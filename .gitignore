@@ -1,1 +1,6 @@
 .DS_Store
+
+# Impeccable: the engine binary is re-downloaded on demand by the launcher
+.claude/skills/impeccable/scripts/bin/
+# Personal Claude Code settings
+.claude/settings.local.json
