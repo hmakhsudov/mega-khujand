@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Astro with static output. The six design files in the repo root (`Mega-Khujand-*.dc.html`, `Facade-Detail-3D.html` with `three-d-stage.js`, and `support.js`) are high-fidelity references, not production code. The production site is rebuilt from them in Astro, with shared components across pages and one generated page per flat from the lot data. Deploy target: not decided.
+Plain static HTML, one shared `css/site.css` with the design tokens, and a small vanilla JS file per page; no framework and no build step (decided when the production build started; this replaces the earlier Astro choice). Pages: `index.html`, `flats.html`, `flat.html`, `building.html`, `picker.html`, `facade-3d.html`. All lot data comes from one file, `js/data.js`. Fonts and three.js are self-hosted. The original `.dc.html` design references live in `design-reference/`. Deploy target: not decided.
 
 ## Users
 
@@ -33,7 +33,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 ## Operating Context
 
-- Sales happen through three channels: a phone call, a WhatsApp/Telegram chat with a sales manager, and an in-person showroom visit. There is no web form or CRM, and none is planned.
+- Sales happen through three channels: a phone call, a WhatsApp/Telegram chat with a sales manager, and an in-person showroom visit. The site's lead form (name, +992 phone, preferred channel, optional flat) asks the sales team to reach the buyer through one of those channels. Where the form submits is not decided yet (`leadEndpoint` in `js/data.js`); there is no CRM.
 - Local families can come in person. Returnees abroad depend on the phone and messengers.
 - Prices are in somoni (TJS, "смн").
 - Lot data (availability, areas, prices, statuses) will come from the sales team. The source format (CRM export, spreadsheet) is not decided. The designs currently generate lots with a deterministic generator.
@@ -52,7 +52,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 **Constraints**
 
 - Russian only. No Tajik or English versions are planned.
-- The lead buttons currently say «Оставить заявку» (leave a request), which implies a form that will not exist. Lead actions must route to phone, messenger, or a showroom visit.
+- Every «Оставить заявку» action leads to the lead form, which records the buyer's preferred channel (call, WhatsApp, Telegram, showroom visit). Until `leadEndpoint` is set, the form only simulates sending; it must be connected before launch.
 - Legal notes in the designs must stay: «Изображения носят информационный характер» (images are for information only), areas are per the project and may differ from BTI measurements, and prices are preliminary and must be confirmed with sales.
 
 **Placeholders.** Every project fact in the designs is unconfirmed and stays as it is for now. Future work must not present any of these as real or add new figures:
