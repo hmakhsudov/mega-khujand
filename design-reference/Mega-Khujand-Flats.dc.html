@@ -75,7 +75,7 @@
         <span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1px solid #DCD2C0"><svg viewBox="0 0 14 14" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5"><path d="M2 7h10M8 3l4 4-4 4"></path></svg></span></a>
     </div>
     <div style="clip-path:url(#mkfBend);overflow:hidden;transform:scaleY(calc(0.76 + var(--mkfE,1) * 0.24))">
-      <img src="media/renders/facade-day-hero-plaza.jpg" alt="MEGA KHUJAND — фасад и площадь" style="width:100%;height:clamp(200px,32vh,320px);object-fit:cover;transform:scale(calc(1.2 - var(--mkfE,1) * 0.2))">
+      <img src="../media/renders/facade-day-hero-plaza.jpg" alt="MEGA KHUJAND — фасад и площадь" style="width:100%;height:clamp(200px,32vh,320px);object-fit:cover;transform:scale(calc(1.2 - var(--mkfE,1) * 0.2))">
     </div>
   </div>
 </section>
@@ -281,7 +281,7 @@
 </main>
 
 <footer style="position:relative;overflow:hidden;background:#100F0C;color:#F4EFE5">
-  <img src="media/renders/facade-night-hero.jpg" alt="Фасад комплекса вечером" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5">
+  <img src="../media/renders/facade-night-hero.jpg" alt="Фасад комплекса вечером" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5">
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(16,15,12,.94) 0%,rgba(16,15,12,.62) 60%,rgba(16,15,12,.42) 100%)"></div>
   <div style="position:relative;padding:clamp(44px,7vh,92px) clamp(18px,3.4vw,54px) clamp(22px,3.4vh,34px)">
     <h2 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:clamp(1.6rem,3.4vw,2.9rem);line-height:1.08;letter-spacing:-.016em;max-width:26ch">Подберём квартиру под ваш сценарий</h2>
@@ -556,7 +556,7 @@ class Component extends DCLogic {
         type: ROOMS[l.rooms],
         area: l.area.toFixed(1),
         meta: 'Корпус ' + l.block + ' · секция ' + l.sect + ' · этаж ' + l.floor + ' из ' + l.floors + ' · №' + l.no,
-        plan: 'media/plans/' + l.plan + '.svg',
+        plan: '../media/plans/' + l.plan + '.svg',
         planAlt: 'Планировка: ' + ROOMS[l.rooms] + ', ' + l.area + ' м²',
         tags: this.tagsFor(l),
         price: l.free ? fmt(l.price) + ' смн' : '—',
@@ -578,7 +578,7 @@ class Component extends DCLogic {
       rows: slice.map(l => ({
         type: ROOMS[l.rooms],
         bs: l.block + ' / ' + l.sect,
-        plan: 'media/plans/' + l.plan + '.svg',
+        plan: '../media/plans/' + l.plan + '.svg',
         area: l.area.toFixed(1) + ' м²',
         floor: l.floor + ' из ' + l.floors,
         no: '№' + l.no,

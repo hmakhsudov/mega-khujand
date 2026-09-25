@@ -67,7 +67,7 @@
       <p style="margin:clamp(14px,2.2vh,24px) 0 0;max-width:46ch;font-size:clamp(14.5px,1.1vw,17px);line-height:1.64;color:#4C463C;text-wrap:pretty">Три корпуса, девять секций. Выберите этаж и стояк — свободные лоты подсвечены, как окна, в которых ещё горит свет.</p>
     </div>
     <div style="clip-path:url(#mkbBend);overflow:hidden;transform:scaleY(calc(0.78 + var(--mkbE,1) * 0.22))">
-      <img src="media/renders/facade-night-dusk-elevation.jpg" alt="Фасад комплекса в сумерках" style="width:100%;height:clamp(180px,28vh,290px);object-fit:cover;transform:scale(calc(1.18 - var(--mkbE,1) * 0.18))">
+      <img src="../media/renders/facade-night-dusk-elevation.jpg" alt="Фасад комплекса в сумерках" style="width:100%;height:clamp(180px,28vh,290px);object-fit:cover;transform:scale(calc(1.18 - var(--mkbE,1) * 0.18))">
     </div>
   </div>
 </section>
@@ -194,7 +194,7 @@
 
   <div style="flex:1;overflow-y:auto;padding:clamp(16px,2vw,22px) clamp(20px,2.4vw,28px)">
     <a href="{{ dHref }}" style="display:grid;place-items:center;padding:clamp(12px,2vh,22px);border-radius:16px;background:#EFE8DA;min-height:190px;transition:background .35s ease" style-hover="background:#EAE2D4">
-      <img src="media/plans/studio-a.svg" ref="{{ dPlanRef }}" alt="Планировка квартиры" style="max-width:90%;max-height:230px;width:auto;filter:brightness(.58) contrast(1.12)">
+      <img src="../media/plans/studio-a.svg" ref="{{ dPlanRef }}" alt="Планировка квартиры" style="max-width:90%;max-height:230px;width:auto;filter:brightness(.58) contrast(1.12)">
     </a>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:clamp(18px,2.6vh,26px);background:#E2D9C7;border:1px solid #E2D9C7;border-radius:14px;overflow:hidden">
       <sc-for list="{{ dSpecs }}" as="s" hint-placeholder-count="6">
@@ -222,7 +222,7 @@
 </aside>
 
 <footer style="position:relative;overflow:hidden;background:#100F0C;color:#F4EFE5">
-  <img src="media/renders/retail-arcade-entrance.jpg" alt="Входная группа и аркада" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42">
+  <img src="../media/renders/retail-arcade-entrance.jpg" alt="Входная группа и аркада" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42">
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(16,15,12,.94) 0%,rgba(16,15,12,.66) 60%,rgba(16,15,12,.46) 100%)"></div>
   <div style="position:relative;padding:clamp(44px,7vh,92px) clamp(18px,3.4vw,54px) clamp(22px,3.4vh,34px)">
     <h2 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:clamp(1.6rem,3.4vw,2.9rem);line-height:1.08;letter-spacing:-.016em;max-width:26ch">Покажем лот вживую на площадке</h2>
@@ -466,7 +466,7 @@ class Component extends DCLogic {
       dKind: sel ? (sel.status === 'book' ? 'Забронирована' : sel.status === 'sale' ? 'Скидка ' + sel.disc + '%' : 'Свободна') : 'Квартира',
       dKindFg: sel && sel.status === 'sale' ? '#8A6A3E' : '#9A9083',
       dNo: sel ? '№ ' + sel.no : '—',
-      dPlanRef: el => { if (el) el.src = sel ? 'media/plans/' + sel.plan + '.svg' : 'media/plans/studio-a.svg'; },
+      dPlanRef: el => { if (el) el.src = sel ? '../media/plans/' + sel.plan + '.svg' : '../media/plans/studio-a.svg'; },
       dSpecs: sel ? [
         {k:'Корпус', v: b.n}, {k:'Секция', v: '№' + sc.i},
         {k:'Этаж', v: sel.f + ' из ' + sc.to}, {k:'Площадь', v: sel.area + ' м²'},
