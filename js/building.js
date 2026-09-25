@@ -6,7 +6,7 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var HOUSE = D.HOUSE;
 
-  var S = { b: 0, s: 0, rooms: [], night: false, sel: null };
+  var S = { b: 0, s: 0, rooms: [], night: true, sel: null };
   var cursor = { r: 0, x: 0 };          // позиция фокуса: строка сверху вниз, стояк
   var matrix = [];                      // [строка][стояк] → лот (пентхаус занимает два стояка)
   var drawer = $('#drawer');

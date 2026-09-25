@@ -102,8 +102,9 @@
     var l = S.sel ? D.find(S.sel) : null;
     var box = $('[data-sel]');
     if (!l) {
-      box.innerHTML = '<div class="pk__sel-row" style="margin-top:0"><div><p class="pk__sel-title">Нажмите на окно на фасаде</p>' +
-        '<p class="pk__sel-meta">Или выберите строку в списке — подсветим квартиру на рендере.</p></div>' +
+      var touch = matchMedia('(pointer: coarse)').matches;
+      box.innerHTML = '<div class="pk__sel-row" style="margin-top:0"><div><p class="pk__sel-title">' + (touch ? 'Выберите квартиру в списке' : 'Нажмите на окно на фасаде') + '</p>' +
+        '<p class="pk__sel-meta">' + (touch ? 'Подсветим её окно на рендере. Окна тоже можно нажимать — увеличьте фасад двумя пальцами.' : 'Или выберите строку в списке — подсветим квартиру на рендере.') + '</p></div>' +
         '<span class="pk__sel-plan is-empty"><img src="' + D.planSrc('two-a') + '" alt=""></span></div>';
       return;
     }
@@ -219,6 +220,11 @@
   });
   $('[data-list]').addEventListener('mouseleave', function () { S.hover = null; paintPolys(); if (S.sel) showTip(S.sel); else tip.classList.remove('is-on'); });
 
+  /* ?v=day|dusk, ?rooms=0…4 — ракурс и подсветка из ссылки; по умолчанию вечер */
+  var qv = MK.params.get('v') || 'dusk';
+  VIEWS.forEach(function (v, i) { if (v.k === qv) S.v = i; });
+  var qr = MK.params.get('rooms');
+  if (qr && /^[0-4]$/.test(qr)) S.rooms = qr;
   /* ?id= — открыть сразу нужный ракурс и квартиру */
   var want = MK.params.get('id');
   if (want && byId[want]) { S.v = byId[want].vi; S.sel = want; }

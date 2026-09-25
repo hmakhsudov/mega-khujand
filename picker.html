@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Подбор квартиры на фасаде — MEGA KHUJAND</title>
 <meta name="description" content="Выберите квартиру прямо на рендере фасада MEGA KHUJAND: подсветка свободных, забронированных и проданных квартир, фильтры по спальням и этажу, цена и планировка.">
-<meta name="theme-color" content="#F4EFE5">
+<meta name="theme-color" content="#121416">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -13,28 +13,30 @@
 <meta property="og:site_name" content="MEGA KHUJAND">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Подбор квартиры на фасаде MEGA KHUJAND">
-<meta property="og:description" content="Наведите на окно — покажем тип, этаж и цену квартиры.">
+<meta property="og:description" content="Свободные квартиры подсвечены на рендере фасада: тип, этаж и цена — по нажатию на окно.">
 <meta property="og:image" content="media/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 <script>(function(d){d.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');if(/[?&]embed=1/.test(location.search)){d.classList.add('pk-embed');var b=document.createElement('base');b.target='_top';document.head.appendChild(b)}})(document.documentElement)</script>
 </head>
 <body class="pickerpage">
 <a class="skip" href="#pk-stage">Перейти к фасаду</a>
 
-<div class="pk">
+<div class="pk on-dark">
   <header class="hdr" data-pk-hdr>
     <a class="hdr__brand" href="index.html">Mega Khujand</a>
     <nav class="hdr__nav" aria-label="Разделы">
       <a href="flats.html">Квартиры</a>
       <a href="building.html">Шахматка</a>
-      <a href="picker.html" aria-current="page">Подбор на фасаде</a>
-      <a href="index.html#arch">О проекте</a>
+      <a href="picker.html" aria-current="page">На фасаде</a>
+      <a href="index.html#plans">Планировки</a>
+      <a href="index.html#lead">Шоурум</a>
     </nav>
     <div class="hdr__end">
       <a class="hdr__tel tnum" href="tel:+992446000000">+992 44 600 00 00</a>
-      <a class="btn btn--dark btn--sm hdr__cta" href="index.html#lead">Оставить заявку</a>
+      <a class="btn btn--dark btn--sm hdr__cta" href="index.html#lead">Записаться на показ</a>
       <a class="hdr__icon hdr__call" href="tel:+992446000000" aria-label="Позвонить: +992 44 600 00 00"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M6.6 2.8l2 3.6-1.5 1.7a10 10 0 0 0 4.8 4.8l1.7-1.5 3.6 2-.8 2.8c-.2.7-.9 1.1-1.6 1A15 15 0 0 1 2.8 5c-.1-.7.3-1.4 1-1.6z"/></svg></a>
       <button class="hdr__icon hdr__burger" type="button" data-menu-open aria-controls="menu" aria-expanded="false" aria-label="Открыть меню"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7h14M3 13h14"/></svg></button>
     </div>
@@ -107,7 +109,7 @@
   </main>
 </div>
 
-<dialog class="menu" id="menu" aria-label="Меню">
+<dialog class="menu on-dark" id="menu" aria-label="Меню">
   <div class="menu__top">
     <a class="hdr__brand" href="index.html">Mega Khujand</a>
     <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
@@ -116,11 +118,15 @@
     <a href="flats.html">Квартиры <small><span data-stat="open">365</span> в продаже</small></a>
     <a href="building.html">Шахматка дома</a>
     <a href="picker.html" aria-current="page">Подбор на фасаде</a>
-    <a href="index.html">О проекте</a>
+    <a href="index.html#plans">Планировки</a>
+    <a href="index.html#lead">Шоурум и контакты</a>
   </nav>
   <div class="menu__foot">
-    <a class="btn btn--dark btn--lg btn--block" href="index.html#lead">Оставить заявку</a>
-    <a class="btn btn--soft btn--lg btn--block tnum" href="tel:+992446000000">+992 44 600 00 00</a>
+    <a class="btn btn--dark btn--lg btn--block" href="index.html#lead">Записаться на показ</a>
+    <div class="menu__row">
+      <a class="btn btn--soft btn--lg" href="tel:+992446000000">Позвонить</a>
+      <a class="btn btn--soft btn--lg" href="https://wa.me/992446000000" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
     <p class="small">Шоурум на набережной Сырдарьи · ежедневно, 9:00–19:00</p>
   </div>
 </dialog>

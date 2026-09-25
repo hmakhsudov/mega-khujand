@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Plain static HTML, one shared `css/site.css` with the design tokens, and a small vanilla JS file per page; no framework and no build step (decided when the production build started; this replaces the earlier Astro choice). Pages: `index.html`, `flats.html`, `flat.html`, `building.html`, `picker.html`, `facade-3d.html`. All lot data comes from one file, `js/data.js`. Fonts and three.js are self-hosted. The original `.dc.html` design references live in `design-reference/`. Deploy target: not decided.
+Plain static HTML, one shared `css/site.css` with the design tokens, and a small vanilla JS file per page; no framework and no build step (decided when the production build started; this replaces the earlier Astro choice). Pages: `index.html`, `flats.html`, `flat.html`, `building.html`, `picker.html`. All lot data comes from one file, `js/data.js`. Fonts are self-hosted. The 3D facade page was removed at the user's request. The original `.dc.html` design references live in `design-reference/`. Deploy target: not decided.
 
 ## Users
 
@@ -42,12 +42,11 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 **Surfaces in the approved designs** (see `README.md` for the handoff notes):
 
-1. Home: seven scroll scenes covering architecture, the embedded 3D facade detail, a panorama, the courtyard, service, the embedded facade picker, and contacts.
+1. Home: the lit model (available flats lit on the dusk facade), plans, materials, the site and courtyard legends, service, and contacts.
 2. Flats catalog: filters for rooms, floor, area, price, building and finish; tile and row views; sorting.
 3. Building grid (шахматка): корпус → секция → стояк → этаж, with lot statuses and penthouses on the top floor.
 4. Flat page: plan, specifications, room areas, price, lead actions, similar flats.
 5. Facade picker: flats highlighted as polygons over the real render, calibrated to the window grid in `calibration/cal-FINAL.json`, with day and dusk views.
-6. 3D facade detail (three.js): a corner of the building showing stone, glass and the metal balcony railing.
 
 **Constraints**
 
@@ -64,9 +63,8 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 - ceiling height ("от 3,1 м"), the walking distance to the river, flat counts
 - phone number `+992 44 600 00 00`
 - showroom location ("на набережной", on the embankment)
-- material codes in the 3D detail (glazing unit 4M1-16Ar-4, RAL 7022, AISI 304)
 
-**Not built yet:** the flat-page 3D finish detail, a real lot-data feed, a connected lead endpoint, and real messenger handles.
+**Not built yet:** a real lot-data feed, a connected lead endpoint, and real messenger handles.
 
 **Terminology:** ЖК (residential complex); корпус (building); секция (section); стояк (a vertical stack of flats in the same position, one per floor); этаж (floor); шахматка (availability grid by stack and floor); лот (flat for sale); комнатность (room count: студия, 1, 2, 3, пентхаус); отделка (finish: без отделки, предчистовая, с отделкой — bare shell, pre-finish, finished); lot statuses свободна, со скидкой, забронирована, продана (available, discounted, reserved, sold); сдача (handover).
 

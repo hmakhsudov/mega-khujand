@@ -1,149 +1,300 @@
-/* Главная: сцены со скроллом и блоки, собранные из data.js */
+/* Главная «Выставочный макет»: плита с вырезанным именем → макет в сумерках,
+   где горят окна свободных квартир; планировки и легенды из data.js */
 (function () {
   'use strict';
   var D = window.MK_DATA;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var smooth = function () { return MK.rm() ? 'auto' : 'smooth'; };
+  var NS = 'http://www.w3.org/2000/svg';
+  var ease = function (t) { t = MK.clamp01(t); return t * t * (3 - 2 * t); };
 
-  /* ── герой: вордмарк-маска → рендер ─────────────────────────────── */
-  var hero = $('.hero'), stage = $('.hero__stage'), bar = $('.hero__bar'), hdr = $('#hdr'), pill = $('#pill');
+  var stage = $('[data-stage]'), veil = $('[data-veil]'), bar = $('[data-bar]');
+  var mark = $('[data-mark]'), wm = $('[data-wm]');
+  var model = $('[data-model]'), frame = $('[data-frame]');
+  var hero = $('.hero'), hdr = $('#hdr');
+  var sceneMq = matchMedia('(min-width: 900px)');
+  function scene() { return sceneMq.matches && !MK.rm(); }
+
+  /* ── плита: вписываем имя в поле над подписью ──────────────────── */
+  var base = { s: 1, tx: 0, ty: 0, fx: 0, fy: 0 };
   function fitMark() {
-    var vw = innerWidth, vh = innerHeight;
-    var sc = Math.max(vw / 1600, vh / 900);
-    var top = (hdr ? hdr.offsetHeight : 80);
-    var region = vh - bar.offsetHeight - top - 20;
-    var wmk = Math.min(1, (vw / sc) / 1140, Math.max(0.24, region / (360 * sc)));
-    var target = top + region / 2 + 6;
-    var wmy = (target - vh / 2) / sc + 19 * wmk;
-    stage.style.setProperty('--wmk', wmk.toFixed(4));
-    stage.style.setProperty('--wmy', wmy.toFixed(1));
-  }
-  fitMark();
-  addEventListener('resize', fitMark);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMark);
-
-  var heroPast = false;
-  MK.pin(hero, function (p, r) {
-    heroPast = r.bottom < innerHeight * 0.35;
-    if (p == null) {
-      stage.style.setProperty('--p', '0');
-      hero.classList.remove('is-dark');
-      if (hdr) hdr.classList.remove('is-hidden');
-    } else {
-      stage.style.setProperty('--p', p.toFixed(4));
-      hero.classList.toggle('is-dark', p > 0.4);
-      if (hdr) hdr.classList.toggle('is-hidden', p > 0.2);
-    }
-    syncPill();
-  });
-
-  /* ── пилюля: появляется после героя, прячется у формы ───────────── */
-  var leadSec = $('#lead');
-  var nearLead = false;
-  function syncPill() { pill.classList.toggle('is-on', heroPast && !nearLead); }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) { nearLead = en[0].isIntersecting; syncPill(); }, { rootMargin: '0px 0px -35% 0px' }).observe(leadSec);
-    var links = $$('a[href^="#"]', pill);
-    var cur = null;
-    var secIo = new IntersectionObserver(function (en) {
-      en.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        cur = '#' + e.target.id;
-        links.forEach(function (a) {
-          if (a.getAttribute('href') === cur) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
-        });
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    ['arch', 'atmosphere', 'infra', 'plans', 'service', 'lead'].forEach(function (id) { var el = document.getElementById(id); if (el) secIo.observe(el); });
-  }
-
-  /* ── атмосфера: три главы ───────────────────────────────────────── */
-  var chap = $('#atmosphere'), chapItems = $$('[data-chap]', chap), chapSegs = $$('.chap__segs i', chap);
-  var ci = 0;
-  function setChap(i) {
-    if (i === ci) return;
-    ci = i;
-    chapItems.forEach(function (n, k) { n.classList.toggle('is-on', k === i); n.classList.toggle('is-before', k < i); });
-    chapSegs.forEach(function (n, k) { n.classList.toggle('is-on', k === i); });
-  }
-  MK.pin(chap, function (p) {
-    if (p == null) return;
-    setChap(Math.min(2, Math.floor(MK.clamp01((p - 0.03) / 0.92) * 3)));
-  });
-
-  /* ── панорама ───────────────────────────────────────────────────── */
-  var pano = $('#pano'), panoStage = $('.pano__stage', pano);
-  MK.pin(pano, function (p) { panoStage.style.setProperty('--p', p == null ? '1' : p.toFixed(4)); });
-
-  /* ── инфраструктура ─────────────────────────────────────────────── */
-  var infra = $('#infra'), iBtns = $$('.infra__btn', infra), iShots = $$('[data-shot]', infra), iDescs = $$('.infra__desc', infra);
-  var iPanel = $('[data-infra-panel]', infra);
-  var ii = 0, iPinned = false, iTimer = 0;
-  function setInfra(i) {
-    if (i === ii) return;
-    ii = i;
-    iBtns.forEach(function (b, k) { b.setAttribute('aria-pressed', String(k === i)); });
-    iShots.forEach(function (s, k) { s.classList.toggle('is-on', k === i); });
-    clearTimeout(iTimer);
-    if (MK.rm()) { iPanel.textContent = iDescs[i].textContent; return; }
-    iPanel.classList.add('is-swap');
-    iTimer = setTimeout(function () { iPanel.textContent = iDescs[i].textContent; iPanel.classList.remove('is-swap'); }, 200);
-  }
-  MK.pin(infra, function (p) {
-    iPinned = p != null;
-    if (p != null) setInfra(Math.min(7, Math.floor(MK.clamp01((p - 0.04) / 0.9) * 8)));
-  });
-  iBtns.forEach(function (b, i) {
-    b.addEventListener('click', function () {
-      if (iPinned) {
-        var top = infra.getBoundingClientRect().top + scrollY;
-        var run = infra.offsetHeight - innerHeight;
-        scrollTo({ top: top + run * ((i + 0.5) / 8 * 0.9 + 0.04), behavior: smooth() });
-      }
-      setInfra(i);
+    var r = mark.getBoundingClientRect();
+    var W = Math.max(1, Math.round(r.width)), H = Math.max(1, Math.round(r.height));
+    mark.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    ['[data-mask]', '[data-mrect]', '[data-prect]'].forEach(function (s) {
+      var n = $(s, mark); n.setAttribute('width', W); n.setAttribute('height', H);
     });
+    var overlap = getComputedStyle(bar).position === 'absolute' ? bar.offsetHeight : 0;
+    var top = W < 560 ? 18 : Math.max(24, H * 0.05);
+    var area = H - overlap - top - (overlap ? Math.max(18, H * 0.03) : 18);
+    wm.setAttribute('transform', '');
+    var bb = wm.getBBox();
+    if (!bb.width) return;
+    var s = Math.min((W * (W < 560 ? 0.9 : 0.86)) / bb.width, area / bb.height);
+    var cx = W / 2, cy = top + area / 2;
+    base.s = s;
+    base.tx = cx - (bb.x + bb.width / 2) * s;
+    base.ty = cy - (bb.y + bb.height / 2) * s;
+    focal(W, H);
+    applyMark(1);
+  }
+  /* точка внутри штриха буквы у центра: при пролёте она раскрывается на весь экран */
+  function focal(W, H) {
+    base.fx = W / 2; base.fy = H / 2;
+    try {
+      var k = 0.25, cw = Math.ceil(W * k), ch = Math.ceil(H * k);
+      var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+      var g = c.getContext('2d');
+      g.setTransform(base.s * k, 0, 0, base.s * k, base.tx * k, base.ty * k);
+      g.font = '800 100px Unbounded';
+      if ('letterSpacing' in g) g.letterSpacing = '-2px';
+      g.textAlign = 'center';
+      g.fillText('MEGA', 0, 0);
+      g.fillText('KHUJAND', 0, 90);
+      var d = g.getImageData(0, 0, cw, ch).data;
+      var on = function (x, y) { return x >= 0 && y >= 0 && x < cw && y < ch && d[(y * cw + x) * 4 + 3] > 200; };
+      var tx = cw / 2, ty = (base.ty + 58 * base.s) * k, best = null, bd = Infinity, rr = Math.max(2, Math.round(base.s * 5 * k));
+      for (var y = 0; y < ch; y++) for (var x = 0; x < cw; x++) {
+        if (!on(x, y) || !on(x - rr, y) || !on(x + rr, y) || !on(x, y - rr) || !on(x, y + rr)) continue;
+        var dd = (x - tx) * (x - tx) + (y - ty) * (y - ty);
+        if (dd < bd) { bd = dd; best = [x, y]; }
+      }
+      if (best) { base.fx = best[0] / k; base.fy = best[1] / k; }
+    } catch (e) { /* без canvas — зум от центра */ }
+  }
+  function applyMark(z) {
+    var f = z === 1 ? '' : 'translate(' + base.fx.toFixed(1) + ' ' + base.fy.toFixed(1) + ') scale(' + z.toFixed(4) + ') translate(' + (-base.fx).toFixed(1) + ' ' + (-base.fy).toFixed(1) + ') ';
+    wm.setAttribute('transform', f + 'translate(' + base.tx.toFixed(1) + ' ' + base.ty.toFixed(1) + ') scale(' + base.s.toFixed(4) + ')');
+  }
+  var fitQueued = false;
+  function queueFit() { if (!fitQueued) { fitQueued = true; requestAnimationFrame(function () { fitQueued = false; fitMark(); MK.tick(); }); } }
+  addEventListener('resize', queueFit);
+  if (document.fonts && document.fonts.load) document.fonts.load('800 100px Unbounded').then(queueFit, queueFit);
+  fitMark();
+
+  /* ── сцена: одна шкала прокрутки — пролёт, свет, пульт ─────────── */
+  var lastZ = -1;
+  MK.watch(hero, function (y, vh) {
+    if (!scene()) {
+      if (lastZ !== 1) { lastZ = 1; applyMark(1); }
+      stage.classList.remove('is-open'); stage.classList.add('is-veiled');
+      return;
+    }
+    var hh = hdr ? hdr.offsetHeight : 64;
+    var r = hero.getBoundingClientRect();
+    var run = r.height - (vh - hh);
+    var p = run > 8 ? MK.clamp01((hh - r.top) / run) : 0;
+    var t = MK.clamp01(p / 0.25);
+    var z = Math.exp(Math.log(90) * Math.pow(t, 1.7));
+    if (Math.abs(z - lastZ) > 0.0005) { lastZ = z; applyMark(z); }
+    var vo = 1 - ease((p - 0.235) / 0.07);
+    stage.style.setProperty('--bo', (1 - ease((p - 0.012) / 0.06)).toFixed(3));
+    stage.style.setProperty('--vo', vo.toFixed(3));
+    stage.style.setProperty('--pz', MK.clamp01(p / 0.42).toFixed(4));
+    stage.style.setProperty('--dim', ease((p - 0.3) / 0.1).toFixed(3));
+    stage.style.setProperty('--con', ease((p - 0.56) / 0.08).toFixed(3));
+    model.style.setProperty('--lit', MK.clamp01((p - 0.38) / 0.22).toFixed(4));
+    stage.classList.toggle('is-veiled', vo > 0.02);
+    stage.classList.toggle('is-open', vo <= 0.02);
+    if (vo > 0.02) hideTag();
+  });
+
+  /* ── макет: окна свободных квартир на рендере в сумерках ───────── */
+  var VIEW = D.FACADE.filter(function (v) { return v.k === 'dusk'; })[0] || D.FACADE[D.FACADE.length - 1];
+  var items = [];
+  VIEW.planes.forEach(function (pl) {
+    var sc = D.secOf(VIEW.corp, pl.sect);
+    if (!sc) return;
+    var H = D.homography(pl.q);
+    var hitPl = { padU: 0.03, padV: 0.04, q: pl.q };
+    sc.floors.forEach(function (row) {
+      row.row.forEach(function (l) {
+        if (!l) return;
+        var pts = function (q) { return q.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
+        items.push({ lot: l, open: D.isOpen(l), lit: pts(D.windowQuad(pl, sc, l, H)), hit: pts(D.windowQuad(hitPl, sc, l, H)), f: (l.floor - sc.from) + ((l.x * 7) % 3) * 0.3 });
+      });
+    });
+  });
+  var open = items.filter(function (it) { return it.open; });
+  var litG = $('[data-lit]'), hitG = $('[data-hit]');
+  open.forEach(function (it, i) {
+    var a = document.createElementNS(NS, 'polygon');
+    a.setAttribute('points', it.lit);
+    a.setAttribute('style', '--f:' + it.f.toFixed(2));
+    litG.appendChild(a);
+    var b = document.createElementNS(NS, 'polygon');
+    b.setAttribute('points', it.hit);
+    b.setAttribute('data-i', i);
+    hitG.appendChild(b);
+    it.a = a; it.b = b;
+  });
+
+  var ROOMS = [['all', 'Все'], [0, 'Студии'], [1, '1 спальня'], [2, '2 спальни'], [3, '3 спальни'], [4, 'Пентхаусы']];
+  var keys = $('[data-keys]');
+  var cnt = function (r) { return open.filter(function (it) { return r === 'all' || it.lot.rooms === r; }).length; };
+  keys.innerHTML = ROOMS.map(function (k) {
+    return '<button class="seg__btn" type="button" data-r="' + k[0] + '" aria-pressed="' + (k[0] === 'all') + '">' + k[1] + ' <small>' + cnt(k[0]) + '</small></button>';
+  }).join('');
+  var sel = 'all';
+  var countEl = $('[data-count]'), go = $('[data-go]'), goFlats = $('[data-go-flats]');
+  function paintKeys() {
+    $$('[data-r]', keys).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-r') === String(sel))); });
+    open.forEach(function (it) {
+      var out = sel !== 'all' && it.lot.rooms !== sel;
+      it.a.classList.toggle('is-out', out);
+      it.b.classList.toggle('is-out', out);
+    });
+    var n = cnt(sel);
+    var word = sel === 'all' ? '' : ' — ' + ROOMS.filter(function (k) { return k[0] === sel; })[0][1].toLowerCase();
+    countEl.innerHTML = 'Корпус ' + VIEW.corp + ', вид с бульвара: светится <b>' + n + '</b> ' + D.plural(n, ['окно', 'окна', 'окон']) + word +
+      ' из ' + items.length + ' ' + D.plural(items.length, ['квартиры', 'квартир', 'квартир']) + ' этого фасада.';
+    go.href = 'picker.html?v=' + VIEW.k + (sel === 'all' ? '' : '&rooms=' + sel);
+    goFlats.href = sel === 'all' ? 'flats.html' : 'flats.html?rooms=' + sel;
+    hideTag();
+  }
+  keys.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-r]');
+    if (!b) return;
+    var v = b.getAttribute('data-r');
+    sel = v === 'all' ? 'all' : +v;
+    paintKeys();
+  });
+  paintKeys();
+
+  /* латунная бирка у окна */
+  var tag = $('[data-tag]'), hot = null, hideT = 0;
+  function showTag(it) {
+    clearTimeout(hideT);
+    if (hot && hot !== it) hot.a.classList.remove('is-hot');
+    hot = it;
+    it.a.classList.add('is-hot');
+    var l = it.lot;
+    tag.innerHTML = '<b>' + l.type + ' · ' + D.area(l.area) + '</b>' +
+      '<span>Этаж ' + l.floor + ' · № ' + l.no + ' · ' + D.money(l.price) + '</span>' +
+      '<a href="' + D.lotHref(l) + '">Открыть квартиру ' + MK.icon('arrow') + '</a>';
+    tag.hidden = false;
+    var fr = frame.getBoundingClientRect(), pr = it.b.getBoundingClientRect();
+    var x = MK.clamp(pr.left + pr.width / 2 - fr.left, 110, fr.width - 110);
+    var below = pr.top - fr.top < 110;
+    tag.classList.toggle('is-below', below);
+    tag.style.left = x.toFixed(0) + 'px';
+    tag.style.top = (below ? pr.bottom - fr.top : pr.top - fr.top).toFixed(0) + 'px';
+  }
+  function hideTag() {
+    if (!tag) return;
+    if (hot) hot.a.classList.remove('is-hot');
+    hot = null;
+    tag.hidden = true;
+  }
+  function later() { clearTimeout(hideT); hideT = setTimeout(hideTag, 280); }
+  hitG.addEventListener('pointerover', function (e) {
+    var p = e.target.closest('polygon');
+    if (p && e.pointerType === 'mouse') showTag(open[+p.getAttribute('data-i')]);
+  });
+  hitG.addEventListener('pointerout', function (e) { if (e.pointerType === 'mouse') later(); });
+  hitG.addEventListener('click', function (e) {
+    var p = e.target.closest('polygon');
+    if (p) showTag(open[+p.getAttribute('data-i')]);
+  });
+  tag.addEventListener('pointerenter', function () { clearTimeout(hideT); });
+  tag.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') later(); });
+  frame.addEventListener('click', function (e) { if (!e.target.closest('polygon, [data-tag]')) hideTag(); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTag(); });
+
+  /* режим света: по шкале сцены или один раз при появлении */
+  var litOnce = false;
+  function syncMode() {
+    model.setAttribute('data-mode', scene() ? 'scroll' : 'io');
+    if (!scene()) model.style.removeProperty('--lit');
+  }
+  syncMode();
+  if (sceneMq.addEventListener) sceneMq.addEventListener('change', function () { syncMode(); queueFit(); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) {
+      if (en[0].isIntersecting && !litOnce) { litOnce = true; model.classList.add('is-lit'); }
+    }, { threshold: 0.3 }).observe(frame);
+  } else model.classList.add('is-lit');
+
+  /* ── номера на рендерах: точка изображения → точка кадра (cover) ── */
+  function placePins() {
+    $$('[data-pins]').forEach(function (fig) {
+      var ar = +fig.getAttribute('data-ar') || 1.79;
+      var op = (fig.getAttribute('data-op') || '50 50').split(' ').map(function (v) { return +v / 100; });
+      var W = fig.clientWidth, H = fig.clientHeight;
+      if (!W || !H) return;
+      var iw, ih;
+      if (W / H > ar) { iw = W; ih = W / ar; } else { ih = H; iw = H * ar; }
+      var ox = (W - iw) * op[0], oy = (H - ih) * op[1];
+      $$('.pin', fig).forEach(function (p) {
+        var x = ox + (+p.getAttribute('data-u')) * iw, y = oy + (+p.getAttribute('data-v')) * ih;
+        p.style.setProperty('--x', (x / W * 100).toFixed(2) + '%');
+        p.style.setProperty('--y', (y / H * 100).toFixed(2) + '%');
+        p.hidden = x < 12 || y < 12 || x > W - 12 || y > H - 12;
+      });
+    });
+  }
+  placePins();
+  addEventListener('resize', placePins);
+  addEventListener('load', placePins);
+
+  /* подсветка номера при наведении на строку легенды */
+  $$('[data-legend] [data-k]').forEach(function (li) {
+    var k = li.getAttribute('data-k');
+    var pin = $('.pin[data-k="' + k + '"]');
+    if (!pin) return;
+    var on = function (v) { li.classList.toggle('is-on', v); pin.classList.toggle('is-on', v); };
+    li.addEventListener('pointerenter', function () { on(true); });
+    li.addEventListener('pointerleave', function () { on(false); });
   });
 
   /* ── планировки ─────────────────────────────────────────────────── */
   var PL = {
-    4: { title: 'Пентхаус', d: 'Лоты на верхних этажах с индивидуальным доступом на лифте, панорамным остеклением и открытой террасой.', files: ['pent-a', 'pent-b', 'pent-c'] },
-    3: { title: '3 спальни', d: 'В коллекции — балконы и лоджии, изолированная мастер-спальня, гостевой санузел и кухня-гостиная на всю ширину квартиры.', files: ['three-a', 'three-b', 'three-c', 'three-d'] },
-    2: { title: '2 спальни', d: 'Избранные конфигурации квартир: с отдельной постирочной и гардеробной или с кухней-гостиной в три окна.', files: ['two-a', 'two-b', 'two-c', 'two-d'] },
-    1: { title: '1 спальня', d: 'Кухня-гостиная с окном во всю стену и изолированная спальня — планировка, в которой день и ночь не мешают друг другу.', files: ['one-a', 'one-b', 'one-c', 'one-d'] },
-    0: { title: 'Студия', d: 'Пространство для начала — максимум света, свободы и функциональности в каждом метре.', files: ['studio-a', 'studio-b', 'studio-c', 'studio-d'] }
+    0: { d: 'Одна комната с кухонной зоной, прихожая и санузел.', files: ['studio-a', 'studio-b', 'studio-c', 'studio-d'] },
+    1: { d: 'Кухня-гостиная и отдельная спальня: день и ночь не мешают друг другу.', files: ['one-a', 'one-b', 'one-c', 'one-d'] },
+    2: { d: 'Кухня-гостиная и две изолированные спальни.', files: ['two-a', 'two-b', 'two-c', 'two-d'] },
+    3: { d: 'Кухня-гостиная, мастер-спальня, ещё две спальни и гостевой санузел.', files: ['three-a', 'three-b', 'three-c', 'three-d'] },
+    4: { d: 'Квартиры верхнего этажа с открытой террасой.', files: ['pent-a', 'pent-b', 'pent-c'] }
   };
+  var LETTER = { a: 'А', b: 'Б', c: 'В', d: 'Г' };
   var st = D.stats();
   var plRoot = $('#plans');
   var plTypes = $$('[data-type]', plRoot), plThumbs = $('[data-pl-thumbs]', plRoot), plImg = $('[data-pl-img]', plRoot);
   var plState = { r: 2, i: 0 };
-  function variant(f) { return f.split('-')[1].toUpperCase(); }
+  function variant(f) { return LETTER[f.split('-')[1]] || f.split('-')[1].toUpperCase(); }
   function planStats(f) {
     var ls = D.LOTS.filter(function (l) { return l.plan === f; });
-    var open = ls.filter(D.isOpen);
     var as = ls.map(function (l) { return l.area; });
-    return { open: open.length, lo: Math.min.apply(null, as), hi: Math.max.apply(null, as) };
+    return { open: ls.filter(D.isOpen).length, lo: Math.min.apply(null, as), hi: Math.max.apply(null, as) };
   }
+  plTypes.forEach(function (b) {
+    var ts = st.byType[+b.getAttribute('data-type')];
+    $('.ptype__n', b).textContent = ts.open ? ts.open + ' своб.' : 'нет свободных';
+    $('.ptype__p', b).textContent = ts.open ? 'от ' + D.money(ts.minPrice) : 'сообщим о новых';
+    b.setAttribute('aria-label', $('.ptype__name', b).textContent + ': ' + (ts.open ? ts.open + ' ' + D.plural(ts.open, ['свободная квартира', 'свободные квартиры', 'свободных квартир']) + ', от ' + D.money(ts.minPrice) : 'свободных нет'));
+  });
   function renderPlans(focusThumb) {
     var t = PL[plState.r], files = t.files, f = files[plState.i];
     var ts = st.byType[plState.r];
-    plTypes.forEach(function (b) { b.setAttribute('aria-pressed', String(+b.getAttribute('data-type') === plState.r)); });
-    $('[data-pl-title]', plRoot).textContent = t.title;
+    plTypes.forEach(function (b) {
+      var on = +b.getAttribute('data-type') === plState.r;
+      b.setAttribute('aria-pressed', String(on));
+      $('.led', b).classList.toggle('is-on', on);
+    });
     $('[data-pl-desc]', plRoot).textContent = t.d;
-    $('[data-pl-facts]', plRoot).innerHTML = ts.open
-      ? 'В продаже <b>' + ts.open + '</b> · от <b class="tnum">' + D.money(ts.minPrice) + '</b>'
-      : 'Сейчас свободных нет — оставьте заявку, сообщим о новых лотах';
     var cta = $('[data-pl-cta]', plRoot);
     cta.href = 'flats.html?rooms=' + plState.r;
     cta.textContent = ts.open ? 'Показать ' + ts.open + ' ' + D.plural(ts.open, ['квартиру', 'квартиры', 'квартир']) : 'Смотреть каталог';
+    $('[data-pl-pick]', plRoot).href = 'picker.html?rooms=' + plState.r;
     plThumbs.innerHTML = files.map(function (x, k) {
-      return '<li><button class="plans__thumb" type="button" data-k="' + k + '" aria-pressed="' + (k === plState.i) + '" aria-label="Вариант ' + variant(x) + '">' +
-        '<img src="' + D.planSrc(x) + '" alt="" loading="lazy" decoding="async"></button></li>';
+      return '<button class="plans__var" type="button" data-k="' + k + '" aria-pressed="' + (k === plState.i) + '" aria-label="Вариант ' + variant(x) + '">' +
+        '<img src="' + D.planSrc(x) + '" alt="" loading="lazy" decoding="async"></button>';
     }).join('');
+    var name = $('.ptype__name', plTypes.filter(function (b) { return +b.getAttribute('data-type') === plState.r; })[0]).textContent;
     plImg.src = D.planSrc(f);
-    plImg.alt = 'Планировка: ' + t.title.toLowerCase() + ', вариант ' + variant(f);
+    plImg.alt = 'Планировка: ' + name.toLowerCase() + ', вариант ' + variant(f);
+    $('[data-pl-cap]', plRoot).textContent = 'Вариант ' + variant(f);
     var ps = planStats(f);
-    $('[data-pl-cap]', plRoot).textContent = 'Вариант ' + variant(f) + ' · ' + D.area(ps.lo).replace(' м²', '') + '–' + D.area(ps.hi) + (ps.open ? ' · в продаже ' + ps.open : '');
+    $('[data-pl-meta]', plRoot).textContent = D.area(ps.lo).replace(' м²', '') + '–' + D.area(ps.hi) + (ps.open ? ' · свободно ' + ps.open : ' · свободных нет');
     if (focusThumb) { var b = plThumbs.querySelector('[data-k="' + plState.i + '"]'); if (b) b.focus(); }
   }
   plTypes.forEach(function (b) {
@@ -153,36 +304,12 @@
     var b = e.target.closest('[data-k]');
     if (b) { plState.i = +b.getAttribute('data-k'); renderPlans(true); }
   });
-  $('[data-pl-prev]', plRoot).addEventListener('click', function () {
-    var n = PL[plState.r].files.length; plState.i = (plState.i - 1 + n) % n; renderPlans();
-  });
-  $('[data-pl-next]', plRoot).addEventListener('click', function () {
-    var n = PL[plState.r].files.length; plState.i = (plState.i + 1) % n; renderPlans();
+  plThumbs.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var n = PL[plState.r].files.length;
+    plState.i = (plState.i + (e.key === 'ArrowRight' ? 1 : n - 1)) % n;
+    renderPlans(true);
+    e.preventDefault();
   });
   renderPlans();
-
-  /* ── сервис: лента ──────────────────────────────────────────────── */
-  var track = $('[data-srv-track]'), rail = $('[data-srv-rail]'), sPrev = $('[data-srv-prev]'), sNext = $('[data-srv-next]');
-  var sQueued = false;
-  function syncRail() {
-    sQueued = false;
-    var max = track.scrollWidth - track.clientWidth;
-    var ratio = Math.min(1, track.clientWidth / Math.max(1, track.scrollWidth));
-    var p = max > 0 ? MK.clamp01(track.scrollLeft / max) : 0;
-    rail.style.width = (ratio * 100).toFixed(2) + '%';
-    rail.style.transform = 'translateX(' + (p * (100 / Math.max(ratio, 0.001) - 100)).toFixed(2) + '%)';
-    sPrev.disabled = track.scrollLeft < 4;
-    sNext.disabled = track.scrollLeft > max - 4;
-  }
-  function queueRail() { if (!sQueued) { sQueued = true; requestAnimationFrame(syncRail); } }
-  track.addEventListener('scroll', queueRail, { passive: true });
-  addEventListener('resize', queueRail);
-  function step(d) {
-    var card = track.firstElementChild;
-    var gap = parseFloat(getComputedStyle(track).columnGap) || 16;
-    track.scrollBy({ left: d * (card.offsetWidth + gap), behavior: smooth() });
-  }
-  sPrev.addEventListener('click', function () { step(-1); });
-  sNext.addEventListener('click', function () { step(1); });
-  syncRail();
 })();

@@ -27,4 +27,3 @@ for (const j of jobs) {
     .toFile(path.join(OUT, `${base}-${j.widths[1]}.jpg`));
   console.log('✓', base);
 }
-// facade-3d-poster-* — снимок самой 3D-модели (facade-3d.html), пересобирается вручную

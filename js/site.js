@@ -100,17 +100,6 @@
     });
   }
 
-  /* ── листва ─────────────────────────────────────────────────────── */
-  function initFoliage() {
-    var fol = document.querySelector('.fol');
-    if (!fol) return;
-    var last = null;
-    MK.always(function (y) {
-      var v = MK.rm() ? 0 : Math.round(y * -0.05);
-      if (v !== last) { last = v; fol.style.setProperty('--sy', v); }
-    });
-  }
-
   /* ── мобильное меню ─────────────────────────────────────────────── */
   function initMenu() {
     var menu = document.getElementById('menu');
@@ -316,7 +305,7 @@
       '<p class="field__err" id="' + id + '-phone-e"></p></div>' +
       '<fieldset class="field"><legend class="field__label">Как удобнее связаться</legend><div class="opts">' +
       METHODS.map(function (m, i) {
-        return '<label class="opt"><input type="radio" name="method" value="' + m[0] + '"' + (i === 0 ? ' checked' : '') + '><span>' + m[1] + '</span></label>';
+        return '<label class="opt"><input type="radio" name="method" value="' + m[0] + '"' + (m[0] === (o.method || 'call') ? ' checked' : '') + '><span>' + m[1] + '</span></label>';
       }).join('') + '</div></fieldset>' +
       '<div class="field" data-interest><label class="field__label" for="' + id + '-int">Что ищете <i>— необязательно</i></label>' +
       '<span class="select select--block"><select id="' + id + '-int" name="interest">' +
@@ -441,7 +430,7 @@
         done.focus();
       } catch (err) {
         alertBox.innerHTML = '<div class="form__alert">' + MK.icon('alert') +
-          '<span>Заявка не отправилась — похоже, пропало соединение. Попробуйте ещё раз или позвоните: <a href="' + D.SITE.phoneHref + '">' + D.SITE.phone + '</a>.</span></div>';
+          '<span>Заявка не отправилась' + (err && /^HTTP/.test(err.message) ? ' — сервер не ответил' : ' — похоже, пропало соединение') + '. Попробуйте ещё раз или позвоните: <a href="' + D.SITE.phoneHref + '">' + D.SITE.phone + '</a>.</span></div>';
       }
       busy(false);
     });
@@ -480,12 +469,11 @@
 
   /* ── старт ──────────────────────────────────────────────────────── */
   initReveal();
-  initFoliage();
   initMenu();
   initEmbeds();
   document.querySelectorAll('[data-lead-slot]').forEach(function (s) {
     if (s.hasAttribute('data-lead-manual')) return;
-    MK.lead(s, { title: s.getAttribute('data-title') || undefined, sub: s.getAttribute('data-sub') || undefined, lot: D.find(MK.params.get('lot')) });
+    MK.lead(s, { title: s.getAttribute('data-title') || undefined, sub: s.getAttribute('data-sub') || undefined, method: s.getAttribute('data-method') || undefined, lot: D.find(MK.params.get('lot')) });
   });
   document.querySelectorAll('[data-year]').forEach(function (n) { n.textContent = new Date().getFullYear(); });
   bindData();

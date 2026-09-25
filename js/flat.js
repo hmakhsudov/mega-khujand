@@ -109,7 +109,7 @@
         '</div>' +
       '</div>' +
       '<figure class="planbox">' +
-        '<div class="planbox__head"><span class="label">Планировка</span><span>' + lot.plan.toUpperCase().replace('-', ' · ') + '</span></div>' +
+        '<div class="planbox__head"><span class="label">Планировка</span><span>Вариант ' + ({ a: 'А', b: 'Б', c: 'В', d: 'Г' }[lot.plan.split('-')[1]] || '') + '</span></div>' +
         '<div class="planbox__img"><img src="' + D.planSrc(lot.plan, true) + '" alt="Планировка квартиры: ' + lot.type.toLowerCase() + ', ' + D.area(lot.area) + '. ' +
           inner.map(function (r) { return r.n.toLowerCase() + ' ' + D.area(r.a); }).join(', ') + '" width="526" height="504" decoding="async"></div>' +
         '<ul class="planbox__tags">' + MK.tags(lot).filter(function (t) { return t[1] !== 'tag--sale'; }).map(function (t) { return '<li>' + t[0] + '</li>'; }).join('') + '</ul>' +
