@@ -4,3 +4,6 @@
 .claude/skills/impeccable/scripts/bin/
 # Personal Claude Code settings
 .claude/settings.local.json
+
+# Impeccable review captures
+.impeccable/review/

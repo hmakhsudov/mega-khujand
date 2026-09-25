@@ -942,8 +942,8 @@ three-d-stage:not(:defined){visibility:hidden}
 .f3d__err{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;font-size:15px;line-height:1.6;color:var(--ink-2)}
 .f3d-bare .f3d__back{display:none}
 @media (max-width:860px){
-  .f3d{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
-  .f3d__side{border-left:0;border-top:1px solid var(--line);max-height:46%}
+  .f3d{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,44%)}
+  .f3d__side{border-left:0;border-top:1px solid var(--line)}
 }
 
 /* ── Уменьшенное движение ──────────────────────────────────────────── */
