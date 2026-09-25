@@ -1018,3 +1018,25 @@ html:not(.js) .hdr__burger,html:not(.js) .plans__rail,html:not(.js) .srv__nav,ht
   html:not(.js) .hdr{flex-wrap:wrap}
   html:not(.js) .hdr__nav{display:flex;order:3;flex-basis:100%;justify-content:flex-start;overflow-x:auto;gap:4px 18px}
 }
+
+/* адаптация: зоны нажатия и узкие экраны */
+.hdr__brand{display:inline-flex;align-items:center;min-height:44px;padding:0}
+@media (max-width:1000px){
+  .plans__thumb{width:52px;height:52px}
+  .plans__rail{gap:8px}
+}
+@media (max-width:560px){
+  .plans__rail .round-btn{display:none}
+  .plans__board{padding:14px}
+}
+@media (pointer:coarse){
+  .seg__btn{height:44px}
+  .chip--sm{height:44px;min-width:44px;justify-content:center}
+  .grid .cell{height:40px}
+  .pk__grp .seg__btn{height:42px}
+}
+@media (min-width:901px) and (max-width:1279px){
+  .pk__stage{flex-direction:column;justify-content:center;gap:10px}
+  .pk__fit{width:min(100%,calc((100cqh - 64px) * 2400 / 1339))}
+  .pk__over{position:static;margin-top:10px}
+}
