@@ -52,12 +52,29 @@
       g.fillText('MEGA', 0, 0);
       g.fillText('KHUJAND', 0, 90);
       var d = g.getImageData(0, 0, cw, ch).data;
-      var on = function (x, y) { return x >= 0 && y >= 0 && x < cw && y < ch && d[(y * cw + x) * 4 + 3] > 200; };
-      var tx = cw / 2, ty = (base.ty + 58 * base.s) * k, best = null, bd = Infinity, rr = Math.max(2, Math.round(base.s * 5 * k));
+      /* двухпроходная карта расстояний до края штриха: берём точку на оси
+         самого толстого штриха ближе к центру — дыра раскрывается ровно */
+      var n = cw * ch, dt = new Float32Array(n), INF = 1e6, D2 = 1.4142;
+      for (var i = 0; i < n; i++) dt[i] = d[i * 4 + 3] > 128 ? INF : 0;
       for (var y = 0; y < ch; y++) for (var x = 0; x < cw; x++) {
-        if (!on(x, y) || !on(x - rr, y) || !on(x + rr, y) || !on(x, y - rr) || !on(x, y + rr)) continue;
-        var dd = (x - tx) * (x - tx) + (y - ty) * (y - ty);
-        if (dd < bd) { bd = dd; best = [x, y]; }
+        var o = y * cw + x; if (!dt[o]) continue;
+        var m = dt[o];
+        if (x > 0) m = Math.min(m, dt[o - 1] + 1); else m = 0;
+        if (y > 0) { m = Math.min(m, dt[o - cw] + 1); if (x > 0) m = Math.min(m, dt[o - cw - 1] + D2); if (x < cw - 1) m = Math.min(m, dt[o - cw + 1] + D2); } else m = 0;
+        dt[o] = m;
+      }
+      for (var y2 = ch - 1; y2 >= 0; y2--) for (var x2 = cw - 1; x2 >= 0; x2--) {
+        var o2 = y2 * cw + x2; if (!dt[o2]) continue;
+        var m2 = dt[o2];
+        if (x2 < cw - 1) m2 = Math.min(m2, dt[o2 + 1] + 1); else m2 = 0;
+        if (y2 < ch - 1) { m2 = Math.min(m2, dt[o2 + cw] + 1); if (x2 < cw - 1) m2 = Math.min(m2, dt[o2 + cw + 1] + D2); if (x2 > 0) m2 = Math.min(m2, dt[o2 + cw - 1] + D2); } else m2 = 0;
+        dt[o2] = m2;
+      }
+      var tx = cw / 2, ty = ch / 2, best = null, bs = -Infinity, diag = Math.hypot(cw, ch);
+      for (var y3 = 0; y3 < ch; y3++) for (var x3 = 0; x3 < cw; x3++) {
+        var v = dt[y3 * cw + x3]; if (v < 2) continue;
+        var sc = v - 0.06 * Math.hypot(x3 - tx, y3 - ty) * (60 / diag);
+        if (sc > bs) { bs = sc; best = [x3, y3]; }
       }
       if (best) { base.fx = best[0] / k; base.fy = best[1] / k; }
     } catch (e) { /* без canvas — зум от центра */ }
@@ -85,7 +102,7 @@
     var run = r.height - (vh - hh);
     var p = run > 8 ? MK.clamp01((hh - r.top) / run) : 0;
     var t = MK.clamp01(p / 0.25);
-    var z = Math.exp(Math.log(90) * Math.pow(t, 1.7));
+    var z = Math.exp(Math.log(160) * Math.pow(t, 1.5));
     if (Math.abs(z - lastZ) > 0.0005) { lastZ = z; applyMark(z); }
     var vo = 1 - ease((p - 0.235) / 0.07);
     stage.style.setProperty('--bo', (1 - ease((p - 0.012) / 0.06)).toFixed(3));
@@ -97,6 +114,16 @@
     stage.classList.toggle('is-veiled', vo > 0.02);
     stage.classList.toggle('is-open', vo <= 0.02);
     if (vo > 0.02) hideTag();
+  });
+
+  /* фокус с клавиатуры на пульте: докручиваем сцену до момента, где он виден */
+  model.addEventListener('focusin', function () {
+    if (!scene()) return;
+    var hh = hdr ? hdr.offsetHeight : 64;
+    var r = hero.getBoundingClientRect();
+    var run = r.height - (innerHeight - hh);
+    var p = MK.clamp01((hh - r.top) / run);
+    if (p < 0.66) scrollTo({ top: scrollY + (0.7 - p) * run, behavior: 'auto' });
   });
 
   /* ── макет: окна свободных квартир на рендере в сумерках ───────── */
