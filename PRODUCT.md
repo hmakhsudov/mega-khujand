@@ -58,7 +58,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 **Placeholders.** Every project fact in the designs is unconfirmed and stays as it is for now. Future work must not present any of these as real or add new figures:
 
 - handover date ("IV квартал 2026")
-- building structure: 3 buildings, 9 sections, 96 lots, and their statuses and areas
+- building structure: 3 buildings, 9 sections and the lots generated from them in `js/data.js` (currently 832, of which 365 on sale), with their statuses and areas
 - base price of ~9,400 TJS/m² and every price derived from it
 - the six named services (24/7 concierge, rental management, cleaning, valet parking, storage, guest apartments)
 - ceiling height ("от 3,1 м"), the walking distance to the river, flat counts
@@ -66,7 +66,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 - showroom location ("на набережной", on the embankment)
 - material codes in the 3D detail (glazing unit 4M1-16Ar-4, RAL 7022, AISI 304)
 
-**Not built yet:** the Astro production site, the flat-page 3D finish detail, a real lot-data feed, and direct links to messenger chats.
+**Not built yet:** the flat-page 3D finish detail, a real lot-data feed, a connected lead endpoint, and real messenger handles.
 
 **Terminology:** ЖК (residential complex); корпус (building); секция (section); стояк (a vertical stack of flats in the same position, one per floor); этаж (floor); шахматка (availability grid by stack and floor); лот (flat for sale); комнатность (room count: студия, 1, 2, 3, пентхаус); отделка (finish: без отделки, предчистовая, с отделкой — bare shell, pre-finish, finished); lot statuses свободна, со скидкой, забронирована, продана (available, discounted, reserved, sold); сдача (handover).
 

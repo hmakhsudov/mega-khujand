@@ -47,6 +47,25 @@
   gallery.push(lot.corner ? ['facade-day-corner-detail', 'Угловая часть фасада с панорамным остеклением'] : ['courtyard-playground-collage', 'Внутренний двор без машин']);
   if (gallery.length < 3) gallery.push(['retail-arcade-entrance', 'Входная группа и торговая аркада']);
 
+  /* окна этой квартиры на рендере — первым кадром галереи */
+  var win = D.windowOf(lot);
+  function winFigure(w) {
+    var xs = w.pts.map(function (p) { return p[0]; }), ys = w.pts.map(function (p) { return p[1]; });
+    var cx = (Math.min.apply(null, xs) + Math.max.apply(null, xs)) / 2, cy = (Math.min.apply(null, ys) + Math.max.apply(null, ys)) / 2;
+    var W = 440, H = 246;
+    var x0 = MK.clamp(cx - W / 2, 0, 2400 - W).toFixed(0), y0 = MK.clamp(cy - H / 2, 0, 1339 - H).toFixed(0);
+    var pts = w.pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+    var href = 'picker.html?id=' + encodeURIComponent(lot.id);
+    return '<figure class="gallery__win"><a class="gallery__img" href="' + href + '" aria-label="Открыть подбор на фасаде с этой квартирой">' +
+      '<svg viewBox="' + x0 + ' ' + y0 + ' ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Окна квартиры на рендере фасада, ' + w.view.title.toLowerCase() + '">' +
+      '<defs><mask id="win-hole"><rect width="2400" height="1339" fill="#fff"/><polygon points="' + pts + '" fill="#000"/></mask></defs>' +
+      '<image href="media/opt/' + w.view.img + '-1920.webp" width="2400" height="1339"/>' +
+      '<rect width="2400" height="1339" fill="rgba(16,15,12,.4)" mask="url(#win-hole)"/>' +
+      '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="34" fill="none" stroke="#F2DFB6" stroke-width="1.5" vector-effect="non-scaling-stroke"/>' +
+      '<polygon points="' + pts + '" fill="rgba(255,236,196,.3)" stroke="#F2DFB6" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
+      '</svg></a><figcaption>Окна этой квартиры на фасаде — нажмите, чтобы открыть подбор</figcaption></figure>';
+  }
+
   var similar = D.LOTS.filter(function (x) { return x.id !== lot.id && D.isOpen(x); })
     .map(function (x) { return { x: x, d: Math.abs(x.area - lot.area) + Math.abs(x.rooms - lot.rooms) * 14 + Math.abs(x.floor - lot.floor) * 0.4 + (x.river === lot.river ? 0 : 5) + (x.corp === lot.corp ? 0 : 2) }; })
     .sort(function (a, b) { return a.d - b.d; }).slice(0, 4).map(function (o) { return o.x; });
@@ -96,7 +115,7 @@
         '<ul class="planbox__tags">' + MK.tags(lot).filter(function (t) { return t[1] !== 'tag--sale'; }).map(function (t) { return '<li>' + t[0] + '</li>'; }).join('') + '</ul>' +
       '</figure>' +
     '</section>' +
-    '<section class="gallery" aria-label="Дом и окружение">' + gallery.map(function (g) {
+    '<section class="gallery" aria-label="Дом и окружение">' + (win ? winFigure(win) : '') + gallery.slice(0, win ? 2 : 3).map(function (g) {
       return '<figure><div class="gallery__img">' + MK.pic(g[0], g[1], { sizes: '(min-width: 900px) 33vw, 100vw' }) + '</div><figcaption>' + g[1] + '</figcaption></figure>';
     }).join('') + '</section>' +
     '<section class="flat-info">' +
@@ -113,7 +132,7 @@
       '</div>' +
     '</section>' +
     (similar.length ? '<section class="similar" id="similar" aria-labelledby="sim-h">' +
-      '<div class="similar__head"><div><h2 class="eyebrow">Похожие квартиры</h2><p class="h4" id="sim-h" style="margin-top:14px">Близкие по площади и виду</p></div>' +
+      '<div class="similar__head"><div><h2 class="h4" id="sim-h">Похожие квартиры</h2><p class="small" style="margin-top:8px">Близкие по площади, этажу и виду</p></div>' +
       '<a class="link-arrow" href="flats.html?rooms=' + lot.rooms + '">Все ' + (lot.rooms === 0 ? 'студии' : lot.rooms === 4 ? 'пентхаусы' : 'квартиры «' + lot.type + '»') + ' ' + arrow + '</a></div>' +
       '<div class="lots">' + similar.map(function (x) { return MK.lotCard(x, { sm: true }); }).join('') + '</div></section>' : '');
 

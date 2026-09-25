@@ -200,6 +200,40 @@
   }
   function find(id) { return typeof id === 'string' && BY_ID[id] ? BY_ID[id] : null; }
 
+  /* Окно лота на рендере: гомография единичного квадрата плоскости фасада
+     (tl, tr, br, bl) → четырёхугольник окна с полями padU / padV внутри ячейки. */
+  function homography(q) {
+    var x0 = q[0][0], y0 = q[0][1], x1 = q[1][0], y1 = q[1][1], x2 = q[2][0], y2 = q[2][1], x3 = q[3][0], y3 = q[3][1];
+    var dx1 = x1 - x2, dx2 = x3 - x2, dy1 = y1 - y2, dy2 = y3 - y2;
+    var sx = x0 - x1 + x2 - x3, sy = y0 - y1 + y2 - y3;
+    var den = dx1 * dy2 - dy1 * dx2;
+    var g = (sx * dy2 - sy * dx2) / den, h = (dx1 * sy - dy1 * sx) / den;
+    return { a: x1 - x0 + g * x1, b: x3 - x0 + h * x3, c: x0, d: y1 - y0 + g * y1, e: y3 - y0 + h * y3, f: y0, g: g, h: h };
+  }
+  function hmap(H, u, v) { var w = H.g * u + H.h * v + 1; return [(H.a * u + H.b * v + H.c) / w, (H.d * u + H.e * v + H.f) / w]; }
+  function secOf(corp, sect) {
+    var b = HOUSE.filter(function (x) { return x.k === corp; })[0];
+    return b ? b.sec.filter(function (s) { return s.i === sect; })[0] || null : null;
+  }
+  function windowQuad(pl, sc, l, H) {
+    H = H || homography(pl.q);
+    var rows = sc.to - sc.from + 1, cw = 1 / sc.cols, rh = 1 / rows;
+    var u0 = l.x * cw + cw * pl.padU, u1 = (l.x + l.span) * cw - cw * pl.padU;
+    var v0 = (sc.to - l.floor) * rh + rh * pl.padV, v1 = (sc.to - l.floor + 1) * rh - rh * pl.padV;
+    return [hmap(H, u0, v0), hmap(H, u1, v0), hmap(H, u1, v1), hmap(H, u0, v1)];
+  }
+  /* ракурс и окно квартиры, если её секция видна на одном из рендеров */
+  function windowOf(l) {
+    for (var i = 0; i < FACADE.length; i++) {
+      var v = FACADE[i];
+      if (v.corp !== l.corp) continue;
+      var pl = v.planes.filter(function (p) { return p.sect === l.sect; })[0];
+      if (!pl) continue;
+      return { view: v, pts: windowQuad(pl, secOf(l.corp, l.sect), l) };
+    }
+    return null;
+  }
+
   function stats() {
     var open = LOTS.filter(isOpen);
     var byType = [0, 1, 2, 3, 4].map(function (r) {
@@ -227,6 +261,7 @@
     SITE: SITE, TYPES: TYPES, ROOM_NAMES: ROOM_NAMES, FINISHES: FINISHES, STATUS: STATUS,
     BLD: BLD, HOUSE: HOUSE, LOTS: LOTS, FACADE: FACADE,
     find: find, stats: stats, isOpen: isOpen, perM: perM, roomsFor: roomsFor,
+    homography: homography, secOf: secOf, windowQuad: windowQuad, windowOf: windowOf,
     money: money, num: num, area: area, plural: plural,
     planSrc: planSrc, lotHref: lotHref, lotTitle: lotTitle, lotPlace: lotPlace, lotLabel: lotLabel
   };

@@ -10,31 +10,16 @@
   var S = { v: 0, rooms: 'all', band: 'all', free: false, ov: true, sel: null, hover: null, limit: 14 };
   var narrow = matchMedia('(max-width: 900px)');
 
-  /* гомография единичного квадрата в четырёхугольник (tl, tr, br, bl) */
-  function homography(q) {
-    var x0 = q[0][0], y0 = q[0][1], x1 = q[1][0], y1 = q[1][1], x2 = q[2][0], y2 = q[2][1], x3 = q[3][0], y3 = q[3][1];
-    var dx1 = x1 - x2, dx2 = x3 - x2, dy1 = y1 - y2, dy2 = y3 - y2;
-    var sx = x0 - x1 + x2 - x3, sy = y0 - y1 + y2 - y3;
-    var den = dx1 * dy2 - dy1 * dx2;
-    var g = (sx * dy2 - sy * dx2) / den, h = (dx1 * sy - dy1 * sx) / den;
-    return { a: x1 - x0 + g * x1, b: x3 - x0 + h * x3, c: x0, d: y1 - y0 + g * y1, e: y3 - y0 + h * y3, f: y0, g: g, h: h };
-  }
-  function hmap(H, u, v) { var w = H.g * u + H.h * v + 1; return [(H.a * u + H.b * v + H.c) / w, (H.d * u + H.e * v + H.f) / w]; }
-
   /* собираем окна для каждого ракурса из секций data.js */
   var VIEWS = D.FACADE.map(function (view) {
-    var house = D.HOUSE.filter(function (b) { return b.k === view.corp; })[0];
     var items = [];
     view.planes.forEach(function (pl, pi) {
-      var sc = house.sec.filter(function (s) { return s.i === pl.sect; })[0];
-      var H = homography(pl.q);
-      var rows = sc.to - sc.from + 1, cols = sc.cols, cw = 1 / cols, rh = 1 / rows;
+      var sc = D.secOf(view.corp, pl.sect);
+      var H = D.homography(pl.q);
       sc.floors.forEach(function (r) {
         r.row.forEach(function (l) {
           if (!l) return;
-          var u0 = l.x * cw + cw * pl.padU, u1 = (l.x + l.span) * cw - cw * pl.padU;
-          var v0 = (sc.to - l.floor) * rh + rh * pl.padV, v1 = (sc.to - l.floor + 1) * rh - rh * pl.padV;
-          var p = [hmap(H, u0, v0), hmap(H, u1, v0), hmap(H, u1, v1), hmap(H, u0, v1)];
+          var p = D.windowQuad(pl, sc, l, H);
           items.push({ lot: l, plane: pi, pts: p.map(function (x) { return x[0].toFixed(1) + ',' + x[1].toFixed(1); }).join(' '),
             cx: (p[0][0] + p[1][0]) / 2, cy: (p[0][1] + p[1][1] + p[2][1] + p[3][1]) / 4, top: Math.min(p[0][1], p[1][1]) });
         });
@@ -135,7 +120,7 @@
     var list = pool();
     var n = list.length;
     $('[data-found]').textContent = n;
-    $('[data-found-word]').textContent = D.plural(n, ['квартира', 'квартиры', 'квартир']) + ' ' + (n % 10 === 1 && n % 100 !== 11 ? 'подходит' : 'подходят');
+    $('[data-found-word]').textContent = D.plural(n, ['квартира', 'квартиры', 'квартир']) + (filtersOn() ? ' ' + (n % 10 === 1 && n % 100 !== 11 ? 'подходит' : 'подходят') : ' на этом ракурсе');
     var box = $('[data-list]');
     if (!n) {
       box.innerHTML = '<div class="pk__empty">На этом ракурсе под фильтр ничего не попало.<br>Смените ракурс или ослабьте фильтры.<br><button class="btn btn--soft btn--sm" type="button" data-clear>Сбросить фильтры</button></div>';

@@ -433,6 +433,7 @@
           '<h3 class="form-card__title">Заявка принята</h3>' +
           '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
           (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в корпусе ' + lot.corp : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
+          (D.SITE.leadEndpoint ? '' : '<p class="form__demo">Демонстрационный режим: заявка сохранена только в этом браузере и в отдел продаж не отправлена. Чтобы связаться сейчас, позвоните ' + D.SITE.phone + '.</p>') +
           '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
           '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
         body.hidden = true;
