@@ -334,11 +334,10 @@ a:hover .ico-ring{border-color:var(--ink);background:var(--ink);color:var(--plas
 .lead-band__copy .h3,.lead-band__copy .h2{max-width:18ch}
 .lead-band__copy .lead{margin-top:clamp(16px,2.4vh,24px);max-width:42ch}
 .showroom{display:grid;gap:6px;margin-top:clamp(24px,4vh,40px);max-width:440px;padding:18px 20px;border:1px solid var(--brass);border-radius:2px}
-.showroom__plate{justify-self:start;padding:5px 10px;border-radius:2px;background:var(--brass);color:var(--ink);font:500 11px/1.2 var(--f-disp);letter-spacing:.12em;text-transform:uppercase}
-.showroom__where{margin-top:8px;font:300 clamp(1.1rem,1.6vw,1.35rem)/1.25 var(--f-disp);letter-spacing:-.015em;color:var(--on-dark)}
+.showroom__where{font:300 clamp(1.1rem,1.6vw,1.35rem)/1.25 var(--f-disp);letter-spacing:-.015em;color:var(--on-dark)}
 .showroom__where small{display:block;margin-top:6px;font:500 13px/1.4 var(--f-sans);letter-spacing:0;color:var(--on-dark-3)}
 .showroom__hours{font-size:14.5px;color:var(--on-dark-2)}
-.showroom__hours b{color:var(--led);font-weight:800}
+.showroom__hours b{color:var(--on-dark);font-weight:800}
 .contacts{display:grid;margin-top:clamp(16px,2.4vh,24px);max-width:440px;border-top:1px solid var(--room-line)}
 .contacts a,.contacts div{display:flex;align-items:center;gap:14px;min-height:52px;padding:8px 0;border-bottom:1px solid var(--room-line);font-size:15px;font-weight:600;color:var(--on-dark)}
 .contacts a:hover{color:var(--brass-lite)}
