@@ -1,347 +1,354 @@
 ---
 name: MEGA KHUJAND
-description: Sales site for a light-stone residential complex on the Syr Darya embankment; the building itself is the interface.
+description: The sales-office model under glass — graphite vitrine, plaster model, brass plates, and a warm light in every window that can still be bought.
 colors:
-  paper: "#F4EFE5"
-  sand: "#EAE2D4"
-  card: "#F9F5EC"
-  well: "#EFE8DA"
-  field: "#FCFAF5"
-  line: "#DCD2C0"
-  line-2: "#E2D9C7"
-  line-3: "#E7DFCE"
-  line-ctl: "#D8CEBB"
-  ink: "#1A1815"
-  ink-hover: "#2F2A23"
-  ink-2: "#4C463C"
-  ink-3: "#5F574B"
-  bronze: "#9C7A4D"
-  bronze-ink: "#7A5C33"
-  bronze-2: "#C9A97E"
-  night: "#100F0C"
-  night-2: "#141310"
-  pine-top: "#255043"
-  pine: "#1C4034"
-  pine-deep: "#163329"
-  gold: "#D2AE79"
-  lit-window: "#F2DFB6"
-  sale-fill: "#E9D6B3"
-  sale-ink: "#553C1B"
-  danger: "#9A3A24"
+  room: "#121416"
+  room-2: "#1A1D20"
+  room-line: "rgba(238,240,238,.13)"
+  room-line-2: "rgba(238,240,238,.26)"
+  plaster: "#EEF0EE"
+  plaster-2: "#E3E6E3"
+  plaster-3: "#F7F8F7"
+  line: "#C9CECB"
+  line-2: "#D9DDDA"
+  ink: "#121416"
+  ink-2: "#3B4144"
+  ink-3: "#596164"
+  brass: "#B08D57"
+  brass-hi: "#C09C63"
+  brass-lite: "#D8BA84"
+  brass-ink: "#76582A"
+  led: "#FFD58A"
+  led-deep: "#F2B85B"
+  danger: "#A8391F"
 typography:
   display:
-    fontFamily: "Prata, Georgia, 'Times New Roman', serif"
-    fontSize: "clamp(2.3rem, 5.6vw, 5rem)"
-    fontWeight: 400
-    lineHeight: 0.98
-    letterSpacing: "-0.02em"
+    fontFamily: "Unbounded, 'Arial Black', system-ui, sans-serif"
+    fontSize: "100px (SVG wordmark, fitted to the viewport)"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-2px"
   headline:
-    fontFamily: "Prata, Georgia, 'Times New Roman', serif"
-    fontSize: "clamp(2.1rem, 4.4vw, 4.1rem)"
-    fontWeight: 400
-    lineHeight: 1.05
-    letterSpacing: "-0.018em"
+    fontFamily: "Unbounded, 'Arial Black', system-ui, sans-serif"
+    fontSize: "clamp(1.75rem, 3.5vw, 3.25rem)"
+    fontWeight: 300
+    lineHeight: 1.08
+    letterSpacing: "-0.025em"
+  page-title:
+    fontFamily: "Unbounded, 'Arial Black', system-ui, sans-serif"
+    fontSize: "clamp(2.1rem, 5vw, 4.4rem)"
+    fontWeight: 300
+    lineHeight: 1
+    letterSpacing: "-0.035em"
   title:
-    fontFamily: "Prata, Georgia, 'Times New Roman', serif"
-    fontSize: "clamp(1.45rem, 2.4vw, 2.3rem)"
+    fontFamily: "Unbounded, 'Arial Black', system-ui, sans-serif"
+    fontSize: "clamp(1.15rem, 1.7vw, 1.5rem)"
     fontWeight: 400
-    lineHeight: 1.12
-    letterSpacing: "-0.014em"
+    lineHeight: 1.18
+    letterSpacing: "-0.015em"
   body:
     fontFamily: "Manrope, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.6
     fontFeature: "lnum"
-  lead:
+  figure:
     fontFamily: "Manrope, system-ui, sans-serif"
-    fontSize: "clamp(15px, 1.15vw, 17.5px)"
-    fontWeight: 400
-    lineHeight: 1.68
-  numeric:
-    fontFamily: "Manrope, system-ui, sans-serif"
-    fontSize: "clamp(18px, 1.4vw, 21px)"
-    fontWeight: 600
-    lineHeight: 1.14
-    letterSpacing: "-0.015em"
+    fontSize: "17px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.01em"
     fontFeature: "lnum, tnum"
   label:
-    fontFamily: "Manrope, system-ui, sans-serif"
+    fontFamily: "Unbounded, 'Arial Black', system-ui, sans-serif"
     fontSize: "11px"
-    fontWeight: 600
+    fontWeight: 500
     lineHeight: 1.4
-    letterSpacing: "0.22em"
-  control:
+    letterSpacing: "0.14em"
+  button:
+    fontFamily: "Unbounded, 'Arial Black', system-ui, sans-serif"
+    fontSize: "11.5px"
+    fontWeight: 500
+    lineHeight: 1.2
+    letterSpacing: "0.09em"
+  key:
     fontFamily: "Manrope, system-ui, sans-serif"
-    fontSize: "14.5px"
+    fontSize: "13.5px"
     fontWeight: 600
-    lineHeight: 1
+    lineHeight: 1.1
 rounded:
-  xs: "8px"
-  sm: "12px"
-  md: "18px"
-  lg: "22px"
-  xl: "24px"
-  pill: "999px"
+  plate: "2px"
+  machined: "3px"
+  led: "50%"
 spacing:
-  gutter: "clamp(18px, 3.4vw, 54px)"
-  section: "clamp(66px, 11vh, 150px)"
-  card-pad: "20px"
-  stack-sm: "16px"
-  gap-grid: "clamp(12px, 1.3vw, 18px)"
+  gutter: "clamp(16px, 3.4vw, 56px)"
+  header: "64px"
+  section: "clamp(64px, 11vh, 140px)"
+  key-gap: "6px"
+  action-gap: "10px"
+  card-inset: "18px"
 components:
-  button-dark:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    typography: "{typography.control}"
-    rounded: "{rounded.pill}"
-    padding: "0 28px"
+  button-primary:
+    backgroundColor: "{colors.brass}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.machined}"
+    padding: "0 26px"
     height: "52px"
-  button-dark-hover:
-    backgroundColor: "{colors.ink-hover}"
-    textColor: "{colors.paper}"
-  button-line:
+  button-primary-hover:
+    backgroundColor: "{colors.brass-hi}"
+    textColor: "{colors.ink}"
+  button-outline:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "0 28px"
+    typography: "{typography.button}"
+    rounded: "{rounded.machined}"
+    padding: "0 26px"
     height: "52px"
-  button-line-hover:
+  button-outline-hover:
     backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
+    textColor: "{colors.plaster}"
   button-soft:
-    backgroundColor: "{colors.card}"
+    backgroundColor: "{colors.plaster-3}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "0 28px"
+    typography: "{typography.button}"
+    rounded: "{rounded.machined}"
+    padding: "0 26px"
     height: "52px"
-  button-light:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "0 28px"
-    height: "52px"
-  segment:
-    backgroundColor: "#EDE6D9"
-    textColor: "{colors.ink-3}"
-    rounded: "14px"
-    padding: "5px"
-  segment-active:
+  key:
+    backgroundColor: "{colors.plaster-3}"
+    textColor: "{colors.ink-2}"
+    typography: "{typography.key}"
+    rounded: "{rounded.machined}"
+    padding: "0 13px"
+    height: "42px"
+  key-pressed:
     backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    rounded: "10px"
+    textColor: "{colors.plaster}"
+  key-dark-pressed:
+    backgroundColor: "{colors.plaster}"
+    textColor: "{colors.ink}"
+  plate:
+    backgroundColor: "{colors.brass}"
+    textColor: "{colors.ink}"
+    typography: "{typography.label}"
+    rounded: "{rounded.plate}"
+    padding: "5px 11px"
+    height: "28px"
+  header-brand:
+    backgroundColor: "transparent"
+    textColor: "{colors.plaster}"
+    rounded: "{rounded.plate}"
+    padding: "0 12px"
     height: "38px"
-  chip:
-    backgroundColor: "{colors.card}"
-    textColor: "{colors.ink-3}"
-    rounded: "{rounded.sm}"
-    padding: "0 16px"
-    height: "44px"
-  chip-selected:
-    backgroundColor: "rgba(201,169,126,.16)"
-    textColor: "{colors.ink}"
+  header:
+    backgroundColor: "{colors.room}"
+    textColor: "{colors.plaster}"
+    height: "64px"
   input:
-    backgroundColor: "{colors.field}"
+    backgroundColor: "#FCFCFC"
     textColor: "{colors.ink}"
-    rounded: "{rounded.sm}"
-    padding: "0 15px"
+    rounded: "{rounded.machined}"
+    padding: "0 14px"
     height: "50px"
   lot-card:
-    backgroundColor: "{colors.card}"
+    backgroundColor: "{colors.plaster-3}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "20px"
-  form-card:
-    backgroundColor: "{colors.card}"
+    rounded: "{rounded.machined}"
+    padding: "18px"
+  price-card:
+    backgroundColor: "{colors.room}"
+    textColor: "{colors.plaster}"
+    rounded: "{rounded.machined}"
+    padding: "clamp(18px, 2.4vw, 26px)"
+  grid-cell-free:
+    backgroundColor: "{colors.led}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.xl}"
-    padding: "clamp(22px, 2.6vw, 34px)"
-  service-card:
-    backgroundColor: "{colors.pine}"
-    textColor: "{colors.paper}"
-    padding: "clamp(130px, 19vh, 200px) clamp(22px, 2.4vw, 40px) clamp(34px, 5vh, 58px)"
-  status-free:
-    backgroundColor: "rgba(201,169,126,.16)"
-    textColor: "{colors.bronze-ink}"
-    rounded: "15px"
-    height: "30px"
-  status-sale:
-    backgroundColor: "{colors.sale-fill}"
-    textColor: "{colors.sale-ink}"
-    rounded: "15px"
-    height: "30px"
+    rounded: "{rounded.plate}"
+    height: "34px"
+  grid-cell-sale:
+    backgroundColor: "{colors.brass}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.plate}"
+    height: "34px"
+  legend-pin:
+    backgroundColor: "{colors.brass}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.led}"
+    size: "26px"
 ---
 
 # Design System: MEGA KHUJAND
 
 ## Overview
 
-**Creative North Star: "The House Read by Its Evening Light"**
+**Creative North Star: "The Model Under Glass"**
 
-The site is built from the building's own materials: cream limestone grounds, sand-coloured alternating scenes, graphite ink, a single bronze accent, and night renders whose lit windows are the only warm glow. A buyer reads the project through its stone, arches and windows, and picks a flat on the facade or the availability grid rather than in a spreadsheet. The system refuses the category's dark "luxury void" as a default ground (night appears only as closing bands, the plan box and the evening theme) and refuses the generic listing grid as the main way in.
+The site behaves like the sales-office model in its vitrine: a graphite room, a white plaster model of the building, brass plates that name things, and a manager's switch that lights the windows still for sale. Every surface is either the room (dark graphite, where the building is shown at dusk) or the model (cool plaster white, where plans, figures and forms are read). The two alternate down the page; they never blend.
 
-Density moves with the job. Persuade scenes on the home page are slow, full-bleed and pinned, with large Prata headlines and photographs cut into organic river, bend, lens and arch silhouettes. Operate surfaces (catalog, flat page, building grid, facade picker) are calm and tight: 1px warm rules, tabular numerals, pill and segmented controls, cards on cream. A drifting foliage-shadow layer (multiply blend) sits behind every page, so even the dense surfaces feel like they stand in a courtyard.
+Light carries meaning, not mood. Warm LED yellow appears only where a flat can be bought: lit windows on the real dusk render, status dots, the dot on a pressed key, the free cells of the building grid. Brass is the engraved-metal voice for everything that labels or commits: plates, primary buttons, numbered legend pins, the discount status. Nothing glows, nothing is gradated for atmosphere, nothing is a pill.
+
+Form is machined rather than soft: 3px corners on anything that holds content, 2px on plates and tags, 1px engraved rules as the main structural device, and circles reserved for LEDs and numbered pins. Density is that of a sales tool: tabular figures, compact keys, lists ruled like a lobby directory.
 
 **Key Characteristics:**
-- Cream stone and sand grounds; graphite for text and primary actions; bronze as the only accent.
-- Prata 400 for every display line; Manrope for everything else, with tabular lining numerals wherever a number is compared.
-- Real renders cut by organic clip-path masks (river, bend, lens, arch), never boxed in hard rectangles on Persuade scenes.
-- Pill buttons, segmented controls and 1px warm rules; depth from tone, with warm diffuse shadows only on lifted or floating elements.
-- Night renders close the story, always carrying a light form card.
-- One rAF-driven scroll loop; pinned scenes only at 900px and up, never under reduced motion.
+- Two materials only: graphite room (#121416) and plaster model (#EEF0EE), alternating by section.
+- LED yellow means "available"; brass means "labelled or chosen by the seller".
+- Unbounded wide caps for plates, labels and buttons; Unbounded Light for headlines; Manrope for reading and every number.
+- Machined 3px corners, 1px rules, circular LEDs; no pills, no gradients, no glow.
+- Keys with an LED dot are the single on/off control across filters, form options and consoles.
 
 ## Colors
 
-A warm, low-chroma stone palette with one metal accent and two deliberate dark worlds (night and pine).
+A cool, near-neutral pair of graphite and plaster, with two warm metals doing all the signalling: brass for naming, LED for availability.
 
 ### Primary
-- **Graphite Ink** (ink): the headline and primary-action colour. Filled pill buttons, selected segments, checked options, active table rows. Hover deepens to Warm Graphite (ink-hover).
+- **Engraved Brass** (#B08D57): primary buttons, plates (plan captions, map tags, tooltips over the render), numbered legend pins, the discount status and discounted grid cells, the brass frame of the header brand, the 1px rules of the service directory, the active-nav underline. Hover lifts to **Polished Brass** (#C09C63).
+- **Brass on Dark** (#D8BA84): brass-toned text and icons on graphite (menu hints, contact icons, plan-box label).
+- **Brass Ink** (#76582A): brass-toned text on plaster (link hover, discounted drawer label), chosen for contrast.
 
 ### Secondary
-- **Weathered Bronze** (bronze): lines, fills and progress only: the eyebrow rule, range-slider fill, availability bar, service rail, active chapter segment, selected plan thumbnail, focus-ring glow on inputs. It is 3.1 to 3.8:1 on the light grounds, so it never carries text.
-- **Bronze Ink** (bronze-ink): the only bronze allowed as text. Lot areas, current nav item, link hover, available status, chapter numbers, focus outline (2px, 3px offset).
-- **Pale Bronze** (bronze-2): outlines of active and hovered controls (chips, segments, lot cards, section buttons, free cells on the grid). Its 16% tint is the selected-state fill.
-
-### Tertiary
-- **Pine** (pine-top to pine to pine-deep, top-to-bottom gradient): the service cards only. **Pavilion Gold** (gold) draws their line icons and the diamond ornament; body copy on pine is a pale sage.
-- **Night** (night, night-2): closing lead bands, the contact finale, footer, the dark plan box on the flat page, and shades over renders. Text on night uses paper at 100/82/68% opacity.
-- **Lit Window** (lit-window): the evening theme of the building grid, where available cells glow like windows (soft 12 to 14px bloom) and sold cells fade into the dark facade.
+- **Window LED** (#FFD58A): the light in a free flat's window. Lit polygons on the dusk facade, free cells on the evening grid, pressed-key dots on dark, the free count in the model console and picker bar.
+- **Deep LED** (#F2B85B): the same signal where it must read on plaster: pressed-key and chip dots on light, the price-tag LED on lot cards, the free-status dot, the free-share bar.
 
 ### Neutral
-- **Cream Stone** (paper): the page ground and the default scene.
-- **Sand** (sand): alternating scenes (atmosphere, plans, panorama, picker stage, 3D stage) and embed placeholders.
-- **Card Linen** (card): cards, panels, sidebars, drawers, sticky bar, the lead form card.
-- **Plan Well** (well): the recessed ground behind floor plans and plan thumbnails.
-- **Field White** (field): text inputs and option pills inside forms.
-- **Warm Rules** (line, line-2, line-3, line-ctl): 1px dividers from strongest to faintest; line-ctl borders form controls.
-- **Ink 2** (ink-2): running body copy and leads.
-- **Ink 3** (ink-3): secondary text, meta, labels, placeholders for UI state. Chosen to hold at least 4.5:1 on every light ground (5.5:1 on sand, 6.5:1 on card).
-- **Sale Parchment** (sale-fill with sale-ink): discounted-lot tags, statuses and grid cells. **Danger** (danger): field errors and the form alert only.
+- **Vitrine Graphite** (#121416): the room. Header, footer, menu, the model section, dark content bands, price card, drawer foot. The same value is **Ink**, the text colour on plaster, so the room and the type are one material.
+- **Podium Graphite** (#1A1D20): panels inside the room: service band, picker bar and side panel, image wells.
+- **Room Rules** (rgba(238,240,238,.13) / .26): engraved 1px rules and key outlines on graphite; the stronger value outlines interactive elements.
+- **Model Plaster** (#EEF0EE): the page ground and text colour on dark.
+- **Plaster in Shadow** (#E3E6E3): plan boards, filter band, sold cells, plan thumbnails.
+- **Plaster Face** (#F7F8F7): tiles on the ground: lot cards, keys, spec grids, the form card, the grid side panel.
+- **Plaster Rules** (#C9CECB, lighter #D9DDDA): 1px rules and tile borders on plaster; also the unlit LED.
+- **Reading Ink** (#3B4144) and **Quiet Ink** (#596164): body copy and secondary text on plaster (the latter at >= 5:1).
+- **Oxide Red** (#A8391F): form errors only.
 
 ### Named Rules
-**The Bronze Speaks Through Ink Rule.** Bronze (#9C7A4D) draws lines and fills; any bronze-coloured word uses bronze-ink. If a new bronze element carries text, it is bronze-ink or it is wrong.
+**The Lit Window Rule.** LED yellow means "this flat can be bought" and nothing else. If an element is not a free or discounted flat, a count of them, or a key that is switched on, it does not get LED.
 
-**The Retired Greys Rule.** The earlier greys (#9A9083, #A79B84, #8A8073) failed contrast and are retired. Secondary text is ink-3; there is no lighter text grey on light grounds.
+**The Brass Plate Rule.** Brass is flat engraved metal: solid fill with ink text, or a 1px frame. Never a gradient, sheen or glow.
 
-**The Night Is a Close Rule.** Night grounds end a story (lead band, contact finale, footer) or frame a drawing (plan box). A light scene is the default; a night section always carries either a real render or a light form card.
+**The Two Rooms Rule.** A section is either graphite room or plaster model. Content never sits on a photo-tinted or mid-grey band between them.
 
 ## Typography
 
-**Display Font:** Prata 400 (self-hosted, latin + cyrillic), with Georgia and Times New Roman
-**Body Font:** Manrope variable 200 to 800 (self-hosted, latin + cyrillic), with system-ui
+**Display Font:** Unbounded (with 'Arial Black', system-ui)
+**Body Font:** Manrope (with system-ui, Segoe UI, Roboto, Arial)
 
-**Character:** A high-contrast, stone-cut Didone-like serif for names and promises, set against a clean geometric sans that does the operating work. Prata is only ever used at weight 400; emphasis comes from size, not weight.
+**Character:** Unbounded's wide geometric caps read as cut lettering on a plate; its Light weight gives headlines an architectural, drawn quality. Manrope is quiet and legible and carries every figure in tabular lining numerals. Both are self-hosted with Cyrillic subsets.
 
 ### Hierarchy
-- **Display** (Prata 400, clamp(2.3rem, 5.6vw, 5rem), 0.98): inner-page titles; the hero h1 runs clamp(1.9rem, 3.4vw, 3.6rem) under the wordmark; the service title reaches 6rem at 0.94.
-- **Headline** (Prata 400, clamp(2.1rem, 4.4vw, 4.1rem), 1.05, -0.018em): section headlines, balanced wrap. A step down (clamp(1.8rem, 3.6vw, 3.2rem)) serves lead-band and chapter headlines.
-- **Title** (Prata 400, clamp(1.45rem, 2.4vw, 2.3rem), 1.12): form-card titles, drawer lot numbers, service card names, lot type (19px on cards). Big figures in stats and free-lot counts are also Prata, with lining numerals.
-- **Body** (Manrope 400, 16px, 1.6): running copy. Leads are 15 to 17.5px at 1.68, capped at 48ch; chapter copy caps at 38ch.
-- **Numeric** (Manrope 600 to 700, tabular lining): prices, areas, floors, spec values, table cells. Prices never go in Prata except the picker's selected price.
-- **Label** (Manrope 600, 11px, 0.14 to 0.22em, uppercase, ink-3): form group names, spec terms, table headers, status pills.
-- **Control** (Manrope 600, 13 to 15px): buttons, segments, options.
+- **Display** (Unbounded 800, fitted SVG wordmark, -2px): the MEGA KHUJAND wordmark cut through the plaster in the home hero. One use only.
+- **Page title** (Unbounded 300, clamp(2.1rem, 5vw, 4.4rem), 1.0, -0.035em): inner-page H1s; flat H1 is clamp(1.9rem, 4vw, 3.4rem).
+- **Headline** (Unbounded 300, clamp(1.75rem, 3.5vw, 3.25rem), 1.08, -0.025em): section H2s, balanced wrap. A step down (clamp(1.45rem, 2.6vw, 2.35rem)) for panel headings.
+- **Title** (Unbounded 400, clamp(1.15rem, 1.7vw, 1.5rem), 1.18): card, form and board titles; list-item names at 1–1.2rem.
+- **Body** (Manrope 400, 16px, 1.6): running text; leads at 15.5–17px with max 52ch; small print 13px.
+- **Figure** (Manrope 700–800, 14.5–17px, tabular): prices, areas, counts, spec values. Large figures (price card, free count) switch to Unbounded 300.
+- **Label** (Unbounded 500, 11px, 0.12–0.14em, uppercase): field and spec labels, plates, statuses, table heads. 11px is the floor for any plate or label text.
+- **Button** (Unbounded 500, 11.5px, 0.09em, uppercase; 11px on small buttons).
+- **Key** (Manrope 600, 13.5px): text on keys, chips, section buttons.
 
 ### Named Rules
-**The Tabular Figures Rule.** Every number a buyer compares (price, price per m², area, floor, lot count in a list) sets in lining tabular numerals. Body copy keeps lining proportional numerals.
+**The Engraved Caps Rule.** Wide uppercase is for things that are engraved: plates, labels, buttons, directory names. Headlines are Unbounded Light in sentence case, never caps.
 
-**The Sixteen-Pixel Field Rule.** Any text input, select or range box is at least 16px on touch widths, so iOS never zooms the form.
+**The Tabular Figures Rule.** Every price, area, floor and count is set in lining tabular numerals so columns and tags align like a price list.
 
 ## Layout
 
-A fluid gutter (clamp(18px, 3.4vw, 54px)) holds every page edge; there is no fixed max-width container on Persuade scenes, which run full-bleed. Sections breathe on a viewport-relative rhythm (clamp(66px, 11vh, 150px) top and bottom). Section heads and two-column scenes use auto-fit grids with a 300 to 340px minimum, so they fold to one column without breakpoint code. Lot lists auto-fill at a 290px minimum (250px for "similar").
+Full-width sections with a fluid side gutter (clamp(16px, 3.4vw, 56px)) and a sticky 64px header (58px under 760px). Sections pad vertically by clamp(64px, 11vh, 140px). Section heads are an auto-fit two-column grid: headline left, lead right, bottom-aligned; single column on narrow screens.
 
-Home-page scenes pin at 900px and up: the hero (250vh), atmosphere chapters (330vh), panorama (130vh) and infrastructure (460vh) use sticky stages driven by one requestAnimationFrame scroll loop. Below 900px and under reduced motion they become ordinary stacked sections. Operate pages use a side panel plus a main board (building grid: 260 to 320px sticky side; picker: 290 to 370px list), collapsing to one column at 980px and 900px. The header nav folds into a full-screen dialog menu below 1200px; on the home page a floating glass pill nav appears once the hero is passed.
+Content grids are asymmetric two-column splits (for example 0.95fr/1.35fr for plans, 1.45fr/1fr for materials, 1.6fr/1fr for the site legend) that collapse to one column at 900px. Lot grids auto-fill at a 280px minimum. The building grid page uses a 260–320px sticky side panel beside the board, stacked below 980px. The picker is a full-height stage with a 290–370px side panel from 901px.
 
-Touch targets are at least 44px everywhere; on coarse pointers segments and small chips grow to 44px and grid cells to 40px tall.
+The home hero is a pinned scroll clock from 900px (hero height 330vh, stage sticky under the header): the wordmark zooms until the viewer flies through the letters, the plaster fades, the dusk facade settles, free windows light floor by floor from the bottom, then the key console rises. Under 900px or with reduced motion, the plaster card and the model stack without a pin and windows light once on entry.
+
+Rhythm is tight inside components (6px between keys, 10px between actions, 18px card insets) and generous between sections.
 
 ## Elevation & Depth
 
-Depth is mostly tonal: cream, sand, card and well stack as four close values separated by 1px warm rules. Shadows are warm (rgb 60,52,38), diffuse and reserved for things that lift or float: a hovered lot card, the floating pill nav and sticky bar, the drawer, the picker frame, a hovered grid cell. On night grounds the form card takes a deeper black shadow. A second depth plane is atmospheric: the foliage layer (six blurred radial blobs, multiply, 26% opacity, 17% on mobile) drifts behind all content on 40 to 62s loops.
+Flat by construction. Depth comes from the two materials (graphite behind, plaster in front), from tiles that sit on a slightly different plaster tone with a 1px rule, and from the lit render itself. There is no resting shadow anywhere.
 
 ### Shadow Vocabulary
-- **Float** (`box-shadow: 0 18px 50px rgba(60,52,38,.16)`): pill nav, sticky price bar.
-- **Lift** (`box-shadow: 0 16px 36px rgba(60,52,38,.1)`): hovered lot card, together with a 3px rise.
-- **Stage** (`box-shadow: 0 24px 60px rgba(60,52,38,.24)`): the facade picker frame.
-- **Drawer** (`box-shadow: -30px 0 80px rgba(60,52,38,.24)`): side lot drawer.
-- **Form on night** (`box-shadow: 0 30px 80px rgba(0,0,0,.34)`): light form card over a night render.
-- **Window glow** (`box-shadow: 0 0 14px rgba(242,223,182,.55)`): available cells in the evening grid.
+- **Overlay lift** (`box-shadow: 0 16px 40px rgba(18,20,22,.3)` on the sticky price bar; `-24px 0 60px rgba(18,20,22,.28)` on the lot drawer): only for panels that float over the page. Not for cards.
+- **Focus ring on fields** (`box-shadow: 0 0 0 3px rgba(176,141,87,.35)`): a brass ring around a focused input or range box.
 
 ### Named Rules
-**The Flat at Rest Rule.** Cards, panels and boards are flat at rest, separated by tone and a 1px rule. A shadow appears only when something floats (nav, bar, drawer, picker) or responds to a pointer.
+**The Flat Vitrine Rule.** Cards, keys, plates and buttons are flat at rest and on hover; they change fill or rule colour, never elevation. Hover on a tile darkens its 1px rule to ink.
 
 ## Shapes
 
-Two shape languages meet. UI is soft and rounded: pill buttons and nav (999px), segmented controls with nested radii (14 outer, 10 inner; 26 and 21 in pill variants), 12px fields and chips, 18px lot cards, 22px boards and sidebars, 24px form cards, embeds and plan boards. Photography is organic: renders are clipped by four objectBoundingBox paths defined once per page (river: a wavy band for wide landscape shots; bend: a softly warped rectangle for inner-page headers and chapter images; lens: an irregular oval for inset details and the 404; arch: one sweeping curve across the top of the whole service card row). Rules are 1px, warm, and never dashed.
+Machined, not soft. Content containers, buttons, keys, inputs and images take a 3px corner. Plates, tags, statuses, grid cells and tooltips take 2px. Circles are reserved for LEDs (7–8px dots), numbered legend pins (26–30px), range thumbs and the form-sent mark. There are no pills.
+
+The 1px rule is the main structural device: rows of lists, the ink rule over a lot card's price, the brass rules of the service directory, table and spec-grid hairlines (spec grids use a 1px gap over a rule-coloured ground). Map tags and tooltips over the render are brass plates with a small square notch turned 45°.
 
 ## Components
 
 ### Buttons
-Quiet, weighty pills that change colour, never shape.
-- **Shape:** full pill (999px); 52px tall, 42px small, 56px large.
-- **Primary (dark):** graphite fill, cream text, 600 weight; hover deepens to warm graphite with a soft 26px shadow; press drops 1px.
-- **Line:** 1px graphite outline, fills graphite on hover. **Soft:** card fill, warm rule outline, pale bronze outline on hover. **Light:** cream fill for night grounds. **Glass:** translucent cream outline on renders.
-- **In the hero:** after the fly-through the dark button inverts to cream and the line button to a cream outline; colour transitions run 0.6s.
-- **Link arrow:** 14px 600 text with a ringed 30px icon, 44px tall; the ring turns bronze on hover.
+Engraved plates you press.
+- **Shape:** machined corner (3px); 52px tall, 42px small, 56px large.
+- **Primary:** solid brass with ink caps text, 26px side padding; hover to polished brass; press nudges down 1px.
+- **Outline:** 1px ink frame with ink text on plaster, filling with ink on hover; on graphite the frame is plaster at 80% and fills with plaster on hover.
+- **Soft:** plaster-face fill with a plaster rule; on dark, a faint plaster wash with a room rule.
+- **Glass:** transparent with a room rule, for secondary actions over the dusk render.
+- **Disabled:** 55% opacity; a spinner replaces the label while sending.
 
-### Segmented controls and chips
-- **Segment:** a recessed tray (#EDE6D9, 1px border, 5px padding) of 38px buttons; the selected button fills graphite with cream text. Pill and glass variants float over renders with a 12px blur.
-- **Chip (filter toggle):** 44px, 12px radius, card fill, ink-3 text, with a 16px check box. Selected: pale bronze outline, 16% bronze tint, check box fills bronze-ink.
-- **Tag:** 12px, 8px radius, line-2 outline. Accent tags use the bronze tint; sale tags use sale parchment.
-- **Status pill:** 30px, uppercase 11.5px label with a 7px dot; free is bronze-ink on tint, sale is sale-ink on parchment.
+### Keys (segments, chips, section buttons, form options)
+The console switch: one control for every on/off choice.
+- **Style:** plaster-face fill, 1px plaster rule, 3px corner, 42–44px tall, Manrope 600, with a 7–8px LED dot before the label that is unlit (rule grey) when off.
+- **Pressed on plaster:** fills ink with plaster text; the dot lights LED.
+- **Pressed on graphite:** fills plaster with ink text; the dot lights deep LED.
+- **Chips:** stay unfilled when pressed; the frame darkens to ink and the dot lights deep LED.
+- **Form contact options** are the same keys in a two-column grid over hidden radios.
+
+### Plates, tags and status
+- **Plate:** solid brass, ink Unbounded caps at 11px, 2px corner, 28px min height. Used for plan captions and the discount superscript on page titles.
+- **Tag:** 2px corner, 1px rule, 12px Manrope 600; accent tag has a brass rule and brass-ink text; sale tag is solid brass.
+- **Status:** a 28px framed caps label with an 8px dot. Free: ink frame, deep-LED dot. Discount: solid brass with an LED dot. Reserved and sold: rule frame, unlit dot.
 
 ### Cards / Containers
-- **Lot card:** 18px radius, card fill, line-2 border, 20px padding. Prata type name with a bronze-ink area at top right, meta line, plan drawing on a centred stage, tags, then a ruled footer with a tabular price and a round favourite toggle. Hover: pale bronze border, 3px rise, lift shadow. Reserved lots dim to 62%. The whole card is one link via a stretched pseudo-element.
-- **Price card, spec tiles, spec grid:** card fill, line-2 border, 14 to 18px radius; uppercase label over a 600-weight tabular value.
-- **Plan box:** night-2 ground, bronze-tinted rules and tags; the one dark card on light pages.
-- **Board and side panel:** card fill, 22px radius, 1px line.
+- **Lot card:** plaster-face tile, 1px plaster rule, 3px corner, 18px insets. Head (flat type in Unbounded 400, area as a tabular figure), meta line, the plan on a centred well, tags, then a price tag: a 1px ink rule and a bold tabular price with an LED dot before it (deep LED when free, brass when discounted, a hollow ring when reserved). Reserved cards dim their plan and head to 58%. Hover or focus darkens the rule to ink; the whole card is one link.
+- **Price card:** graphite block, 3px corner, large Unbounded Light price, per-metre figure, brass primary action.
+- **Plan board / plan box:** plaster-in-shadow well with a brass plate caption on the home page; graphite box with a brass-lite label on the flat page.
+- **Spec grid:** 1px-gap grid of plaster-face cells, caps label over a tabular figure.
 
 ### Inputs / Fields
-- **Style:** 50px, field-white fill, line-ctl 1px border, 12px radius, 16px 500 text.
-- **Focus:** border turns bronze with a 3px bronze glow (22%) and the fill goes white. Global focus-visible is a 2px bronze-ink outline at 3px offset (a pale gold outline on night).
-- **Error:** danger border with a 12% danger ring; message below in 12.5px danger text; form-level alert on a danger tint.
-- **Option pills (channel choice):** 40px, 20px radius, field fill; checked fills graphite.
-- **Range slider:** two tabular number boxes over a 2px track with a bronze fill and 22px cream thumbs outlined in graphite.
+- **Style:** 50px, near-white fill (#FCFCFC), 1px plaster rule, 3px corner, 16px Manrope 600. Labels are Manrope 700 at 13px above the field.
+- **Focus:** rule turns ink with a 3px brass ring.
+- **Error:** oxide-red rule with a faint red ring; message in oxide red, 12.5px.
+- **Range:** a 2px engraved track that fills ink between two brass thumbs with ink borders, paired with boxed numeric inputs.
 
 ### Navigation
-- **Header:** brand in 11.5px tracked caps, centred 13.5px nav, phone and a small dark CTA at the end; current item in bronze-ink; 1px bottom rule. Over the hero it floats transparent and hides during the fly-through.
-- **Mobile menu:** full-screen dialog on cream; Prata links (1.55 to 2.2rem) on faint rules with tracked caps counters.
-- **Floating pill (home):** glass cream capsule, 16px blur, float shadow; rises from the bottom after the hero; active link on 22% bronze tint; on narrow screens only the CTA and a menu button remain.
-- **Sticky bar (flat page):** the same glass capsule with price and actions.
+- **Header:** graphite bar, 64px, 1px room rule below. Brand is a brass-framed plate (1px brass frame, 2px corner, Unbounded 600 caps at 12px) that fills brass on hover. Links are Manrope 600 at 14px in plaster at 80%, full plaster on hover; the current page gets a 2px brass underline. Primary action is a small brass button.
+- **Mobile:** under 1100px the links move into a full-screen graphite menu of Unbounded Light rows ruled by room lines, each with a brass-lite caps hint; the current page turns brass-lite.
+- **Footer:** graphite, 13px, brand in Unbounded caps, legal note kept visible.
 
-### Wordmark Cut-Out Hero (signature)
-A full-bleed cream field with MEGA KHUJAND set in Prata (198px in the SVG, scaled to aspect) as a mask, the night render showing through the letters. Scrolling scales the letters up to 16 times until the camera flies through them into the full render; a shade fades in and the bottom band (h1, subline, handover date, two actions) inverts to cream. Under reduced motion the stage does not pin; the final state is shown.
+### Lit Model (signature)
+The dusk render of the real facade with SVG window polygons over it. Free windows fill with the LED light in screen blend and light bottom-up by floor; hovering a window turns it near-white and raises a brass tag with type, floor, price and a link. The console below holds the count (free total in LED), brass and glass actions, and a row of room-count keys that re-light only matching windows.
 
-### Service Cards (signature)
-A horizontally snapping row of tall pine cards (pine-top to pine-deep gradient), three to a view on desktop and 84% wide on mobile, cut along the top by the single arch curve. Each carries a gold line icon, a Prata name, a gold rule-diamond-rule ornament, sage copy and a Prata index number. A bronze progress rail and round prev/next buttons (next in graphite) sit below.
+### Building Grid (signature)
+Floors by stacks in 34px cells (40px on touch) with 4px gaps and 2px corners. It opens in evening mode on a graphite board: free cells are LED, discounted cells brass, reserved cells an LED outline with LED text, sold cells a faint plaster wash with no text. The daytime "scheme" mode uses the same cells on plaster-face. A legend of 16px swatches and a free-share bar in deep LED sit in the side panel.
 
-### Night Close with Form Card (signature)
-A night render at 46% under a left-to-right night gradient; Prata headline and contact rows (48px, cream rules) on the left, a light card-linen form card (24px radius) on the right, stacking on narrow screens. The home contact finale is the same band at full viewport height.
+### Service Directory
+A lobby directory on podium graphite: rows separated by 1px brass rules top and bottom, service names in engraved Unbounded caps at 13px, descriptions in Manrope beside them.
 
-### Availability Grid (signature)
-Floors by stacks as 34px cells with 7px radius: available is cream with a pale bronze border, discounted is solid pale bronze, reserved is a bronze hatch, sold is a flat sand block with hidden text. The evening theme turns the board dark and the available cells into lit windows with a warm glow. Arrow, Home/End and PageUp/PageDown move focus; a side drawer opens the lot.
-
-### Facade Picker (signature)
-Calibrated polygons over the real render (day and dusk). Day polygons multiply bronze gradients into the facade; dusk polygons screen a warm window glow. Filtering desaturates the render and darkens non-matching windows; the hovered window lifts 3px with a stronger stroke. A glass tooltip, a glass legend and a card-linen list panel complete it.
-
-### Eyebrow Section Label (open decision)
-Tracked uppercase 11px bronze-ink text preceded by a 26px bronze rule. It names sections on the home page (architecture, atmosphere, infrastructure, plans, contacts) by the user's explicit request. It conflicts with the craft floor, which bans eyebrows, and the decision is still open with the user. It is recorded so the current build can be read, not as a pattern to extend: do not add eyebrows to new sections or new pages.
+### Numbered Legend
+Numbered brass pins (26–30px circles with a 2px graphite ring, ink Unbounded numerals) placed on the render and keyed to a ruled list of Unbounded 400 names with Manrope descriptions.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep cream (#F4EFE5) or sand (#EAE2D4) as the ground of every new scene; reach for night only to close a story or frame a drawing.
-- **Do** set every compared number (price, area, floor, count) in Manrope with lining tabular numerals.
-- **Do** colour bronze text with bronze-ink (#7A5C33) and keep bronze (#9C7A4D) for rules, fills and progress.
-- **Do** use ink-3 (#5F574B) as the lightest text on light grounds.
-- **Do** cut real renders with the river, bend, lens or arch masks on Persuade scenes, and label stock photos as stock.
-- **Do** keep controls as pills and segmented trays with a graphite selected state and pale bronze (#C9A97E) hover and active outlines.
-- **Do** keep touch targets at least 44px and form fields at 16px on touch widths.
-- **Do** route new motion through the shared rAF scroll loop, pin only at 900px and up, and under reduced motion remove movement while keeping colour and opacity changes.
+- **Do** alternate graphite room (#121416) and plaster (#EEF0EE) sections; let the render live in the graphite ones.
+- **Do** reserve LED (#FFD58A / #F2B85B) for availability: lit windows, free cells, status and price-tag dots, pressed-key dots, free counts.
+- **Do** use brass (#B08D57) as flat solid plates or 1px frames: primary buttons, plates, legend pins, discount status, the brand frame, directory rules.
+- **Do** build every on/off control as a key with an LED dot; pressed keys invert (ink on plaster, plaster on graphite).
+- **Do** end lot cards with the price tag: 1px ink rule, bold tabular price, status LED.
+- **Do** keep corners at 3px for containers and 2px for plates and cells; circles only for LEDs and pins.
+- **Do** set plate and label text at 11px minimum in Unbounded caps with 0.12–0.14em tracking.
+- **Do** set every figure in Manrope tabular lining numerals.
+- **Do** give the pinned hero a stacked, unpinned fallback under 900px and for reduced motion.
 
 ### Don't:
-- **Don't** make a dark "luxury void" the default ground of a page.
-- **Don't** use the retired greys (#9A9083, #A79B84, #8A8073) or any text lighter than ink-3 on light grounds.
-- **Don't** set prices or data tables in Prata, or set Prata in any weight but 400.
-- **Don't** add a second accent hue on light surfaces; pine and gold stay inside the service cards.
-- **Don't** add shadows to cards at rest or use cool grey or black shadows on light grounds.
-- **Don't** spread the eyebrow label to new sections or pages while its decision is open.
+- **Don't** use LED yellow for decoration, highlights, hover states or anything that is not a buyable flat or an active switch.
+- **Don't** add gradients, sheens, glows or drop shadows to brass, buttons, cards or keys.
+- **Don't** use pill shapes or large radii; nothing rounder than 3px except LEDs and pins.
+- **Don't** return to the cream, serif and bronze "warm premium" look, or set headlines in a serif or in caps.
+- **Don't** open a page on a full-bleed render with a serif headline over it; the render sits inside the letters or inside the graphite model.
+- **Don't** set label or plate text below 11px, or use Unbounded for body text.
+- **Don't** raise tiles with shadows on hover; change the rule or fill instead.
