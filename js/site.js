@@ -251,16 +251,21 @@
       var src = box.getAttribute('data-embed');
       var title = box.getAttribute('data-embed-title') || '';
       var min = +box.getAttribute('data-embed-auto') || 0;
-      function go(focus) {
-        if (box.classList.contains('is-live')) return;
-        var f = document.createElement('iframe');
-        f.src = src; f.title = title; f.loading = 'lazy';
-        f.setAttribute('allow', 'fullscreen');
-        box.appendChild(f);
-        box.classList.add('is-live');
-        if (focus) f.focus();
-      }
       var btn = box.querySelector('[data-embed-go]');
+      function go(focus) {
+        if (box.classList.contains('is-loading') || box.classList.contains('is-live')) return;
+        box.classList.add('is-loading');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin" aria-hidden="true"></span>Загружаем…'; }
+        var f = document.createElement('iframe');
+        f.src = src; f.title = title;
+        f.setAttribute('allow', 'fullscreen');
+        f.addEventListener('load', function () {
+          box.classList.remove('is-loading');
+          box.classList.add('is-live');
+          if (focus) f.focus();
+        });
+        box.appendChild(f);
+      }
       if (btn) btn.addEventListener('click', function () { go(true); });
       if (min && 'IntersectionObserver' in window) {
         var ob = new IntersectionObserver(function (en) {
@@ -401,8 +406,12 @@
         MK.store.set('mk-leads', saved.slice(-20));
         return;
       }
-      var r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
+      var ctrl = 'AbortController' in window ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
+      try {
+        var r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+      } finally { clearTimeout(timer); }
     }
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
