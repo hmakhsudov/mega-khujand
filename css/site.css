@@ -962,3 +962,11 @@ three-d-stage:not(:defined){visibility:hidden}
   .fol i{scale:2.1}
   .plans__types{display:grid;gap:10px}
 }
+.rows__in{min-width:1110px}
+.row .row__fav{padding:6px 10px;overflow:visible}
+.rows ul{margin:0}
+@media (max-width:760px){.catalog .viewsw{display:none}}
+@media (min-width:1200px){
+  .filters__grid{grid-template-columns:minmax(360px,1.2fr) repeat(3,minmax(0,1fr))}
+  .filters__grid .seg{flex-wrap:nowrap}
+}
