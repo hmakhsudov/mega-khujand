@@ -978,3 +978,33 @@ three-d-stage:not(:defined){visibility:hidden}
 .grid .cell,.grid__head .grid__col{flex-basis:var(--cw);width:var(--cw)}
 .grid .cell--w{flex-basis:calc(var(--cw) * 2 + 4px);width:calc(var(--cw) * 2 + 4px)}
 .grid .cell{height:34px}
+
+/* подбор на фасаде: кадр, состояния окон */
+.pk__fit{position:relative;width:100%}
+.pk__frame [data-shot]{position:absolute;inset:0}
+.pk__frame [data-shot] picture,.pk__frame [data-shot] img{width:100%;height:100%;object-fit:cover;transition:filter .6s ease}
+.pk__frame.is-filter [data-shot] img{filter:saturate(.72)}
+.pk__svg polygon{fill:url(#pkFreeD);stroke:rgba(64,44,20,.6);stroke-width:1.1;mix-blend-mode:multiply}
+.pk__svg polygon.st-book{fill:url(#pkBookD);stroke:rgba(78,58,34,.4)}
+.pk__svg polygon.st-sold{fill:url(#pkSoldD);stroke:rgba(40,36,30,.28)}
+.pk__svg.is-filter polygon.is-match{fill:url(#pkFreeD);stroke:rgba(58,40,18,.7);stroke-width:2}
+.pk__svg.is-filter polygon.is-out{fill:rgba(34,30,24,.5);stroke:none;pointer-events:none}
+.pk__svg.is-night polygon{fill:url(#pkFreeN);stroke:rgba(255,232,190,.44);mix-blend-mode:screen}
+.pk__svg.is-night polygon.st-book{fill:url(#pkBookN);stroke:rgba(226,190,142,.34)}
+.pk__svg.is-night polygon.st-sold{fill:url(#pkSoldN);stroke:rgba(255,255,255,.1);mix-blend-mode:multiply}
+.pk__svg.is-night.is-filter polygon.is-match{fill:url(#pkFreeN);stroke:rgba(255,236,196,.6);stroke-width:2;mix-blend-mode:screen}
+.pk__svg.is-night.is-filter polygon.is-out{fill:rgba(6,6,8,.62);stroke:none;mix-blend-mode:multiply}
+.pk__svg polygon.is-hot.is-hot{fill:url(#pkHotD);stroke:rgba(96,68,34,.85);stroke-width:2.6;mix-blend-mode:normal;transform:translateY(-3px)}
+.pk__svg.is-night polygon.is-hot.is-hot{fill:url(#pkHotN);stroke:rgba(255,246,224,.95);mix-blend-mode:screen}
+.rm .pk__svg polygon.is-hot{transform:none}
+@media (min-width:901px){
+  .pk{height:100vh;height:100svh;min-height:560px}
+  .pk__main{min-height:0}
+  .pk__stage{container-type:size;min-height:0}
+  .pk__fit{width:min(100%,calc(100cqh * 2400 / 1339))}
+  .pk__side{max-height:none;min-height:0}
+}
+.pk__grp .seg__btn{flex:0 0 auto}
+.pk__svg{cursor:pointer}
+.f3d__ctl{display:flex;flex-wrap:wrap;gap:8px}
+.f3d__side .small{margin-top:-4px}

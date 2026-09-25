@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Подбор квартиры на фасаде — MEGA KHUJAND</title>
+<meta name="description" content="Выберите квартиру прямо на рендере фасада MEGA KHUJAND: подсветка свободных, забронированных и проданных квартир, фильтры по спальням и этажу, цена и планировка.">
+<meta name="theme-color" content="#F4EFE5">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MEGA KHUJAND">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Подбор квартиры на фасаде MEGA KHUJAND">
+<meta property="og:description" content="Наведите на окно — покажем тип, этаж и цену квартиры.">
+<meta property="og:image" content="media/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/site.css">
+<script>(function(d){d.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');if(/[?&]embed=1/.test(location.search)){d.classList.add('pk-embed');var b=document.createElement('base');b.target='_top';document.head.appendChild(b)}})(document.documentElement)</script>
+</head>
+<body class="pickerpage">
+<a class="skip" href="#pk-stage">Перейти к фасаду</a>
+
+<div class="pk">
+  <header class="hdr" data-pk-hdr>
+    <a class="hdr__brand" href="index.html">Mega Khujand</a>
+    <nav class="hdr__nav" aria-label="Разделы">
+      <a href="flats.html">Квартиры</a>
+      <a href="building.html">Шахматка</a>
+      <a href="picker.html" aria-current="page">Подбор на фасаде</a>
+      <a href="index.html#arch">О проекте</a>
+    </nav>
+    <div class="hdr__end">
+      <a class="hdr__tel tnum" href="tel:+992446000000">+992 44 600 00 00</a>
+      <a class="btn btn--dark btn--sm hdr__cta" href="index.html#lead">Оставить заявку</a>
+      <a class="hdr__icon hdr__call" href="tel:+992446000000" aria-label="Позвонить: +992 44 600 00 00"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M6.6 2.8l2 3.6-1.5 1.7a10 10 0 0 0 4.8 4.8l1.7-1.5 3.6 2-.8 2.8c-.2.7-.9 1.1-1.6 1A15 15 0 0 1 2.8 5c-.1-.7.3-1.4 1-1.6z"/></svg></a>
+      <button class="hdr__icon hdr__burger" type="button" data-menu-open aria-controls="menu" aria-expanded="false" aria-label="Открыть меню"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7h14M3 13h14"/></svg></button>
+    </div>
+  </header>
+
+  <div class="pk__bar">
+    <div class="pk__grp">
+      <span class="label" id="pk-rooms-l">Спальни</span>
+      <div class="seg" role="group" aria-labelledby="pk-rooms-l" data-rooms>
+        <button class="seg__btn" type="button" data-room="all" aria-pressed="true">Все</button>
+        <button class="seg__btn" type="button" data-room="0" aria-pressed="false">Студии</button>
+        <button class="seg__btn" type="button" data-room="1" aria-pressed="false">1</button>
+        <button class="seg__btn" type="button" data-room="2" aria-pressed="false">2</button>
+        <button class="seg__btn" type="button" data-room="3" aria-pressed="false">3</button>
+        <button class="seg__btn" type="button" data-room="4" aria-pressed="false">Пентхаусы</button>
+      </div>
+    </div>
+    <div class="pk__grp">
+      <span class="label" id="pk-floor-l">Этаж</span>
+      <div class="seg" role="group" aria-labelledby="pk-floor-l" data-bands>
+        <button class="seg__btn" type="button" data-band="all" aria-pressed="true">Все</button>
+        <button class="seg__btn" type="button" data-band="low" aria-pressed="false">2–7</button>
+        <button class="seg__btn" type="button" data-band="mid" aria-pressed="false">8–13</button>
+        <button class="seg__btn" type="button" data-band="high" aria-pressed="false">14+</button>
+      </div>
+    </div>
+    <button class="chip" type="button" data-free aria-pressed="false"><span class="chip__box"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.4l2.6 2.6L10 3.6"/></svg></span>Только свободные</button>
+    <p class="pk__count" role="status" aria-live="polite"><b data-found>0</b><span data-found-word>квартир</span></p>
+  </div>
+
+  <main class="pk__main" id="main">
+    <h1 class="sr-only">Подбор квартиры на фасаде MEGA KHUJAND</h1>
+    <section class="pk__stage" id="pk-stage" aria-label="Фасад с подсветкой квартир">
+      <div class="pk__fit">
+      <div class="pk__frame" data-frame>
+        <div data-shot></div>
+        <svg class="pk__svg" viewBox="0 0 2400 1339" preserveAspectRatio="none" tabindex="0" role="group" aria-label="Квартиры на фасаде" aria-describedby="pk-help" data-svg>
+          <defs>
+            <linearGradient id="pkFreeD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C99A55" stop-opacity=".92"/><stop offset="1" stop-color="#88602E" stop-opacity=".84"/></linearGradient>
+            <linearGradient id="pkBookD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6E5231" stop-opacity=".86"/><stop offset="1" stop-color="#3C2C18" stop-opacity=".8"/></linearGradient>
+            <linearGradient id="pkSoldD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A3630" stop-opacity=".6"/><stop offset="1" stop-color="#1E1C18" stop-opacity=".52"/></linearGradient>
+            <linearGradient id="pkHotD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3DC" stop-opacity=".92"/><stop offset="1" stop-color="#F4D69A" stop-opacity=".76"/></linearGradient>
+            <linearGradient id="pkFreeN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE7B8" stop-opacity=".5"/><stop offset="1" stop-color="#D9A863" stop-opacity=".3"/></linearGradient>
+            <linearGradient id="pkBookN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C79055" stop-opacity=".36"/><stop offset="1" stop-color="#8A6437" stop-opacity=".2"/></linearGradient>
+            <linearGradient id="pkSoldN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14120F" stop-opacity=".6"/><stop offset="1" stop-color="#0B0A08" stop-opacity=".46"/></linearGradient>
+            <linearGradient id="pkHotN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF8E8" stop-opacity=".8"/><stop offset="1" stop-color="#FFD79A" stop-opacity=".52"/></linearGradient>
+          </defs>
+          <g data-polys></g>
+        </svg>
+        <div class="pk__tip" aria-hidden="true" data-tip><b></b><span></span></div>
+      </div>
+      <div class="pk__over">
+        <div class="seg seg--glass" role="group" aria-label="Ракурс" data-views></div>
+        <button class="pk__ovbtn" type="button" data-ov aria-pressed="true"><svg class="ico" viewBox="0 0 18 12" aria-hidden="true" style="width:17px;height:12px"><path d="M1 6s3-4.6 8-4.6S17 6 17 6s-3 4.6-8 4.6S1 6 1 6z"/><circle cx="9" cy="6" r="1.9"/></svg><span>Подсветка</span></button>
+        <div class="pk__legend" aria-label="Обозначения"><span><i class="pk-free"></i>свободна</span><span><i class="pk-book"></i>бронь</span><span><i class="pk-sold"></i>продана</span></div>
+      </div>
+      </div>
+      <p class="sr-only" id="pk-help">Стрелки выбирают квартиру на фасаде: влево и вправо — по стоякам, вверх и вниз — по этажам. Enter открывает карточку квартиры. Тот же список — справа.</p>
+      <noscript><p class="noscript">Подсветка строится в браузере. Включите JavaScript или откройте <a href="flats.html">каталог</a> и <a href="building.html">шахматку</a>.</p></noscript>
+    </section>
+
+    <aside class="pk__side" aria-label="Выбранная квартира и список">
+      <div class="pk__sel" data-sel aria-live="polite"></div>
+      <div class="pk__list">
+        <h2 class="sr-only">Квартиры на этом ракурсе</h2>
+        <div data-list></div>
+        <p class="pk__note" data-note></p>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<dialog class="menu" id="menu" aria-label="Меню">
+  <div class="menu__top">
+    <a class="hdr__brand" href="index.html">Mega Khujand</a>
+    <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
+  </div>
+  <nav class="menu__nav" aria-label="Меню сайта">
+    <a href="flats.html">Квартиры <small><span data-stat="open">365</span> в продаже</small></a>
+    <a href="building.html">Шахматка дома</a>
+    <a href="picker.html" aria-current="page">Подбор на фасаде</a>
+    <a href="index.html">О проекте</a>
+  </nav>
+  <div class="menu__foot">
+    <a class="btn btn--dark btn--lg btn--block" href="index.html#lead">Оставить заявку</a>
+    <a class="btn btn--soft btn--lg btn--block tnum" href="tel:+992446000000">+992 44 600 00 00</a>
+    <p class="small">Шоурум на набережной Сырдарьи · ежедневно, 9:00–19:00</p>
+  </div>
+</dialog>
+
+<script src="js/data.js"></script>
+<script src="js/site.js"></script>
+<script src="js/picker.js"></script>
+</body>
+</html>

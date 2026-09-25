@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Фрагмент фасада в 3D — MEGA KHUJAND</title>
+<meta name="description" content="Трёхмерная модель угла корпуса MEGA KHUJAND: светлый камень, витражный эркер, балкон с металлическим ограждением. Поверните фрагмент и рассмотрите материалы вблизи.">
+<meta name="theme-color" content="#EAE2D4">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MEGA KHUJAND">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Фрагмент фасада MEGA KHUJAND в 3D">
+<meta property="og:description" content="Камень, стекло и металл вблизи — угол корпуса в натуральном масштабе.">
+<meta property="og:image" content="media/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(d){d.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');if(/[?&]bare=1/.test(location.search)){d.classList.add('f3d-bare');var b=document.createElement('base');b.target='_top';document.head.appendChild(b)}})(document.documentElement)</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.min.js",
+    "three/addons/controls/OrbitControls.js": "./vendor/three/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "./vendor/three/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "./vendor/three/GLTFExporter.js"
+  }
+}
+</script>
+</head>
+<body>
+<main class="f3d" id="main">
+  <div class="f3d__stage">
+    <three-d-stage name="mega-khujand-facade-corner" background="#EAE2D4" obj-label="Скачать OBJ + MTL" glb-label="Скачать GLB"></three-d-stage>
+    <noscript><p class="f3d__err">3D-модель работает с включённым JavaScript. Рендеры фасада — на <a href="index.html#arch">главной странице</a>.</p></noscript>
+  </div>
+  <aside class="f3d__side" aria-labelledby="f3d-h">
+    <a class="f3d__back" href="index.html#arch"><span class="ico-ring"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4"/></svg></span>MEGA KHUJAND</a>
+    <p class="eyebrow">Фрагмент фасада · 1:1</p>
+    <h1 id="f3d-h">Угол корпуса, два верхних этажа</h1>
+    <p class="lead">Модель собрана по рабочему рендеру углового объёма: пилястры, витражный эркер на срезе угла, вынос балконной плиты и перфорированный экран над остеклением лестничного холла.</p>
+    <ul class="mats" aria-label="Материалы фасада — наведите или выберите, чтобы подсветить на модели">
+      <li><button class="mat" type="button" data-mat="stone-limestone" aria-pressed="false">
+        <i class="mat__sw" style="background:linear-gradient(150deg,#F1EADC,#DED4C1)" aria-hidden="true"></i>
+        <span><b>Известняк, светлый тон</b><span>Навесной вентилируемый фасад, плита 40 мм, крепёж скрыт в шве 8 мм</span></span>
+      </button></li>
+      <li><button class="mat" type="button" data-mat="glass-glazing" aria-pressed="false">
+        <i class="mat__sw" style="background:linear-gradient(150deg,#8FA9BC,#33454F)" aria-hidden="true"></i>
+        <span><b>Стеклопакет 4M1-16Ar-4-16Ar-4i</b><span>Двухкамерный, аргон, мультифункциональное покрытие; Ug 0,6 Вт/(м²·К)</span></span>
+      </button></li>
+      <li><button class="mat" type="button" data-mat="metal-mullion" aria-pressed="false">
+        <i class="mat__sw" style="background:linear-gradient(150deg,#5A544B,#2C2A26)" aria-hidden="true"></i>
+        <span><b>Стоечно-ригельный профиль</b><span>Алюминий с терморазрывом, стойка 50 мм, порошковая окраска RAL 7022</span></span>
+      </button></li>
+      <li><button class="mat" type="button" data-mat="metal-railing" aria-pressed="false">
+        <i class="mat__sw" style="background:linear-gradient(150deg,#E2E6E8,#9AA1A5)" aria-hidden="true"></i>
+        <span><b>Ограждение балкона</b><span>Нержавеющая сталь AISI 304, стойка 16 мм, поручень 42 мм, высота 1,05 м</span></span>
+      </button></li>
+    </ul>
+    <p class="small">Спецификация материалов предварительная и будет сверена с проектом.</p>
+    <div class="f3d__ctl" role="group" aria-label="Управление видом">
+      <button class="round-btn" type="button" data-orbit="-1" aria-label="Повернуть влево"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2L4 8l6 6"/></svg></button>
+      <button class="round-btn" type="button" data-orbit="1" aria-label="Повернуть вправо"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2l6 6-6 6"/></svg></button>
+      <button class="round-btn" type="button" data-zoom="-1" aria-label="Приблизить"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></button>
+      <button class="round-btn" type="button" data-zoom="1" aria-label="Отдалить"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg></button>
+      <button class="round-btn" type="button" data-reset-view aria-label="Вернуть исходный ракурс"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.5-3.6M3 3v3h3"/></svg></button>
+    </div>
+    <p class="f3d__hint"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12M4.6 4.6l6.8 6.8M11.4 4.6l-6.8 6.8"/></svg>Потяните, чтобы повернуть, колесо или щипок — масштаб</p>
+  </aside>
+</main>
+<script src="three-d-stage.js"></script>
+<script type="module" src="js/facade-3d.js"></script>
+</body>
+</html>
