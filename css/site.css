@@ -970,3 +970,11 @@ three-d-stage:not(:defined){visibility:hidden}
   .filters__grid{grid-template-columns:minmax(360px,1.2fr) repeat(3,minmax(0,1fr))}
   .filters__grid .seg{flex-wrap:nowrap}
 }
+.grid__cell{display:flex;flex:0 0 auto}
+.board__title h2{font:inherit;margin:0}
+.board__scroll{container-type:inline-size}
+.board__scroll > div{display:flex;justify-content:center;min-width:min-content}
+.grid{--cw:clamp(36px,calc((100cqw - 56px) / var(--cols,8) - 4px),66px);min-width:0}
+.grid .cell,.grid__head .grid__col{flex-basis:var(--cw);width:var(--cw)}
+.grid .cell--w{flex-basis:calc(var(--cw) * 2 + 4px);width:calc(var(--cw) * 2 + 4px)}
+.grid .cell{height:34px}
