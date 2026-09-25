@@ -52,7 +52,7 @@
   function winFigure(w) {
     var xs = w.pts.map(function (p) { return p[0]; }), ys = w.pts.map(function (p) { return p[1]; });
     var cx = (Math.min.apply(null, xs) + Math.max.apply(null, xs)) / 2, cy = (Math.min.apply(null, ys) + Math.max.apply(null, ys)) / 2;
-    var W = 440, H = 246;
+    var W = 780, H = 435;
     var x0 = MK.clamp(cx - W / 2, 0, 2400 - W).toFixed(0), y0 = MK.clamp(cy - H / 2, 0, 1339 - H).toFixed(0);
     var pts = w.pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
     var href = 'picker.html?id=' + encodeURIComponent(lot.id);
@@ -60,9 +60,9 @@
       '<svg viewBox="' + x0 + ' ' + y0 + ' ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Окна квартиры на рендере фасада, ' + w.view.title.toLowerCase() + '">' +
       '<defs><mask id="win-hole"><rect width="2400" height="1339" fill="#fff"/><polygon points="' + pts + '" fill="#000"/></mask></defs>' +
       '<image href="media/opt/' + w.view.img + '-1920.webp" width="2400" height="1339"/>' +
-      '<rect width="2400" height="1339" fill="rgba(16,15,12,.4)" mask="url(#win-hole)"/>' +
-      '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="34" fill="none" stroke="#F2DFB6" stroke-width="1.5" vector-effect="non-scaling-stroke"/>' +
-      '<polygon points="' + pts + '" fill="rgba(255,236,196,.3)" stroke="#F2DFB6" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
+      '<rect width="2400" height="1339" fill="rgba(16,15,12,.16)" mask="url(#win-hole)"/>' +
+      '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="44" fill="none" stroke="#FFF4DC" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
+      '<polygon points="' + pts + '" fill="rgba(255,226,170,.55)" stroke="#FFF4DC" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
       '</svg></a><figcaption>Окна этой квартиры на фасаде — нажмите, чтобы открыть подбор</figcaption></figure>';
   }
 

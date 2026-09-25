@@ -88,11 +88,12 @@
     var l = rec.it.lot;
     $('b', tip).textContent = l.type + ' · ' + D.area(l.area);
     $('span', tip).textContent = 'Этаж ' + l.floor + ' · № ' + l.no + ' · ' + (D.isOpen(l) ? D.money(l.price) + (l.disc ? ' (−' + l.disc + '%)' : '') : D.STATUS[l.status].toLowerCase());
-    var x = rec.it.cx / 2400 * 100, y = rec.it.top / 1339 * 100;
+    /* позиция по реальному прямоугольнику окна: рендер может быть обрезан (cover) */
+    var pr = polys[id].getBoundingClientRect(), fr = frame.getBoundingClientRect();
+    var x = (pr.left + pr.width / 2 - fr.left) / fr.width * 100, y = (pr.top - fr.top) / fr.height * 100;
     tip.style.left = MK.clamp(x, 9, 91) + '%';
     tip.style.top = y + '%';
-    tip.style.transform = 'translate(-50%, calc(-100% - 10px))';
-    if (y < 12) tip.style.transform = 'translate(-50%, 34px)';
+    tip.style.transform = y < 12 ? 'translate(-50%, 34px)' : 'translate(-50%, calc(-100% - 10px))';
     tip.classList.add('is-on');
   }
 
@@ -101,7 +102,7 @@
     var l = S.sel ? D.find(S.sel) : null;
     var box = $('[data-sel]');
     if (!l) {
-      box.innerHTML = '<p class="label">Выберите квартиру</p><div class="pk__sel-row"><div><p class="pk__sel-title">Нажмите на окно на фасаде</p>' +
+      box.innerHTML = '<div class="pk__sel-row" style="margin-top:0"><div><p class="pk__sel-title">Нажмите на окно на фасаде</p>' +
         '<p class="pk__sel-meta">Или выберите строку в списке — подсветим квартиру на рендере.</p></div>' +
         '<span class="pk__sel-plan is-empty"><img src="' + D.planSrc('two-a') + '" alt=""></span></div>';
       return;
