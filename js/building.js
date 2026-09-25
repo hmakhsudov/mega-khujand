@@ -52,7 +52,7 @@
     var free = pool.filter(D.isOpen).length;
     $('[data-free-n]').textContent = free;
     $('[data-free-of]').textContent = D.plural(free, ['свободна', 'свободны', 'свободно']) + ' из ' + pool.length + (S.rooms.length ? ' подходящих' : ' в секции');
-    $('[data-free-bar]').style.width = (pool.length ? Math.round(free / pool.length * 100) : 0) + '%';
+    $('[data-free-bar]').style.transform = 'scaleX(' + (pool.length ? (free / pool.length).toFixed(3) : 0) + ')';
   }
 
   /* ── сетка ──────────────────────────────────────────────────────── */
