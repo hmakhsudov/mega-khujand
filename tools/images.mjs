@@ -9,11 +9,8 @@ const OUT = path.join(ROOT, 'media/opt');
 fs.mkdirSync(OUT, { recursive: true });
 
 const renders = fs.readdirSync(path.join(ROOT, 'media/renders')).filter(f => f.endsWith('.jpg'));
-// стоковые фото — только иллюстрации, на сайте подписаны «Фото для примера»
-const stock = ['courtyard-sports-aerial.jpg', 'rooftop-terrace-aerial.jpg', 'aerial-river-daytime.jpg'];
 const jobs = [
-  ...renders.map(f => ({ src: path.join(ROOT, 'media/renders', f), widths: [640, 1280, 1920] })),
-  ...stock.map(f => ({ src: path.join(ROOT, 'media', f), widths: [480, 800, 1080] }))
+  ...renders.map(f => ({ src: path.join(ROOT, 'media/renders', f), widths: [640, 1280, 1920] }))
 ];
 
 for (const j of jobs) {

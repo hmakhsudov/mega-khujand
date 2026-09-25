@@ -138,10 +138,9 @@
   };
 
   /* ── изображения ────────────────────────────────────────────────── */
-  var STOCK = { 'courtyard-sports-aerial': 1, 'rooftop-terrace-aerial': 1, 'aerial-river-daytime': 1 };
   MK.pic = function (name, alt, o) {
     o = o || {};
-    var w = STOCK[name] ? [480, 800, 1080] : [640, 1280, 1920];
+    var w = [640, 1280, 1920];
     var set = function (ext) { return w.map(function (x) { return 'media/opt/' + name + '-' + x + '.' + ext + ' ' + x + 'w'; }).join(', '); };
     var sizes = o.sizes || '100vw';
     return '<picture' + (o.pcls ? ' class="' + o.pcls + '"' : '') + '>' +
@@ -149,7 +148,7 @@
       '<source type="image/webp" srcset="' + set('webp') + '" sizes="' + sizes + '">' +
       '<img src="media/opt/' + name + '-' + w[1] + '.jpg" alt="' + MK.esc(alt || '') + '"' +
       (o.cls ? ' class="' + o.cls + '"' : '') +
-      (o.eager ? '' : ' loading="lazy"') + ' decoding="async" width="' + (STOCK[name] ? 1080 : 2400) + '" height="' + (STOCK[name] ? 607 : 1339) + '">' +
+      (o.eager ? '' : ' loading="lazy"') + ' decoding="async" width="2400" height="1339">' +
       '</picture>';
   };
 

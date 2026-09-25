@@ -129,16 +129,20 @@
   /* ── макет: окна свободных квартир на рендере в сумерках ───────── */
   var VIEW = D.FACADE.filter(function (v) { return v.k === 'dusk'; })[0] || D.FACADE[D.FACADE.length - 1];
   var items = [];
+  /* плоскость с сильным наклоном верхней кромки не ложится на сетку окон
+     рендера — её окна не зажигаем; верхний этаж уходит в корону — тоже */
   VIEW.planes.forEach(function (pl) {
     var sc = D.secOf(VIEW.corp, pl.sect);
     if (!sc) return;
+    if (Math.abs((pl.q[1][1] - pl.q[0][1]) / (pl.q[1][0] - pl.q[0][0])) > 0.5) return;
     var H = D.homography(pl.q);
+    var litPl = { padU: Math.min(0.42, pl.padU + 0.1), padV: Math.min(0.36, pl.padV + 0.05), q: pl.q };
     var hitPl = { padU: 0.03, padV: 0.04, q: pl.q };
     sc.floors.forEach(function (row) {
       row.row.forEach(function (l) {
-        if (!l) return;
+        if (!l || l.floor >= sc.to) return;
         var pts = function (q) { return q.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
-        items.push({ lot: l, open: D.isOpen(l), lit: pts(D.windowQuad(pl, sc, l, H)), hit: pts(D.windowQuad(hitPl, sc, l, H)), f: (l.floor - sc.from) + ((l.x * 7) % 3) * 0.3 });
+        items.push({ lot: l, open: D.isOpen(l), lit: pts(D.windowQuad(litPl, sc, l, H)), hit: pts(D.windowQuad(hitPl, sc, l, H)), f: (l.floor - sc.from) + ((l.x * 7) % 3) * 0.3 });
       });
     });
   });
@@ -159,6 +163,7 @@
   var ROOMS = [['all', 'Все'], [0, 'Студии'], [1, '1 спальня'], [2, '2 спальни'], [3, '3 спальни'], [4, 'Пентхаусы']];
   var keys = $('[data-keys]');
   var cnt = function (r) { return open.filter(function (it) { return r === 'all' || it.lot.rooms === r; }).length; };
+  ROOMS = ROOMS.filter(function (k) { return cnt(k[0]) > 0; });
   keys.innerHTML = ROOMS.map(function (k) {
     return '<button class="seg__btn" type="button" data-r="' + k[0] + '" aria-pressed="' + (k[0] === 'all') + '">' + k[1] + ' <small>' + cnt(k[0]) + '</small></button>';
   }).join('');
@@ -176,6 +181,7 @@
     countEl.innerHTML = 'Корпус ' + VIEW.corp + ', вид с бульвара: светится <b>' + n + '</b> ' + D.plural(n, ['окно', 'окна', 'окон']) + word +
       ' из ' + items.length + ' ' + D.plural(items.length, ['квартиры', 'квартир', 'квартир']) + ' этого фасада.';
     go.href = 'picker.html?v=' + VIEW.k + (sel === 'all' ? '' : '&rooms=' + sel);
+    if (sel !== 'all') wish(sel);
     goFlats.href = sel === 'all' ? 'flats.html' : 'flats.html?rooms=' + sel;
     hideTag();
   }
@@ -187,6 +193,12 @@
     paintKeys();
   });
   paintKeys();
+
+  /* что выбрал покупатель на макете или в планировках — сразу в форму шоурума */
+  function wish(r) {
+    var f = $('#lead select[name="interest"]');
+    if (f && D.ROOM_NAMES[r]) f.value = D.ROOM_NAMES[r];
+  }
 
   /* латунная бирка у окна */
   var tag = $('[data-tag]'), hot = null, hideT = 0;
@@ -325,7 +337,7 @@
     if (focusThumb) { var b = plThumbs.querySelector('[data-k="' + plState.i + '"]'); if (b) b.focus(); }
   }
   plTypes.forEach(function (b) {
-    b.addEventListener('click', function () { plState = { r: +b.getAttribute('data-type'), i: 0 }; renderPlans(); });
+    b.addEventListener('click', function () { plState = { r: +b.getAttribute('data-type'), i: 0 }; renderPlans(); wish(plState.r); });
   });
   plThumbs.addEventListener('click', function (e) {
     var b = e.target.closest('[data-k]');
