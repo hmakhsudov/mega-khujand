@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;background:#F4EFE5;color:#1A1815;font-family:'Manrope',sans-serif;font-variant-numeric:lining-nums;-webkit-font-smoothing:antialiased}
+  *,*::before,*::after{box-sizing:border-box}
+  a{color:#1A1815;text-decoration:none}
+  a:hover{color:#9C7A4D}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  img{display:block}
+  #mkp-list::-webkit-scrollbar{width:8px}
+  #mkp-list::-webkit-scrollbar-thumb{background:#DCD2C0;border-radius:4px}
+</style>
+</helmet>
+
+<div style="min-height:{{ shellH }};display:flex;flex-direction:column;background:#F4EFE5">
+
+  <header style="display:{{ hdrDisp }};align-items:center;justify-content:space-between;gap:clamp(14px,2vw,36px);padding:16px clamp(16px,2.6vw,40px);border-bottom:1px solid #DCD2C0;background:#F4EFE5">
+    <a href="Mega-Khujand-Home.dc.html" style="font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;font-weight:600;white-space:nowrap">Mega Khujand</a>
+    <nav style="display:flex;gap:clamp(10px,1.3vw,22px);font-size:13.5px;font-weight:500;white-space:nowrap">
+      <a href="Mega-Khujand-Home.dc.html#mk-arch">Архитектура</a>
+      <a href="Mega-Khujand-Flats.dc.html">Каталог</a>
+      <a href="Mega-Khujand-Building.dc.html">Шахматка</a>
+      <span style="color:#9C7A4D;font-weight:600">Подбор на фасаде</span>
+    </nav>
+    <a href="tel:+992446000000" style="font-size:13.5px;font-weight:500;color:#6E6659;white-space:nowrap">+992 44 600 00 00</a>
+  </header>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(12px,1.6vw,26px);padding:14px clamp(16px,2.6vw,40px);border-bottom:1px solid #DCD2C0;background:#F9F5EC">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;color:#9A9083">Комнатность</span>
+      <div style="display:flex;gap:5px;padding:5px;border-radius:24px;background:#F4EFE5;border:1px solid #DCD2C0">
+        <sc-for list="{{ roomChips }}" as="c" hint-placeholder-count="6">
+          <button type="button" onClick="{{ c.pick }}" style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ c.bg }};color:{{ c.fg }};transition:background .3s ease,color .3s ease">{{ c.t }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;color:#9A9083">Этаж</span>
+      <div style="display:flex;gap:5px;padding:5px;border-radius:24px;background:#F4EFE5;border:1px solid #DCD2C0">
+        <sc-for list="{{ floorChips }}" as="c" hint-placeholder-count="4">
+          <button type="button" onClick="{{ c.pick }}" style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ c.bg }};color:{{ c.fg }};transition:background .3s ease,color .3s ease">{{ c.t }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <button type="button" onClick="{{ toggleFree }}" style="display:flex;align-items:center;gap:9px;height:42px;padding:0 18px;border-radius:21px;border:1px solid {{ freeBd }};background:{{ freeBg }};font-size:13px;font-weight:600;color:{{ freeFg }};white-space:nowrap;transition:background .3s ease,border-color .3s ease,color .3s ease">
+      <span style="width:8px;height:8px;border-radius:50%;background:{{ freeDot }}"></span>Только свободные
+    </button>
+    <div style="margin-left:auto;display:flex;align-items:baseline;gap:8px">
+      <span style="font-family:'Prata',serif;font-size:clamp(1.1rem,1.6vw,1.5rem)">{{ found }}</span>
+      <span style="font-size:12.5px;color:#6E6659">{{ foundWord }} подходит</span>
+    </div>
+  </div>
+
+  <main ref="{{ mainRef }}" style="flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,368px);gap:0;align-items:stretch">
+
+    <section style="position:relative;min-width:0;container-type:size;display:flex;align-items:center;justify-content:center;padding:clamp(12px,1.6vw,26px);background:#EAE2D4;overflow:hidden">
+      <div style="position:relative;width:min(100%, calc(100cqh * 2400 / 1339 - 2 * clamp(12px,1.6vw,26px)));aspect-ratio:2400 / 1339;flex:0 0 auto;box-shadow:0 30px 80px rgba(60,52,38,.22);border-radius:24px;overflow:hidden;border:1px solid #DCD2C0">
+        <img src="media/renders/facade-day-hero-plaza.jpg" ref="{{ shotRef }}" alt="Фасад комплекса — подбор квартир на рендере" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:filter .6s ease;filter:saturate({{ shotSat }})">
+
+        <svg viewBox="0 0 2400 1339" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;display:block;opacity:{{ ovOpacity }};transition:opacity .5s ease">
+          <defs>
+            <linearGradient id="mkFreeDay" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#C99A55" stop-opacity=".92"></stop>
+              <stop offset="1" stop-color="#88602E" stop-opacity=".84"></stop>
+            </linearGradient>
+            <linearGradient id="mkBookDay" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6E5231" stop-opacity=".86"></stop>
+              <stop offset="1" stop-color="#3C2C18" stop-opacity=".8"></stop>
+            </linearGradient>
+            <linearGradient id="mkSoldDay" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3A3630" stop-opacity=".6"></stop>
+              <stop offset="1" stop-color="#1E1C18" stop-opacity=".52"></stop>
+            </linearGradient>
+            <linearGradient id="mkHotDay" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFF3DC" stop-opacity=".92"></stop>
+              <stop offset="1" stop-color="#F4D69A" stop-opacity=".76"></stop>
+            </linearGradient>
+            <linearGradient id="mkFreeNight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFE7B8" stop-opacity=".5"></stop>
+              <stop offset="1" stop-color="#D9A863" stop-opacity=".3"></stop>
+            </linearGradient>
+            <linearGradient id="mkBookNight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#C79055" stop-opacity=".36"></stop>
+              <stop offset="1" stop-color="#8A6437" stop-opacity=".2"></stop>
+            </linearGradient>
+            <linearGradient id="mkSoldNight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#14120F" stop-opacity=".6"></stop>
+              <stop offset="1" stop-color="#0B0A08" stop-opacity=".46"></stop>
+            </linearGradient>
+            <linearGradient id="mkHotNight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFF8E8" stop-opacity=".8"></stop>
+              <stop offset="1" stop-color="#FFD79A" stop-opacity=".52"></stop>
+            </linearGradient>
+          </defs>
+          <sc-for list="{{ quads }}" as="q" hint-placeholder-count="0">
+            <polygon points="{{ q.pts }}" fill="{{ q.fill }}" stroke="{{ q.stroke }}" stroke-width="{{ q.sw }}" transform="{{ q.tf }}" onMouseEnter="{{ q.enter }}" onMouseLeave="{{ q.leave }}" onClick="{{ q.click }}" style="cursor:pointer;mix-blend-mode:{{ q.blend }};pointer-events:{{ q.pe }};transition:fill .22s ease,stroke .22s ease,transform .28s cubic-bezier(.2,.7,.2,1)"></polygon>
+          </sc-for>
+        </svg>
+
+        <div style="position:absolute;left:0;top:0;padding:6px 10px;border-radius:9px;background:rgba(244,239,229,.94);border:1px solid rgba(26,24,21,.12);box-shadow:0 12px 30px rgba(40,34,24,.24);pointer-events:none;opacity:{{ tipOp }};transform:translate3d({{ tipX }},{{ tipY }},0);transition:opacity .18s ease">
+          <div style="font-size:12.5px;font-weight:600;white-space:nowrap">{{ tipT }}</div>
+          <div style="margin-top:3px;font-size:11px;color:#6E6659;white-space:nowrap">{{ tipM }}</div>
+        </div>
+
+        <div style="position:absolute;left:clamp(10px,1.4vw,18px);right:clamp(10px,1.4vw,18px);bottom:clamp(10px,1.4vw,18px);display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between">
+          <div style="display:flex;gap:5px;padding:5px;border-radius:24px;background:rgba(244,239,229,.9);backdrop-filter:blur(12px);border:1px solid rgba(26,24,21,.1)">
+            <sc-for list="{{ viewBtns }}" as="v" hint-placeholder-count="2">
+              <button type="button" onClick="{{ v.pick }}" style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ v.bg }};color:{{ v.fg }};transition:background .3s ease,color .3s ease">{{ v.t }}</button>
+            </sc-for>
+          </div>
+          <button type="button" onClick="{{ toggleOv }}" aria-label="Показать или скрыть подсветку" style="display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:21px;background:rgba(244,239,229,.9);backdrop-filter:blur(12px);border:1px solid rgba(26,24,21,.1);font-size:13px;font-weight:600;white-space:nowrap">
+            <svg viewBox="0 0 18 12" style="width:16px;height:11px;fill:none;stroke:#1A1815;stroke-width:1.4"><path d="M1 6s3-4.6 8-4.6S17 6 17 6s-3 4.6-8 4.6S1 6 1 6z"></path><circle cx="9" cy="6" r="1.9"></circle></svg>
+            {{ ovLabel }}
+          </button>
+          <div style="display:flex;flex-wrap:wrap;gap:7px 14px;padding:10px 14px;border-radius:16px;background:rgba(244,239,229,.9);backdrop-filter:blur(12px);border:1px solid rgba(26,24,21,.1);font-size:12px;color:#6E6659">
+          <div style="display:flex;align-items:center;gap:8px"><i style="width:12px;height:12px;border-radius:3px;background:linear-gradient(180deg,#E0C795,#9A7647);display:block"></i>свободна</div>
+          <div style="display:flex;align-items:center;gap:8px"><i style="width:12px;height:12px;border-radius:3px;background:linear-gradient(180deg,#8A6941,#4E3A22);display:block"></i>бронь</div>
+          <div style="display:flex;align-items:center;gap:8px"><i style="width:12px;height:12px;border-radius:3px;background:linear-gradient(180deg,#46423A,#22201B);display:block"></i>продана</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside style="min-width:0;display:flex;flex-direction:column;border-left:{{ asideBd }};border-top:{{ asideBdTop }};background:#F9F5EC;max-height:{{ asideMax }}">
+      <div style="padding:clamp(14px,1.8vw,22px) clamp(14px,1.8vw,22px) 12px;border-bottom:1px solid #E4DBC9">
+        <div style="font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;color:#9A9083">{{ selKind }}</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:9px">
+          <div style="min-width:0">
+            <div style="font-family:'Prata',serif;font-size:clamp(1.25rem,1.9vw,1.7rem);line-height:1.14">{{ selTitle }}</div>
+            <div style="margin-top:7px;font-size:12.5px;color:#6E6659;line-height:1.5">{{ selMeta }}</div>
+          </div>
+          <div style="width:74px;height:74px;flex:0 0 auto;border-radius:12px;background:#EFE8DA;display:grid;place-items:center;overflow:hidden">
+            <img src="media/plans/two-a.svg" ref="{{ selPlanRef }}" alt="" style="max-width:84%;max-height:84%;width:auto;filter:brightness(.58) contrast(1.12);opacity:{{ selPlanOp }}"></div>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid #E4DBC9">
+          <span style="font-family:'Prata',serif;font-size:clamp(1.05rem,1.5vw,1.35rem)">{{ selPrice }}</span>
+          <a href="{{ selHref }}" style="display:inline-flex;align-items:center;height:42px;padding:0 20px;border-radius:21px;background:{{ selCtaBg }};color:{{ selCtaFg }};font-size:13px;font-weight:600;white-space:nowrap">{{ selCta }}</a>
+        </div>
+      </div>
+
+      <div id="mkp-list" style="flex:1;overflow-y:auto;padding:10px clamp(10px,1.4vw,16px) 18px">
+        <sc-for list="{{ list }}" as="r" hint-placeholder-count="6">
+          <button type="button" onClick="{{ r.click }}" onMouseEnter="{{ r.enter }}" onMouseLeave="{{ r.leave }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:10px;border-radius:16px;border:1px solid {{ r.bd }};background:{{ r.bg }};margin-top:6px;text-align:left;transition:background .25s ease,border-color .25s ease">
+            <span style="width:52px;height:52px;flex:0 0 auto;border-radius:12px;background:#EFE8DA;display:grid;place-items:center;overflow:hidden">
+              <img src="{{ r.plan }}" alt="" loading="lazy" style="max-width:86%;max-height:86%;width:auto;filter:brightness(.58) contrast(1.12)">
+            </span>
+            <span style="flex:1;min-width:0">
+              <span style="display:block;font-size:13.5px;font-weight:600">{{ r.name }}</span>
+              <span style="display:block;margin-top:3px;font-size:11.5px;color:#6E6659">{{ r.meta }}</span>
+            </span>
+            <span style="flex:0 0 auto;text-align:right">
+              <span style="display:block;font-size:12.5px;font-weight:600;color:{{ r.priceFg }}">{{ r.price }}</span>
+              <span style="display:block;margin-top:3px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:{{ r.stFg }}">{{ r.st }}</span>
+            </span>
+          </button>
+        </sc-for>
+        <button type="button" onClick="{{ more }}" style="width:100%;height:44px;margin-top:12px;border-radius:22px;border:1px solid #DCD2C0;font-size:13px;font-weight:600;color:#6E6659;display:{{ moreDisp }}">Показать ещё</button>
+        <p style="margin:14px 4px 0;font-size:11.5px;line-height:1.55;color:#9A9083;text-wrap:pretty">Подсветка нанесена на реальный рендер комплекса. Площади и цены предварительные, уточняйте в отделе продаж.</p>
+      </div>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const T = {
+  s: {r:0, n:'Студия',    a:[26,34],   p:['studio-a','studio-b','studio-c','studio-d']},
+  1: {r:1, n:'1 спальня',  a:[38,50],   p:['one-a','one-b','one-c','one-d']},
+  2: {r:2, n:'2 спальни',  a:[55,74],   p:['two-a','two-b','two-c','two-d']},
+  3: {r:3, n:'3 спальни',  a:[80,106],  p:['three-a','three-b','three-c','three-d']},
+  4: {r:4, n:'Пентхаус',   a:[132,188], p:['pent-a','pent-b','pent-c']}
+};
+const PRICE_BASE = 9400;
+const money = v => Math.round(v).toLocaleString('ru-RU').replace(/,/g,' ');
+const lcg = seed => { let s = seed >>> 0; return () => (s = (s*1664525 + 1013904223) >>> 0) / 4294967296; };
+
+/* Плоскости фасада: 4 угла квада в координатах рендера (2400×1339).
+   Гомография переводит равномерную сетку «стояк × этаж» в перспективу кадра. */
+const VIEWS = [
+  {
+    k:'day', t:'Днём · площадь', src:'media/renders/facade-day-hero-plaza.jpg',
+    planes:[
+      {corp:1, sect:1, st:['1','2','2','3','2','2','1','s'], from:2, to:17, padU:0.28, padV:0.17,
+       q:[[592,376],[816,266],[810,940],[587,954]]},
+      {corp:1, sect:2, st:['2','3','3','2'], from:2, to:17, padU:0.24, padV:0.16,
+       q:[[948,213],[1150,127],[1148,920],[944,931]]},
+      {corp:1, sect:3, st:['s','1','2','3','3','2','1','1'], from:2, to:16, padU:0.27, padV:0.23,
+       q:[[1154,188],[1400,372],[1400,977],[1154,951]]}
+    ]
+  },
+  {
+    k:'dusk', t:'Вечером · бульвар', src:'media/renders/facade-night-dusk-elevation.jpg',
+    planes:[
+      {corp:2, sect:1, st:['1','2','2','3','2','1','s'], from:2, to:17, padU:0.25, padV:0.22,
+       q:[[563,295],[809,210],[809,986],[563,970]]},
+      {corp:2, sect:2, st:['s','1','2','3','3','2','1','2'], from:2, to:18, padU:0.26, padV:0.23,
+       q:[[814,202],[1130,97],[1130,1086],[814,1060]]},
+      {corp:2, sect:3, st:['1','2','3','3','2','1'], from:2, to:18, padU:0.18, padV:0.26,
+       q:[[1090,47],[1390,265],[1390,1054],[1090,1071]]}
+    ]
+  }
+];
+
+/* гомография из единичного квадрата в квад изображения (точная перспектива плоского фасада) */
+function homography(q){
+  const [[x0,y0],[x1,y1],[x2,y2],[x3,y3]] = q; // tl, tr, br, bl
+  const dx1 = x1 - x2, dx2 = x3 - x2, dy1 = y1 - y2, dy2 = y3 - y2;
+  const sx = x0 - x1 + x2 - x3, sy = y0 - y1 + y2 - y3;
+  const den = dx1*dy2 - dy1*dx2;
+  const g = (sx*dy2 - sy*dx2) / den;
+  const h = (dx1*sy - dy1*sx) / den;
+  return {
+    a: x1 - x0 + g*x1, b: x3 - x0 + h*x3, c: x0,
+    d: y1 - y0 + g*y1, e: y3 - y0 + h*y3, f: y0,
+    g, h
+  };
+}
+const hmap = (H, u, v) => {
+  const w = H.g*u + H.h*v + 1;
+  return [(H.a*u + H.b*v + H.c) / w, (H.d*u + H.e*v + H.f) / w];
+};
+
+/* сборка лотов: те же правила, что в шахматке (стояк задаёт тип, верхний этаж — пентхаус) */
+const FLATS = [];
+VIEWS.forEach((view, vi) => {
+  view.planes.forEach(pl => {
+    const H = homography(pl.q);
+    const rnd = lcg(pl.corp * 7919 + pl.sect * 104729);
+    const cols = pl.st.length, rows = pl.to - pl.from + 1;
+    const stacks = pl.st.map((key, x) => ({
+      key, t: T[key],
+      area: +(T[key].a[0] + rnd()*(T[key].a[1] - T[key].a[0])).toFixed(1),
+      plan: T[key].p[Math.floor(rnd()*T[key].p.length)],
+      view: x < 2 || x > cols - 3
+    }));
+    let no = 1;
+    for (let r = 0; r < rows; r++){
+      const f = pl.to - r;                 // сверху вниз
+      const isTop = f === pl.to;
+      const fl = (f - pl.from) / Math.max(1, pl.to - pl.from);
+      for (let x = 0; x < cols; x++){
+        const st = stacks[x];
+        const t = isTop ? T[4] : st.t;
+        const key = isTop ? '4' : st.key;
+        const area = isTop ? +(t.a[0] + rnd()*(t.a[1]-t.a[0])).toFixed(1) : st.area;
+        const plan = isTop ? T[4].p[Math.floor(rnd()*T[4].p.length)] : st.plan;
+        let per = PRICE_BASE * (1 + fl*.34) * (st.view ? 1.06 : 1) * (isTop ? 1.42 : 1);
+        per = Math.round(per / 100) * 100;
+        const u = rnd(), soldBias = .70 - fl*.34;
+        const status = u < soldBias ? 'sold' : u < soldBias + .13 ? 'book' : 'free';
+        const u0 = x / cols, u1 = (x + 1) / cols, v0 = r / rows, v1 = (r + 1) / rows;
+        const padU = pl.padU ?? 0.12, padV = pl.padV ?? 0.18;
+        const cu0 = u0 + (u1-u0)*padU, cu1 = u1 - (u1-u0)*padU;
+        const cv0 = v0 + (v1-v0)*padV, cv1 = v1 - (v1-v0)*padV;
+        const pts = [hmap(H,cu0,cv0), hmap(H,cu1,cv0), hmap(H,cu1,cv1), hmap(H,cu0,cv1)];
+        FLATS.push({
+          id: view.k+'-'+pl.corp+'-'+pl.sect+'-'+f+'-'+x, vi, key,
+          name: t.n, rooms: t.r, area, plan, status, floor: f, topFloor: pl.to,
+          corp: pl.corp, sect: pl.sect, no: 100 + no++,
+          price: per * area, per,
+          terr: isTop || (st.view && rnd() < .18),
+          pts: pts.map(p => p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '),
+          cx: (pts[0][0] + pts[1][0]) / 2, cy: (pts[0][1] + pts[2][1]) / 2
+        });
+      }
+    }
+  });
+});
+
+const FLOOR_BANDS = [
+  {k:'all', t:'Все'}, {k:'low', t:'2–8', lo:2, hi:8},
+  {k:'mid', t:'9–16', lo:9, hi:16}, {k:'high', t:'17+', lo:17, hi:99}
+];
+const ROOMS = [
+  {k:'all', t:'Все'}, {k:'s', t:'Студии'}, {k:'1', t:'1К'},
+  {k:'2', t:'2К'}, {k:'3', t:'3К'}, {k:'4', t:'Пентхаусы'}
+];
+const STATUS = {free:'свободна', book:'бронь', sold:'продана'};
+
+const EMBED = typeof location !== 'undefined' && new URLSearchParams(location.search).has('embed');
+
+class Component extends DCLogic {
+  state = { v:0, rooms:'all', band:'all', freeOnly:false, hover:null, sel:null, limit:14, ov:true, tip:null, narrow:false };
+
+  componentDidMount(){
+    this.fit = () => {
+      const w = (this.mainEl && this.mainEl.clientWidth) || innerWidth || 1200;
+      const narrow = w < 900;
+      if (narrow !== this.state.narrow) this.setState({narrow});
+      if (this.mainEl) this.mainEl.style.gridTemplateColumns = narrow ? 'minmax(0,1fr)' : 'minmax(0,1fr) minmax(280px,368px)';
+    };
+    this.mainRefFn = el => { this.mainEl = el; if (el) this.fit(); };
+    addEventListener('resize', this.fit);
+    this.beat = setInterval(this.fit, 400);
+    this.fit();
+  }
+  componentDidUpdate(){ if (this.fit) this.fit(); }
+  componentWillUnmount(){ removeEventListener('resize', this.fit); clearInterval(this.beat); }
+
+  match(f){
+    const s = this.state;
+    if (f.vi !== s.v) return false;
+    if (s.rooms !== 'all' && f.key !== s.rooms) return false;
+    if (s.freeOnly && f.status !== 'free') return false;
+    const b = FLOOR_BANDS.find(x => x.k === s.band);
+    if (b && b.lo && (f.floor < b.lo || f.floor > b.hi)) return false;
+    return true;
+  }
+
+  filtersOn(){
+    const s = this.state;
+    return s.rooms !== 'all' || s.band !== 'all' || s.freeOnly;
+  }
+
+  onEnter(f, e){
+    this.setState({hover: f.id, tip: {t: f.name + ' · ' + f.area.toFixed(1).replace('.', ',') + ' м²',
+      m: 'Этаж ' + f.floor + ' · ' + (f.status === 'free' ? money(f.price) + ' смн' : STATUS[f.status]),
+      x: f.cx, y: f.cy}});
+  }
+
+  renderVals(){
+    const s = this.state;
+    const view = VIEWS[s.v];
+    const inView = FLATS.filter(f => f.vi === s.v);
+    const pool = inView.filter(f => this.match(f));
+    const on = this.filtersOn();
+    const sel = FLATS.find(f => f.id === s.sel) || null;
+
+    const night = view.k === 'dusk';
+    const quads = inView.map(f => {
+      const ok = this.match(f);
+      const hot = f.id === s.hover || f.id === s.sel;
+      let fill, stroke, blend = night ? 'screen' : 'multiply', sw = 1.1;
+      if (!ok && on){
+        fill = night ? 'rgba(6,6,8,.62)' : 'rgba(34,30,24,.5)';
+        stroke = 'none'; sw = 0; blend = 'multiply';
+      } else if (hot){
+        fill = night ? 'url(#mkHotNight)' : 'url(#mkHotDay)';
+        stroke = night ? 'rgba(255,246,224,.95)' : 'rgba(96,68,34,.85)';
+        sw = 2.4; blend = night ? 'screen' : 'normal';
+      } else if (on){
+        fill = night ? 'url(#mkFreeNight)' : 'url(#mkFreeDay)';
+        stroke = night ? 'rgba(255,236,196,.6)' : 'rgba(58,40,18,.7)';
+        sw = 2;
+      } else if (f.status === 'sold'){
+        fill = night ? 'url(#mkSoldNight)' : 'url(#mkSoldDay)';
+        stroke = night ? 'rgba(255,255,255,.1)' : 'rgba(40,36,30,.28)';
+        blend = 'multiply';
+      } else if (f.status === 'book'){
+        fill = night ? 'url(#mkBookNight)' : 'url(#mkBookDay)';
+        stroke = night ? 'rgba(226,190,142,.34)' : 'rgba(78,58,34,.4)';
+      } else {
+        fill = night ? 'url(#mkFreeNight)' : 'url(#mkFreeDay)';
+        stroke = night ? 'rgba(255,232,190,.44)' : 'rgba(64,44,20,.6)';
+      }
+      return {
+        pts: f.pts, fill, stroke, sw, blend,
+        pe: (!ok && on) ? 'none' : 'auto',
+        tf: hot ? 'translate(0,-3)' : 'translate(0,0)',
+        enter: e => this.onEnter(f, e),
+        leave: () => this.setState({hover:null, tip:null}),
+        click: () => this.setState({sel: f.id, hover: f.id})
+      };
+    });
+
+    const list = pool.slice(0, s.limit).map(f => ({
+      name: f.name + ' · ' + f.area.toFixed(1).replace('.', ',') + ' м²',
+      meta: 'Корпус ' + f.corp + ' · секция ' + f.sect + ' · этаж ' + f.floor,
+      plan: 'media/plans/' + f.plan + '.svg',
+      price: f.status === 'free' ? money(f.price) + ' смн' : '—',
+      priceFg: f.status === 'free' ? '#1A1815' : '#9A9083',
+      st: STATUS[f.status],
+      stFg: f.status === 'free' ? '#9C7A4D' : '#9A9083',
+      bg: f.id === s.sel ? '#EFE6D5' : f.id === s.hover ? '#F4EDE0' : 'transparent',
+      bd: f.id === s.sel ? '#C9A97E' : '#E4DBC9',
+      click: () => this.setState({sel: f.id}),
+      enter: () => this.setState({hover: f.id}),
+      leave: () => this.setState({hover: null})
+    }));
+
+    const word = n => { const m = n % 100, k = n % 10;
+      return (m > 10 && m < 20) || k === 0 || k > 4 ? 'квартир' : k === 1 ? 'квартира' : 'квартиры'; };
+
+    const nar = s.narrow;
+    return {
+      mainRef: el => { this.mainEl = el; if (el && this.fit) this.fit(); },
+      hdrDisp: EMBED ? 'none' : 'flex',
+      shellH: EMBED ? '100%' : '100vh',
+      asideMax: nar ? '62vh' : (EMBED ? 'none' : 'calc(100vh - 132px)'),
+      asideBd: nar ? '0' : '1px solid #DCD2C0',
+      asideBdTop: nar ? '1px solid #DCD2C0' : '0',
+      roomChips: ROOMS.map(r => ({
+        t: r.t, bg: s.rooms === r.k ? '#1A1815' : 'transparent', fg: s.rooms === r.k ? '#F4EFE5' : '#6E6659',
+        pick: () => this.setState({rooms: r.k, limit: 14, sel: null})
+      })),
+      floorChips: FLOOR_BANDS.map(b => ({
+        t: b.t, bg: s.band === b.k ? '#1A1815' : 'transparent', fg: s.band === b.k ? '#F4EFE5' : '#6E6659',
+        pick: () => this.setState({band: b.k, limit: 14, sel: null})
+      })),
+      toggleFree: () => this.setState({freeOnly: !s.freeOnly, limit: 14}),
+      freeBg: s.freeOnly ? '#1A1815' : 'transparent',
+      freeFg: s.freeOnly ? '#F4EFE5' : '#6E6659',
+      freeBd: s.freeOnly ? '#1A1815' : '#DCD2C0',
+      freeDot: s.freeOnly ? '#C9A97E' : '#C6BBA5',
+
+      found: pool.length, foundWord: word(pool.length),
+
+      shotRef: el => { if (el && el.getAttribute('src') !== view.src) el.src = view.src; },
+      shotSat: on ? 0.72 : 1,
+      viewBtns: VIEWS.map((v, i) => ({
+        t: v.t, bg: s.v === i ? '#1A1815' : 'transparent', fg: s.v === i ? '#F4EFE5' : '#6E6659',
+        pick: () => this.setState({v: i, sel: null, hover: null, tip: null, limit: 14})
+      })),
+      toggleOv: () => this.setState({ov: !s.ov}),
+      ovOpacity: s.ov ? 1 : 0,
+      ovLabel: s.ov ? 'Скрыть подсветку' : 'Показать подсветку',
+
+      quads,
+      tipOp: s.tip && s.ov ? 1 : 0,
+      tipX: s.tip ? (Math.max(10, Math.min(2400 - 250, s.tip.x - 96)) / 24).toFixed(2) + '%' : '0%',
+      tipY: s.tip ? (Math.max(10, Math.min(1339 - 110, s.tip.y - 86)) / 13.39).toFixed(2) + '%' : '0%',
+      tipT: s.tip ? s.tip.t : '',
+      tipM: s.tip ? s.tip.m : '',
+
+      selKind: sel ? 'Квартира №' + sel.no : 'Выберите квартиру',
+      selTitle: sel ? sel.name + ' · ' + sel.area.toFixed(1).replace('.', ',') + ' м²' : 'Кликните объём на фасаде',
+      selMeta: sel
+        ? 'Корпус ' + sel.corp + ' · секция ' + sel.sect + ' · этаж ' + sel.floor + ' из ' + sel.topFloor + (sel.terr ? ' · терраса' : '')
+        : 'Или выберите строку в списке справа — подсветим её на рендере.',
+      selPlanRef: el => { if (el) el.src = 'media/plans/' + (sel ? sel.plan : 'two-a') + '.svg'; },
+      selPlanOp: sel ? 1 : 0.25,
+      selPrice: sel ? (sel.status === 'free' ? money(sel.price) + ' смн' : STATUS[sel.status]) : '—',
+      selCta: sel && sel.status === 'free' ? 'Забронировать' : 'Подобрать похожую',
+      selCtaBg: sel ? '#1A1815' : '#E4DBC9',
+      selCtaFg: sel ? '#F4EFE5' : '#9A9083',
+      selHref: 'Mega-Khujand-Flats.dc.html',
+
+      list,
+      more: () => this.setState({limit: s.limit + 14}),
+      moreDisp: pool.length > s.limit ? 'block' : 'none'
+    };
+  }
+}
+</script>
+</body>
+</html>

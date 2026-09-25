@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#F4EFE5;color:#1A1815;font-family:'Manrope',sans-serif;font-variant-numeric:lining-nums;-webkit-font-smoothing:antialiased}
+  *,*::before,*::after{box-sizing:border-box}
+  a{color:#1A1815;text-decoration:none}
+  a:hover{color:#9C7A4D}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  img{display:block}
+  select{font:inherit;color:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;background:none;pointer-events:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;cursor:grab;box-shadow:0 2px 6px rgba(60,52,38,.2)}
+  input[type=range]::-webkit-slider-runnable-track{height:16px;background:none}
+  @keyframes mkDriftA{0%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}100%{transform:translate3d(5vw,3vh,0) rotate(9deg) scale(1.12)}}
+  @keyframes mkDriftB{0%{transform:translate3d(0,0,0) rotate(0deg) scale(1.06)}100%{transform:translate3d(-4vw,4vh,0) rotate(-11deg) scale(.94)}}
+  @keyframes mkDriftC{0%{transform:translate3d(0,0,0) rotate(-4deg) scale(.96)}100%{transform:translate3d(3vw,-3vh,0) rotate(7deg) scale(1.14)}}
+</style>
+</helmet>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none">
+  <defs>
+    <clipPath id="mkfRiver" clipPathUnits="objectBoundingBox">
+      <path d="M0,0.20 C0.18,0.03 0.40,0.13 0.62,0.05 C0.82,-0.02 1,0.04 1,0.19 L1,0.79 C1,0.94 0.84,1.02 0.64,0.96 C0.42,0.89 0.20,0.98 0.04,0.90 C-0.01,0.87 0,0.83 0,0.79 Z"></path>
+    </clipPath>
+    <clipPath id="mkfBend" clipPathUnits="objectBoundingBox">
+      <path d="M0.06,0 C0.36,0 0.62,0.08 0.84,0.02 C0.95,-0.01 1,0.05 1,0.14 L1,0.90 C1,0.98 0.92,1.01 0.80,0.98 C0.56,0.92 0.30,1.0 0.10,0.97 C0.02,0.96 0,0.92 0,0.86 L0,0.10 C0,0.04 0.02,0 0.06,0 Z"></path>
+    </clipPath>
+  </defs>
+</svg>
+
+<div id="mkf-fol" aria-hidden="true" style="position:fixed;inset:-12vh -10vw;z-index:1;pointer-events:none;mix-blend-mode:multiply;opacity:.26;transform:translateY(calc(var(--mkfSy,0) * 1px));will-change:transform">
+  <div style="position:absolute;left:3%;top:8%;width:26vw;height:20vw;border-radius:64% 8% 60% 10%;background:radial-gradient(closest-side,#9E9683,transparent 78%);filter:blur(26px);animation:mkDriftA 46s ease-in-out infinite alternate"></div>
+  <div style="position:absolute;right:8%;top:16%;width:29vw;height:21vw;border-radius:58% 12% 66% 8%;background:radial-gradient(closest-side,#A29A87,transparent 80%);filter:blur(30px);animation:mkDriftC 52s ease-in-out infinite alternate;animation-delay:-6s"></div>
+  <div style="position:absolute;left:16%;bottom:6%;width:23vw;height:17vw;border-radius:12% 60% 10% 64%;background:radial-gradient(closest-side,#948C79,transparent 77%);filter:blur(24px);animation:mkDriftB 44s ease-in-out infinite alternate;animation-delay:-22s"></div>
+  <div style="position:absolute;right:22%;bottom:-2%;width:25vw;height:18vw;border-radius:62% 10% 58% 14%;background:radial-gradient(closest-side,#9A9280,transparent 79%);filter:blur(28px);animation:mkDriftA 62s ease-in-out infinite alternate;animation-delay:-30s"></div>
+</div>
+
+<div style="position:relative;z-index:2">
+
+<header style="display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,40px);padding:24px clamp(18px,3.4vw,54px);border-bottom:1px solid #DCD2C0">
+  <a href="Mega-Khujand-Home.dc.html" style="font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;font-weight:600;white-space:nowrap">Mega Khujand</a>
+  <nav style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px clamp(10px,1.3vw,24px);font-size:13.5px;font-weight:500;white-space:nowrap;flex:1 1 auto;min-width:0">
+    <a href="Mega-Khujand-Home.dc.html#mk-arch">Архитектура</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-chapters">Атмосфера</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-infra">Инфраструктура</a>
+    <a href="Mega-Khujand-Flats.dc.html" aria-current="page" style="color:#9C7A4D">Квартиры</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-contact">Контакты</a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:clamp(12px,1.4vw,20px)">
+    <a href="tel:+992446000000" style="font-size:14px;font-weight:500;color:#6E6659;white-space:nowrap">+992 44 600 00 00</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-contact" style="display:inline-flex;align-items:center;height:42px;padding:0 22px;border-radius:21px;background:#1A1815;color:#F4EFE5;font-size:13px;font-weight:600;white-space:nowrap">Оставить заявку</a>
+  </div>
+</header>
+
+<section id="mkf-hero" style="position:relative;padding:clamp(28px,4.4vh,52px) clamp(18px,3.4vw,54px) 0">
+  <div style="display:flex;gap:9px;align-items:center;font-size:12.5px;color:#8A8073">
+    <a href="Mega-Khujand-Home.dc.html" style="color:#8A8073">Главная</a><span>·</span><span>Выбор квартиры</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(20px,3vw,56px);align-items:end;margin-top:clamp(18px,2.6vh,30px)">
+    <div>
+      <h1 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:clamp(2.4rem,6vw,5.4rem);line-height:.98;letter-spacing:-.02em">Квартиры<sup style="font-family:'Manrope',sans-serif;font-size:.2em;font-weight:600;letter-spacing:.04em;vertical-align:super;color:#9C7A4D;margin-left:.12em">{{ total }}</sup></h1>
+      <p style="margin:clamp(16px,2.4vh,26px) 0 0;max-width:44ch;font-size:clamp(14.5px,1.1vw,17px);line-height:1.66;color:#4C463C;text-wrap:pretty">96 лотов в трёх корпусах — от студии до двухуровневого пентхауса с террасой. Фильтруйте по площади, этажу и виду на реку.</p>
+      <a href="Mega-Khujand-Building.dc.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:22px;font-size:14px;font-weight:600">Выбрать на схеме дома
+        <span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1px solid #DCD2C0"><svg viewBox="0 0 14 14" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5"><path d="M2 7h10M8 3l4 4-4 4"></path></svg></span></a>
+    </div>
+    <div style="clip-path:url(#mkfBend);overflow:hidden;transform:scaleY(calc(0.76 + var(--mkfE,1) * 0.24))">
+      <img src="media/renders/facade-day-hero-plaza.jpg" alt="MEGA KHUJAND — фасад и площадь" style="width:100%;height:clamp(200px,32vh,320px);object-fit:cover;transform:scale(calc(1.2 - var(--mkfE,1) * 0.2))">
+    </div>
+  </div>
+</section>
+
+<section style="margin-top:clamp(26px,4vh,48px);border-top:1px solid #DCD2C0;border-bottom:1px solid #DCD2C0;padding:clamp(20px,2.6vw,30px) clamp(18px,3.4vw,54px)">
+  <div style="display:grid;gap:clamp(18px,2.2vw,34px) clamp(20px,2.6vw,40px);grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div style="min-width:0">
+      <span style="display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9A9083">Комнатность</span>
+      <div style="display:flex;gap:5px;margin-top:12px;padding:5px;border-radius:14px;background:#EDE6D9;border:1px solid #DFD6C4;flex-wrap:wrap">
+        <sc-for list="{{ roomBtns }}" as="b" hint-placeholder-count="5">
+          <button type="button" onClick="{{ b.pick }}" style="flex:1;min-width:44px;height:36px;padding:0 12px;border-radius:10px;font-size:13.5px;font-weight:600;white-space:nowrap;background:{{ b.bg }};color:{{ b.fg }};transition:background .3s ease,color .3s ease">{{ b.t }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="min-width:0">
+      <span style="display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9A9083">Стоимость, смн</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+        <span style="display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC"><span style="font-size:11.5px;color:#9A9083">от</span><input value="{{ priceLoText }}" onChange="{{ onPriceLo }}" inputmode="numeric" style="flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;font-variant-numeric:lining-nums tabular-nums"></span>
+        <span style="width:10px;height:1px;background:#C6BBA5;flex:0 0 auto"></span>
+        <span style="display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC"><span style="font-size:11.5px;color:#9A9083">до</span><input value="{{ priceHiText }}" onChange="{{ onPriceHi }}" inputmode="numeric" style="flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;font-variant-numeric:lining-nums tabular-nums"></span>
+      </div>
+      <div style="position:relative;height:16px;margin-top:12px">
+        <span style="position:absolute;left:8px;right:8px;top:7px;height:2px;background:#DCD2C0;border-radius:1px"></span>
+        <span style="position:absolute;top:7px;height:2px;background:#9C7A4D;border-radius:1px;left:{{ priceFillL }};right:{{ priceFillR }}"></span>
+        <span style="position:absolute;top:0;left:{{ priceThumbL }};width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;box-shadow:0 2px 6px rgba(60,52,38,.22);pointer-events:none"></span>
+        <span style="position:absolute;top:0;left:{{ priceThumbR }};width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;box-shadow:0 2px 6px rgba(60,52,38,.22);pointer-events:none"></span>
+        <input type="range" min="{{ priceMin }}" max="{{ priceMax }}" step="10000" value="{{ priceLo }}" onInput="{{ onPriceLoR }}" aria-label="Цена от" style="position:absolute;inset:0;width:100%;margin:0;height:16px;opacity:0;cursor:pointer">
+        <input type="range" min="{{ priceMin }}" max="{{ priceMax }}" step="10000" value="{{ priceHi }}" onInput="{{ onPriceHiR }}" aria-label="Цена до" style="position:absolute;inset:0;width:100%;margin:0;height:16px;opacity:0;cursor:pointer">
+      </div>
+    </div>
+
+    <div style="min-width:0">
+      <span style="display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9A9083">Площадь, м²</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+        <span style="display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC"><span style="font-size:11.5px;color:#9A9083">от</span><input value="{{ areaLo }}" onChange="{{ onAreaLo }}" inputmode="numeric" style="flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;font-variant-numeric:lining-nums tabular-nums"></span>
+        <span style="width:10px;height:1px;background:#C6BBA5;flex:0 0 auto"></span>
+        <span style="display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC"><span style="font-size:11.5px;color:#9A9083">до</span><input value="{{ areaHi }}" onChange="{{ onAreaHi }}" inputmode="numeric" style="flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;font-variant-numeric:lining-nums tabular-nums"></span>
+      </div>
+      <div style="position:relative;height:16px;margin-top:12px">
+        <span style="position:absolute;left:8px;right:8px;top:7px;height:2px;background:#DCD2C0;border-radius:1px"></span>
+        <span style="position:absolute;top:7px;height:2px;background:#9C7A4D;border-radius:1px;left:{{ areaFillL }};right:{{ areaFillR }}"></span>
+        <span style="position:absolute;top:0;left:{{ areaThumbL }};width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;box-shadow:0 2px 6px rgba(60,52,38,.22);pointer-events:none"></span>
+        <span style="position:absolute;top:0;left:{{ areaThumbR }};width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;box-shadow:0 2px 6px rgba(60,52,38,.22);pointer-events:none"></span>
+        <input type="range" min="{{ areaMin }}" max="{{ areaMax }}" step="1" value="{{ areaLo }}" onInput="{{ onAreaLoR }}" aria-label="Площадь от" style="position:absolute;inset:0;width:100%;margin:0;height:16px;opacity:0;cursor:pointer">
+        <input type="range" min="{{ areaMin }}" max="{{ areaMax }}" step="1" value="{{ areaHi }}" onInput="{{ onAreaHiR }}" aria-label="Площадь до" style="position:absolute;inset:0;width:100%;margin:0;height:16px;opacity:0;cursor:pointer">
+      </div>
+    </div>
+
+    <div style="min-width:0">
+      <span style="display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9A9083">Этаж</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+        <span style="display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC"><span style="font-size:11.5px;color:#9A9083">от</span><input value="{{ floorLo }}" onChange="{{ onFloorLo }}" inputmode="numeric" style="flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;font-variant-numeric:lining-nums tabular-nums"></span>
+        <span style="width:10px;height:1px;background:#C6BBA5;flex:0 0 auto"></span>
+        <span style="display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC"><span style="font-size:11.5px;color:#9A9083">до</span><input value="{{ floorHi }}" onChange="{{ onFloorHi }}" inputmode="numeric" style="flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;font-variant-numeric:lining-nums tabular-nums"></span>
+      </div>
+      <div style="position:relative;height:16px;margin-top:12px">
+        <span style="position:absolute;left:8px;right:8px;top:7px;height:2px;background:#DCD2C0;border-radius:1px"></span>
+        <span style="position:absolute;top:7px;height:2px;background:#9C7A4D;border-radius:1px;left:{{ floorFillL }};right:{{ floorFillR }}"></span>
+        <span style="position:absolute;top:0;left:{{ floorThumbL }};width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;box-shadow:0 2px 6px rgba(60,52,38,.22);pointer-events:none"></span>
+        <span style="position:absolute;top:0;left:{{ floorThumbR }};width:16px;height:16px;border-radius:50%;background:#F4EFE5;border:1.5px solid #1A1815;box-shadow:0 2px 6px rgba(60,52,38,.22);pointer-events:none"></span>
+        <input type="range" min="{{ floorMin }}" max="{{ floorMax }}" step="1" value="{{ floorLo }}" onInput="{{ onFloorLoR }}" aria-label="Этаж от" style="position:absolute;inset:0;width:100%;margin:0;height:16px;opacity:0;cursor:pointer">
+        <input type="range" min="{{ floorMin }}" max="{{ floorMax }}" step="1" value="{{ floorHi }}" onInput="{{ onFloorHiR }}" aria-label="Этаж до" style="position:absolute;inset:0;width:100%;margin:0;height:16px;opacity:0;cursor:pointer">
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:clamp(16px,2vw,26px)">
+    <span style="position:relative;display:inline-flex">
+      <select value="{{ block }}" onChange="{{ onBlock }}" aria-label="Корпус" style="height:44px;padding:0 40px 0 15px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC;font-size:14px;font-weight:500;-webkit-appearance:none;appearance:none;cursor:pointer">
+        <option value="">Любой корпус</option><option>Корпус 1</option><option>Корпус 2</option><option>Корпус 3</option>
+      </select>
+      <span style="position:absolute;right:16px;top:50%;width:7px;height:7px;border-right:1.5px solid #8A8073;border-bottom:1.5px solid #8A8073;transform:translateY(-70%) rotate(45deg);pointer-events:none"></span>
+    </span>
+    <span style="position:relative;display:inline-flex">
+      <select value="{{ fin }}" onChange="{{ onFin }}" aria-label="Отделка" style="height:44px;padding:0 40px 0 15px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC;font-size:14px;font-weight:500;-webkit-appearance:none;appearance:none;cursor:pointer">
+        <option value="">Любая отделка</option><option>Без отделки</option><option>Предчистовая</option><option>С отделкой</option>
+      </select>
+      <span style="position:absolute;right:16px;top:50%;width:7px;height:7px;border-right:1.5px solid #8A8073;border-bottom:1.5px solid #8A8073;transform:translateY(-70%) rotate(45deg);pointer-events:none"></span>
+    </span>
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+      <button type="button" onClick="{{ c.pick }}" style="display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 17px;border-radius:12px;border:1px solid {{ c.bd }};background:{{ c.bg }};font-size:14px;font-weight:500;color:{{ c.fg }};transition:border-color .3s ease,background .3s ease,color .3s ease">
+        <span style="width:15px;height:15px;border:1.5px solid {{ c.box }};border-radius:4px;flex:0 0 auto;position:relative;background:{{ c.boxBg }};display:grid;place-items:center">
+          <svg viewBox="0 0 12 12" style="width:9px;height:9px;fill:none;stroke:#F4EFE5;stroke-width:2;opacity:{{ c.tick }}"><path d="M2 6.4l2.6 2.6L10 3.6"></path></svg>
+        </span>{{ c.t }}
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:clamp(16px,2vw,24px)">
+    <div style="font-size:15px;color:#4C463C">Найдено <b style="font-weight:600;color:#1A1815;font-variant-numeric:lining-nums tabular-nums">{{ total }}</b> {{ totalWord }}</div>
+    <button type="button" onClick="{{ reset }}" style="display:inline-flex;align-items:center;gap:9px;font-size:14px;color:#8A8073;transition:color .3s ease" style-hover="color:#9C7A4D">
+      <svg viewBox="0 0 12 12" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.6"><path d="M1 1l10 10M11 1L1 11"></path></svg>Сбросить фильтры
+    </button>
+  </div>
+</section>
+
+<div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:clamp(20px,2.6vw,30px) clamp(18px,3.4vw,54px)">
+  <span style="position:relative;display:inline-flex">
+    <select value="{{ sort }}" onChange="{{ onSort }}" aria-label="Сортировка" style="height:44px;padding:0 40px 0 15px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC;font-size:14px;font-weight:500;-webkit-appearance:none;appearance:none;cursor:pointer">
+      <option value="rec">Рекомендуемые</option>
+      <option value="price-asc">Сначала дешевле</option>
+      <option value="price-desc">Сначала дороже</option>
+      <option value="area-asc">Меньшая площадь</option>
+      <option value="area-desc">Большая площадь</option>
+      <option value="floor-desc">Сначала верхние этажи</option>
+    </select>
+    <span style="position:absolute;right:16px;top:50%;width:7px;height:7px;border-right:1.5px solid #8A8073;border-bottom:1.5px solid #8A8073;transform:translateY(-70%) rotate(45deg);pointer-events:none"></span>
+  </span>
+  <div style="display:flex;gap:4px;padding:4px;border:1px solid #DFD6C4;border-radius:12px;background:#F9F5EC">
+    <button type="button" onClick="{{ viewGrid }}" aria-label="Плитка" style="width:40px;height:36px;border-radius:8px;display:grid;place-items:center;background:{{ gridBg }};color:{{ gridFg }};transition:background .3s ease,color .3s ease">
+      <svg viewBox="0 0 16 16" style="width:15px;height:15px;fill:currentColor"><rect x="0" y="0" width="7" height="7" rx="1.4"></rect><rect x="9" y="0" width="7" height="7" rx="1.4"></rect><rect x="0" y="9" width="7" height="7" rx="1.4"></rect><rect x="9" y="9" width="7" height="7" rx="1.4"></rect></svg>
+    </button>
+    <button type="button" onClick="{{ viewList }}" aria-label="Таблица" style="width:40px;height:36px;border-radius:8px;display:grid;place-items:center;background:{{ listBg }};color:{{ listFg }};transition:background .3s ease,color .3s ease">
+      <svg viewBox="0 0 16 16" style="width:15px;height:15px;fill:currentColor"><rect x="0" y="1" width="16" height="2.6" rx="1.2"></rect><rect x="0" y="6.7" width="16" height="2.6" rx="1.2"></rect><rect x="0" y="12.4" width="16" height="2.6" rx="1.2"></rect></svg>
+    </button>
+  </div>
+</div>
+
+<main style="padding:0 clamp(18px,3.4vw,54px) clamp(46px,7vw,90px)">
+  <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;gap:clamp(12px,1.3vw,18px);grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
+      <sc-for list="{{ cards }}" as="l" hint-placeholder-count="6">
+        <article style="position:relative;display:flex;flex-direction:column;background:#F9F5EC;border:1px solid #E2D9C7;border-radius:18px;overflow:hidden;opacity:{{ l.op }};transition:border-color .45s ease,transform .55s cubic-bezier(.2,.7,.2,1),background .45s ease" style-hover="border-color:#C9A97E;background:#FBF8F1;transform:translateY(-3px)">
+          <a href="{{ l.href }}" aria-label="{{ l.aria }}" style="position:absolute;inset:0;z-index:1"></a>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 20px 0">
+            <h3 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:19px;line-height:1.2">{{ l.type }}</h3>
+            <span style="font-size:18px;font-weight:600;letter-spacing:-.015em;color:#9C7A4D;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums">{{ l.area }} м<sup style="font-size:.62em">2</sup></span>
+          </div>
+          <div style="padding:8px 20px 0;font-size:13px;color:#8A8073">{{ l.meta }}</div>
+          <div style="flex:1;display:grid;place-items:center;padding:14px 18px 6px;min-height:214px">
+            <img src="{{ l.plan }}" alt="{{ l.planAlt }}" loading="lazy" style="max-height:200px;width:auto;filter:brightness(.58) contrast(1.12);opacity:.94">
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 14px">
+            <sc-for list="{{ l.tags }}" as="t" hint-placeholder-count="3">
+              <span style="font-size:11.5px;font-weight:500;padding:5px 10px;border-radius:8px;border:1px solid {{ t.bd }};color:{{ t.fg }};background:{{ t.bg }}">{{ t.t }}</span>
+            </sc-for>
+          </div>
+          <div style="border-top:1px solid #E2D9C7;padding:15px 20px 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px">
+            <div style="font-size:clamp(18px,1.4vw,21px);font-weight:600;letter-spacing:-.015em;line-height:1.14;font-variant-numeric:lining-nums tabular-nums">{{ l.price }}
+              <small style="display:block;margin-top:7px;font-size:12.5px;font-weight:500;letter-spacing:0;color:#9A9083">{{ l.per }}</small>
+            </div>
+            <button type="button" onClick="{{ l.fav }}" aria-label="В избранное" style="position:relative;z-index:2;width:38px;height:38px;border-radius:50%;border:1px solid {{ l.favBd }};background:{{ l.favBg }};display:grid;place-items:center;flex:0 0 auto;transition:border-color .35s ease,background .35s ease" style-hover="border-color:#C9A97E">
+              <svg viewBox="0 0 20 20" style="width:16px;height:16px;fill:{{ l.favFill }};stroke:{{ l.favStroke }};stroke-width:1.5"><path d="M10 17S2.6 12.6 2.6 7.6A3.9 3.9 0 0 1 10 5.6a3.9 3.9 0 0 1 7.4 2c0 5-7.4 9.4-7.4 9.4z"></path></svg>
+            </button>
+          </div>
+          <sc-if value="{{ l.locked }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:auto 0 0 0;padding:15px 20px;border-top:1px solid #E2D9C7;font-size:13px;font-weight:500;color:#8A8073;background:#F2ECE0;display:flex;align-items:center;gap:9px">
+              <svg viewBox="0 0 14 14" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.6"><rect x="2" y="6" width="10" height="7" rx="1.6"></rect><path d="M4.4 6V4.2a2.6 2.6 0 0 1 5.2 0V6"></path></svg>Квартира забронирована
+            </div>
+          </sc-if>
+        </article>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+    <div style="overflow-x:auto">
+      <div style="min-width:1080px;font-size:14.5px">
+        <div style="display:flex;align-items:flex-end;border-bottom:1px solid #DCD2C0;padding-bottom:13px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;color:#9A9083">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="10">
+            <div style="flex:{{ c.flex }};min-width:0;padding:0 16px;white-space:nowrap">
+              <button type="button" onClick="{{ c.sort }}" style="display:inline-flex;align-items:center;gap:6px;color:{{ c.fg }};font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:{{ c.cur }}">{{ c.t }}<span style="font-size:9px">{{ c.arrow }}</span></button>
+            </div>
+          </sc-for>
+        </div>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+          <div style="position:relative;display:flex;align-items:center;border-bottom:1px solid #E7DFCE;opacity:{{ r.op }};transition:background .3s ease" style-hover="background:#F2ECE0">
+            <a href="{{ r.href }}" aria-label="{{ r.aria }}" style="position:absolute;inset:0;z-index:1"></a>
+            <div style="flex:0 0 150px;min-width:0;padding:13px 16px;white-space:nowrap;font-weight:500">{{ r.type }}</div>
+            <div style="flex:0 0 90px;min-width:0;padding:13px 16px;white-space:nowrap;color:#4C463C">{{ r.bs }}</div>
+            <div style="flex:0 0 70px;min-width:0;padding:8px 16px"><img src="{{ r.plan }}" alt="" loading="lazy" style="height:42px;width:auto;filter:brightness(.58) contrast(1.12)"></div>
+            <div style="flex:0 0 110px;min-width:0;padding:13px 16px;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums;color:#4C463C">{{ r.area }}</div>
+            <div style="flex:0 0 110px;min-width:0;padding:13px 16px;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums;color:#4C463C">{{ r.floor }}</div>
+            <div style="flex:0 0 80px;min-width:0;padding:13px 16px;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums;color:#8A8073">{{ r.no }}</div>
+            <div style="flex:0 0 130px;min-width:0;padding:13px 16px;white-space:nowrap;color:#4C463C">{{ r.fin }}</div>
+            <div style="flex:1 1 170px;min-width:0;padding:13px 16px;color:#8A8073;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.feat }}</div>
+            <div style="flex:0 0 150px;min-width:0;padding:13px 16px;white-space:nowrap;font-weight:600;font-variant-numeric:lining-nums tabular-nums">{{ r.price }}</div>
+            <div style="flex:0 0 66px;min-width:0;padding:8px 16px">
+              <button type="button" onClick="{{ r.fav }}" aria-label="В избранное" style="position:relative;z-index:2;width:34px;height:34px;border-radius:50%;border:1px solid {{ r.favBd }};background:{{ r.favBg }};display:{{ r.favDisp }};place-items:center" style-hover="border-color:#C9A97E">
+                <svg viewBox="0 0 20 20" style="width:15px;height:15px;fill:{{ r.favFill }};stroke:{{ r.favStroke }};stroke-width:1.5"><path d="M10 17S2.6 12.6 2.6 7.6A3.9 3.9 0 0 1 10 5.6a3.9 3.9 0 0 1 7.4 2c0 5-7.4 9.4-7.4 9.4z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:clamp(50px,9vh,110px) 0;text-align:center">
+      <div style="font-family:'Prata',serif;font-size:clamp(1.4rem,2.4vw,2rem);line-height:1.2">Под эти условия ничего не нашлось</div>
+      <p style="margin:14px auto 0;max-width:40ch;font-size:15px;line-height:1.6;color:#6E6659">Попробуйте расширить диапазон цены или площади — или посмотрите дом на шахматке.</p>
+      <button type="button" onClick="{{ reset }}" style="display:inline-flex;align-items:center;height:48px;padding:0 26px;border-radius:24px;background:#1A1815;color:#F4EFE5;font-size:14px;font-weight:600;margin-top:24px">Сбросить фильтры</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;justify-content:center;padding-top:clamp(26px,4vh,44px)">
+      <button type="button" onClick="{{ more }}" style="display:inline-flex;align-items:center;height:52px;padding:0 32px;border-radius:26px;border:1px solid #DCD2C0;background:#F9F5EC;font-size:14px;font-weight:600;transition:background .35s ease,border-color .35s ease" style-hover="background:#1A1815;color:#F4EFE5;border-color:#1A1815">{{ moreText }}</button>
+    </div>
+  </sc-if>
+</main>
+
+<footer style="position:relative;overflow:hidden;background:#100F0C;color:#F4EFE5">
+  <img src="media/renders/facade-night-hero.jpg" alt="Фасад комплекса вечером" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5">
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(16,15,12,.94) 0%,rgba(16,15,12,.62) 60%,rgba(16,15,12,.42) 100%)"></div>
+  <div style="position:relative;padding:clamp(44px,7vh,92px) clamp(18px,3.4vw,54px) clamp(22px,3.4vh,34px)">
+    <h2 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:clamp(1.6rem,3.4vw,2.9rem);line-height:1.08;letter-spacing:-.016em;max-width:26ch">Подберём квартиру под ваш сценарий</h2>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:clamp(18px,3vw,44px);flex-wrap:wrap;margin-top:clamp(22px,3.6vh,40px)">
+      <p style="margin:0;max-width:42ch;font-size:15px;line-height:1.64;color:rgba(244,239,229,.76);text-wrap:pretty">Оставьте контакты — пришлём подборку планировок, актуальные цены в сомони и приглашение в шоурум.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="Mega-Khujand-Building.dc.html" style="display:inline-flex;align-items:center;height:52px;padding:0 28px;border-radius:26px;background:#F4EFE5;color:#1A1815;font-size:14.5px;font-weight:600">Шахматка дома</a>
+        <a href="tel:+992446000000" style="display:inline-flex;align-items:center;height:52px;padding:0 28px;border-radius:26px;border:1px solid rgba(244,239,229,.34);color:#F4EFE5;font-size:14.5px;font-weight:600">+992 44 600 00 00</a>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;margin-top:clamp(28px,4.6vh,56px);padding-top:20px;border-top:1px solid rgba(244,239,229,.18);font-size:12.5px;color:rgba(244,239,229,.56)">
+      <span>© 2026 · MEGA KHUJAND</span>
+      <span>Изображения носят информационный характер</span>
+      <a href="Mega-Khujand-Home.dc.html" style="color:rgba(244,239,229,.56)">На главную</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const PLANS = [
+  {p:'studio-a', r:0, a:28.4}, {p:'studio-b', r:0, a:31.6},
+  {p:'studio-c', r:0, a:26.9}, {p:'studio-d', r:0, a:33.1},
+  {p:'one-a', r:1, a:45.9}, {p:'one-b', r:1, a:48.8},
+  {p:'one-c', r:1, a:44.2}, {p:'one-d', r:1, a:47.4},
+  {p:'two-a', r:2, a:64.3}, {p:'two-b', r:2, a:68.5},
+  {p:'two-c', r:2, a:62.4}, {p:'two-d', r:2, a:66.8},
+  {p:'three-a', r:3, a:88.1}, {p:'three-b', r:3, a:93.4},
+  {p:'three-c', r:3, a:85.6}, {p:'three-d', r:3, a:90.7},
+  {p:'pent-a', r:4, a:142.8}, {p:'pent-b', r:4, a:151.6}, {p:'pent-c', r:4, a:138.4}
+];
+const ROOMS = ['Студия','1 комната','2 комнаты','3 комнаты','Пентхаус'];
+const FIN = ['Без отделки','Предчистовая','С отделкой'];
+const fmt = n => n.toLocaleString('ru-RU').replace(/,/g,' ');
+
+let seed = 20260819;
+const rnd = () => (seed = (seed*1664525 + 1013904223) % 4294967296) / 4294967296;
+const pick = a => a[Math.floor(rnd()*a.length)];
+
+const LOTS = [];
+let lotNo = 108;
+for (let i = 0; i < 96; i++){
+  const pl = PLANS[Math.floor(rnd()*PLANS.length)];
+  const pent = pl.r === 4;
+  const floor = pent ? 17 + Math.floor(rnd()*3) : 2 + Math.floor(rnd()*15);
+  const area = +(pl.a + (rnd()*2.4 - 1.2)).toFixed(1);
+  const river = pent || rnd() > .58;
+  const terrace = pent || (floor >= 15 && rnd() > .55);
+  const corner = rnd() > .62;
+  let per = 9800 + floor*180 + (river?1900:0) + (terrace?1500:0) + (corner?700:0);
+  if (pent) per += 4200;
+  per += Math.round((rnd()*1400 - 700) / 100) * 100;
+  LOTS.push({
+    id:'f'+i, plan:pl.p, rooms:pl.r, area,
+    block: 1 + Math.floor(rnd()*3), sect: 1 + Math.floor(rnd()*4),
+    floor, floors: 19, no: lotNo += 1 + Math.floor(rnd()*4),
+    fin: pent ? pick(['Предчистовая','С отделкой']) : pick(FIN),
+    river, terrace, corner, rec: rnd(), free: rnd() > .17,
+    price: Math.round(per * area / 1000) * 1000
+  });
+}
+
+const bounds = k => [Math.min(...LOTS.map(l=>l[k])), Math.max(...LOTS.map(l=>l[k]))];
+const B = { price: bounds('price'), area: bounds('area'), floor: bounds('floor') };
+B.price = [Math.floor(B.price[0]/10000)*10000, Math.ceil(B.price[1]/10000)*10000];
+B.area = [Math.floor(B.area[0]), Math.ceil(B.area[1])];
+
+const clamp = (v,a,b) => v<a?a:v>b?b:v;
+function lotHref(l, back){
+  const q = new URLSearchParams({
+    plan:l.plan, r:l.rooms, a:l.area, b:l.block, s:l.sect, fl:l.floor, fs:l.floors,
+    no:l.no, fin:l.fin, price:l.price, river:l.river?1:0, terr:l.terrace?1:0,
+    corner:l.corner?1:0, st:l.free?'free':'book'
+  });
+  if (back) q.set('back', back);
+  return 'Mega-Khujand-Flat.dc.html?' + q.toString();
+}
+const plural = (n,a) => { const m=n%100,k=n%10;
+  return (m>10&&m<20)||k===0||k>4 ? a[2] : k===1 ? a[0] : a[1]; };
+
+class Component extends DCLogic {
+  state = {
+    rooms: [], price: [...B.price], area: [...B.area], floor: [...B.floor],
+    block: '', fin: '', terrace:false, river:false, corner:false, free:true,
+    sort: 'rec', view: 'grid', shown: 12, fav: []
+  };
+
+  componentDidMount(){
+    const h = (location.hash || '').replace('#','');
+    const saved = new URLSearchParams(location.search).get('f');
+    if (saved){
+      try { const st = JSON.parse(saved); if (st && typeof st === 'object') this.setState(st); } catch (e) {}
+    }
+    else if (h !== '' && /^[0-4]$/.test(h)) this.setState({rooms:[+h]});
+    else if (h === 'pent') this.setState({rooms:[4]});
+    const root = document.documentElement;
+    this.paint = () => {
+      const vh = innerHeight || document.documentElement.clientHeight || 900;
+      const hero = document.getElementById('mkf-hero');
+      if (hero){
+        const r = hero.getBoundingClientRect();
+        const e = clamp((vh*0.92 - r.top) / (vh*0.5), 0, 1);
+        root.style.setProperty('--mkfE', (Number.isFinite(e) ? e : 1).toFixed(3));
+      }
+      root.style.setProperty('--mkfSy', (scrollY * -0.05).toFixed(1));
+    };
+    this.onScroll = () => this.paint();
+    addEventListener('scroll', this.onScroll, {passive:true});
+    addEventListener('resize', this.onScroll);
+    document.addEventListener('visibilitychange', this.onScroll);
+    addEventListener('load', this.onScroll);
+    this.beat = setInterval(this.paint, 200);
+    setTimeout(this.paint, 0);
+    setTimeout(this.paint, 300);
+    this.paint();
+  }
+  componentWillUnmount(){
+    removeEventListener('scroll', this.onScroll);
+    removeEventListener('resize', this.onScroll);
+    removeEventListener('load', this.onScroll);
+    document.removeEventListener('visibilitychange', this.onScroll);
+    clearInterval(this.beat);
+  }
+
+  filtered(){
+    const s = this.state;
+    return LOTS.filter(l =>
+      (!s.rooms.length || s.rooms.includes(l.rooms)) &&
+      l.price >= s.price[0] && l.price <= s.price[1] &&
+      l.area >= s.area[0] && l.area <= s.area[1] &&
+      l.floor >= s.floor[0] && l.floor <= s.floor[1] &&
+      (!s.block || 'Корпус ' + l.block === s.block) &&
+      (!s.fin || l.fin === s.fin) &&
+      (!s.terrace || l.terrace) && (!s.river || l.river) && (!s.corner || l.corner) &&
+      (!s.free || l.free)
+    ).sort((a,b) => {
+      switch (s.sort){
+        case 'price-desc': return b.price - a.price;
+        case 'area-asc': return a.area - b.area;
+        case 'area-desc': return b.area - a.area;
+        case 'floor-desc': return b.floor - a.floor || b.price - a.price;
+        case 'price-asc': return a.price - b.price;
+        default: return a.rec - b.rec;
+      }
+    });
+  }
+
+  rng(key, idx, v, step){
+    const [lo,hi] = B[key];
+    this.setState(s => {
+      const next = [...s[key]];
+      next[idx] = idx === 0 ? clamp(v, lo, next[1] - step) : clamp(v, next[0] + step, hi);
+      return {[key]: next, shown: 12};
+    });
+  }
+
+  toggle(key){ this.setState(s => ({[key]: !s[key], shown: 12})); }
+
+  tagsFor(l){
+    const t = [];
+    if (l.terrace) t.push(['Терраса', 1]);
+    if (l.river) t.push(['Вид на реку', 1]);
+    if (l.corner) t.push(['Панорамное остекление', 0]);
+    t.push([l.fin, 0]);
+    return t.map(([x,a]) => ({
+      t: x,
+      bd: a ? '#C9A97E' : '#E2D9C7',
+      fg: a ? '#8A6A3E' : '#8A8073',
+      bg: a ? 'rgba(201,169,126,.14)' : 'transparent'
+    }));
+  }
+
+  favVals(l){
+    const on = this.state.fav.includes(l.id);
+    return {
+      favBd: on ? '#C9A97E' : '#E2D9C7',
+      favBg: on ? 'rgba(201,169,126,.16)' : 'transparent',
+      favFill: on ? '#9C7A4D' : 'none',
+      favStroke: on ? '#9C7A4D' : '#8A8073',
+      fav: () => this.setState(s => ({fav: s.fav.includes(l.id) ? s.fav.filter(x=>x!==l.id) : [...s.fav, l.id]}))
+    };
+  }
+
+  renderVals(){
+    const s = this.state;
+    const list = this.filtered();
+    const isGrid = s.view === 'grid';
+    const slice = isGrid ? list.slice(0, s.shown) : list;
+    const frac = (key, i) => (s[key][i] - B[key][0]) / (B[key][1] - B[key][0]);
+    const pct = (key, i) => frac(key, i) * 100;
+    const thumb = (key, i) => 'calc(' + frac(key, i).toFixed(4) + ' * (100% - 16px))';
+    const rest = list.length - s.shown;
+
+    const COLS = [['Тип',null,'0 0 150px'],['Корпус',null,'0 0 90px'],['План',null,'0 0 70px'],
+                  ['Площадь','area','0 0 110px'],['Этаж','floor','0 0 110px'],['№',null,'0 0 80px'],
+                  ['Отделка',null,'0 0 130px'],['Особенности',null,'1 1 170px'],
+                  ['Стоимость','price','0 0 150px'],['',null,'0 0 66px']];
+    const dir = s.sort.split('-');
+    const back = JSON.stringify({rooms:s.rooms, price:s.price, area:s.area, floor:s.floor,
+      block:s.block, fin:s.fin, terrace:s.terrace, river:s.river, corner:s.corner,
+      free:s.free, sort:s.sort, view:s.view, shown:s.shown});
+    const aria = l => ROOMS[l.rooms] + ', ' + l.area + ' м², этаж ' + l.floor + ', № ' + l.no;
+
+    return {
+      total: list.length,
+      totalWord: plural(list.length, ['квартира','квартиры','квартир']),
+      isGrid, isList: !isGrid, isEmpty: list.length === 0,
+      hasMore: isGrid && list.length > s.shown,
+      moreText: 'Показать ещё ' + Math.min(12, rest) + ' из ' + fmt(Math.max(0,rest)),
+      more: () => this.setState(x => ({shown: x.shown + 12})),
+      reset: () => this.setState({rooms:[], price:[...B.price], area:[...B.area], floor:[...B.floor],
+        block:'', fin:'', terrace:false, river:false, corner:false, free:true, shown:12}),
+
+      roomBtns: ['Студия','1','2','3','Пентхаус'].map((t,i) => ({
+        t, bg: s.rooms.includes(i) ? '#1A1815' : 'transparent',
+        fg: s.rooms.includes(i) ? '#F4EFE5' : '#6E6659',
+        pick: () => this.setState(x => ({rooms: x.rooms.includes(i) ? x.rooms.filter(r=>r!==i) : [...x.rooms, i], shown:12}))
+      })),
+
+      priceMin: B.price[0], priceMax: B.price[1], priceLo: s.price[0], priceHi: s.price[1],
+      priceLoText: fmt(s.price[0]), priceHiText: fmt(s.price[1]),
+      priceFillL: pct('price',0) + '%', priceFillR: (100 - pct('price',1)) + '%',
+      priceThumbL: thumb('price',0), priceThumbR: thumb('price',1),
+      onPriceLoR: e => this.rng('price', 0, +e.target.value, 10000),
+      onPriceHiR: e => this.rng('price', 1, +e.target.value, 10000),
+      onPriceLo: e => this.rng('price', 0, +String(e.target.value).replace(/\D/g,'') || B.price[0], 10000),
+      onPriceHi: e => this.rng('price', 1, +String(e.target.value).replace(/\D/g,'') || B.price[1], 10000),
+
+      areaMin: B.area[0], areaMax: B.area[1], areaLo: s.area[0], areaHi: s.area[1],
+      areaFillL: pct('area',0) + '%', areaFillR: (100 - pct('area',1)) + '%',
+      areaThumbL: thumb('area',0), areaThumbR: thumb('area',1),
+      onAreaLoR: e => this.rng('area', 0, +e.target.value, 1),
+      onAreaHiR: e => this.rng('area', 1, +e.target.value, 1),
+      onAreaLo: e => this.rng('area', 0, parseFloat(String(e.target.value).replace(',','.')) || B.area[0], 1),
+      onAreaHi: e => this.rng('area', 1, parseFloat(String(e.target.value).replace(',','.')) || B.area[1], 1),
+
+      floorMin: B.floor[0], floorMax: B.floor[1], floorLo: s.floor[0], floorHi: s.floor[1],
+      floorFillL: pct('floor',0) + '%', floorFillR: (100 - pct('floor',1)) + '%',
+      floorThumbL: thumb('floor',0), floorThumbR: thumb('floor',1),
+      onFloorLoR: e => this.rng('floor', 0, +e.target.value, 1),
+      onFloorHiR: e => this.rng('floor', 1, +e.target.value, 1),
+      onFloorLo: e => this.rng('floor', 0, parseInt(e.target.value,10) || B.floor[0], 1),
+      onFloorHi: e => this.rng('floor', 1, parseInt(e.target.value,10) || B.floor[1], 1),
+
+      block: s.block, fin: s.fin, sort: s.sort,
+      onBlock: e => this.setState({block: e.target.value, shown:12}),
+      onFin: e => this.setState({fin: e.target.value, shown:12}),
+      onSort: e => this.setState({sort: e.target.value}),
+
+      chips: [
+        ['terrace','Терраса'], ['river','Вид на реку'], ['corner','Панорама'], ['free','Только свободные']
+      ].map(([k,t]) => {
+        const on = s[k];
+        return {
+          t, tick: on ? 1 : 0,
+          bd: on ? '#C9A97E' : '#DFD6C4',
+          bg: on ? 'rgba(201,169,126,.14)' : '#F9F5EC',
+          fg: on ? '#1A1815' : '#6E6659',
+          box: on ? '#9C7A4D' : '#C6BBA5',
+          boxBg: on ? '#9C7A4D' : 'transparent',
+          pick: () => this.toggle(k)
+        };
+      }),
+
+      viewGrid: () => this.setState({view:'grid'}),
+      viewList: () => this.setState({view:'list'}),
+      gridBg: isGrid ? '#1A1815' : 'transparent', gridFg: isGrid ? '#F4EFE5' : '#A79B84',
+      listBg: !isGrid ? '#1A1815' : 'transparent', listFg: !isGrid ? '#F4EFE5' : '#A79B84',
+
+      cards: slice.map(l => ({
+        type: ROOMS[l.rooms],
+        area: l.area.toFixed(1),
+        meta: 'Корпус ' + l.block + ' · секция ' + l.sect + ' · этаж ' + l.floor + ' из ' + l.floors + ' · №' + l.no,
+        plan: 'media/plans/' + l.plan + '.svg',
+        planAlt: 'Планировка: ' + ROOMS[l.rooms] + ', ' + l.area + ' м²',
+        tags: this.tagsFor(l),
+        price: l.free ? fmt(l.price) + ' смн' : '—',
+        per: l.free ? fmt(Math.round(l.price/l.area)) + ' смн за м²' : 'снята с продажи',
+        op: l.free ? 1 : .5,
+        locked: !l.free,
+        href: lotHref(l, back), aria: aria(l),
+        ...this.favVals(l)
+      })),
+
+      cols: COLS.map(([t,k,fx]) => ({
+        t, flex: fx,
+        sort: k ? () => this.setState(x => ({sort: k + (x.sort === k+'-asc' ? '-desc' : '-asc')})) : () => {},
+        fg: k && dir[0] === k ? '#9C7A4D' : '#9A9083',
+        cur: k ? 'pointer' : 'default',
+        arrow: k && dir[0] === k ? (dir[1] === 'asc' ? '▲' : '▼') : ''
+      })),
+
+      rows: slice.map(l => ({
+        type: ROOMS[l.rooms],
+        bs: l.block + ' / ' + l.sect,
+        plan: 'media/plans/' + l.plan + '.svg',
+        area: l.area.toFixed(1) + ' м²',
+        floor: l.floor + ' из ' + l.floors,
+        no: '№' + l.no,
+        fin: l.fin,
+        feat: [l.terrace&&'терраса', l.river&&'река', l.corner&&'панорама'].filter(Boolean).join(' · ') || '—',
+        price: l.free ? fmt(l.price) + ' смн' : 'забронирована',
+        free: l.free, op: l.free ? 1 : .5, favDisp: l.free ? 'grid' : 'none',
+        href: lotHref(l, back), aria: aria(l),
+        ...this.favVals(l)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

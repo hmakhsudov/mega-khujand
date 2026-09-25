@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#F4EFE5;color:#1A1815;font-family:'Manrope',sans-serif;font-variant-numeric:lining-nums;-webkit-font-smoothing:antialiased}
+  *,*::before,*::after{box-sizing:border-box}
+  a{color:#1A1815;text-decoration:none}
+  a:hover{color:#9C7A4D}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  img{display:block}
+  @keyframes mkdDriftA{0%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}100%{transform:translate3d(5vw,3vh,0) rotate(9deg) scale(1.12)}}
+  @keyframes mkdDriftB{0%{transform:translate3d(0,0,0) rotate(-4deg) scale(.96)}100%{transform:translate3d(3vw,-3vh,0) rotate(7deg) scale(1.14)}}
+</style>
+</helmet>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none">
+  <defs>
+    <clipPath id="mkdBend" clipPathUnits="objectBoundingBox">
+      <path d="M0.06,0 C0.36,0 0.62,0.08 0.84,0.02 C0.95,-0.01 1,0.05 1,0.14 L1,0.90 C1,0.98 0.92,1.01 0.80,0.98 C0.56,0.92 0.30,1.0 0.10,0.97 C0.02,0.96 0,0.92 0,0.86 L0,0.10 C0,0.04 0.02,0 0.06,0 Z"></path>
+    </clipPath>
+  </defs>
+</svg>
+
+<div aria-hidden="true" style="position:fixed;inset:-12vh -10vw;z-index:1;pointer-events:none;mix-blend-mode:multiply;opacity:.22;transform:translateY(calc(var(--mkdSy,0) * 1px));will-change:transform">
+  <div style="position:absolute;left:4%;top:10%;width:26vw;height:20vw;border-radius:64% 8% 60% 10%;background:radial-gradient(closest-side,#9E9683,transparent 78%);filter:blur(26px);animation:mkdDriftA 46s ease-in-out infinite alternate"></div>
+  <div style="position:absolute;right:9%;top:22%;width:28vw;height:21vw;border-radius:58% 12% 66% 8%;background:radial-gradient(closest-side,#A29A87,transparent 80%);filter:blur(30px);animation:mkdDriftB 54s ease-in-out infinite alternate;animation-delay:-8s"></div>
+  <div style="position:absolute;left:18%;bottom:6%;width:23vw;height:17vw;border-radius:12% 60% 10% 64%;background:radial-gradient(closest-side,#948C79,transparent 77%);filter:blur(24px);animation:mkdDriftA 60s ease-in-out infinite alternate;animation-delay:-24s"></div>
+</div>
+
+<div style="position:relative;z-index:2">
+
+<header style="display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2vw,40px);padding:24px clamp(18px,3.4vw,54px);border-bottom:1px solid #DCD2C0">
+  <a href="Mega-Khujand-Home.dc.html" style="font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;font-weight:600;white-space:nowrap">Mega Khujand</a>
+  <nav style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px clamp(10px,1.3vw,24px);font-size:13.5px;font-weight:500;white-space:nowrap;flex:1 1 auto;min-width:0">
+    <a href="Mega-Khujand-Home.dc.html#mk-arch">Архитектура</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-infra">Инфраструктура</a>
+    <a href="Mega-Khujand-Flats.dc.html" aria-current="page" style="color:#9C7A4D">Квартиры</a>
+    <a href="Mega-Khujand-Building.dc.html">Шахматка</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-contact">Контакты</a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:clamp(12px,1.4vw,20px)">
+    <a href="tel:+992446000000" style="font-size:14px;font-weight:500;color:#6E6659;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums">+992 44 600 00 00</a>
+    <a href="Mega-Khujand-Home.dc.html#mk-contact" style="display:inline-flex;align-items:center;height:42px;padding:0 22px;border-radius:21px;background:#1A1815;color:#F4EFE5;font-size:13px;font-weight:600;white-space:nowrap">Оставить заявку</a>
+  </div>
+</header>
+
+<section style="padding:clamp(20px,3vh,34px) clamp(18px,3.4vw,54px) 0">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;gap:9px;align-items:center;font-size:12.5px;color:#8A8073">
+      <a href="Mega-Khujand-Home.dc.html" style="color:#8A8073">Главная</a><span>·</span>
+      <a href="{{ backHref }}" style="color:#8A8073">Квартиры</a><span>·</span><span>{{ crumb }}</span>
+    </div>
+    <a href="{{ backHref }}" style="display:inline-flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600">
+      <span style="display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid #DCD2C0"><svg viewBox="0 0 14 14" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5"><path d="M12 7H2M6 3L2 7l4 4"></path></svg></span>Назад к каталогу
+    </a>
+  </div>
+</section>
+
+<section style="padding:clamp(18px,2.6vh,30px) clamp(18px,3.4vw,54px) 0">
+  <div style="display:grid;gap:clamp(20px,2.6vw,44px);grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start">
+
+    <div style="min-width:0">
+      <div style="display:inline-flex;align-items:center;gap:9px;height:30px;padding:0 13px;border-radius:15px;border:1px solid {{ stBd }};background:{{ stBg }};font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:{{ stFg }}">{{ stText }}</div>
+      <h1 style="font-family:'Prata',serif;font-weight:400;margin:16px 0 0;font-size:clamp(2.1rem,4.6vw,3.9rem);line-height:1.02;letter-spacing:-.02em">{{ title }}</h1>
+      <div style="margin-top:14px;font-size:15.5px;color:#4C463C;font-variant-numeric:lining-nums tabular-nums">{{ subline }}</div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:8px;margin-top:clamp(20px,2.8vh,30px)">
+        <sc-for list="{{ keySpecs }}" as="s" hint-placeholder-count="4">
+          <div style="padding:14px 16px;background:#F9F5EC;border:1px solid #E2D9C7;border-radius:14px">
+            <span style="display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#9A9083">{{ s.k }}</span>
+            <b style="display:block;margin-top:7px;font-size:17px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:lining-nums tabular-nums">{{ s.v }}</b>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:clamp(20px,2.8vh,30px);padding:clamp(18px,2.4vw,26px);border:1px solid #E2D9C7;border-radius:18px;background:#F9F5EC">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">
+          <div>
+            <span style="display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#9A9083">Стоимость</span>
+            <b style="display:block;margin-top:9px;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:lining-nums tabular-nums">{{ price }}</b>
+            <span style="display:block;margin-top:9px;font-size:13.5px;color:#8A8073;font-variant-numeric:lining-nums tabular-nums">{{ perM }}</span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="Mega-Khujand-Home.dc.html#mk-contact" style="display:inline-flex;align-items:center;height:52px;padding:0 26px;border-radius:26px;background:#1A1815;color:#F4EFE5;font-size:14px;font-weight:600">{{ ctaMain }}</a>
+            <a href="tel:+992446000000" style="display:inline-flex;align-items:center;height:52px;padding:0 24px;border-radius:26px;border:1px solid #DCD2C0;font-size:14px;font-weight:600;font-variant-numeric:lining-nums tabular-nums">Позвонить</a>
+          </div>
+        </div>
+        <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:#8A8073;text-wrap:pretty">{{ priceNote }}</p>
+      </div>
+    </div>
+
+    <div style="min-width:0;position:relative;border-radius:22px;overflow:hidden;background:#141310;border:1px solid #2A2620">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px clamp(16px,2vw,24px);border-bottom:1px solid rgba(202,174,135,.18)">
+        <span style="font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#CAAE87">Планировка</span>
+        <span style="font-size:12.5px;color:rgba(244,239,229,.5);font-variant-numeric:lining-nums tabular-nums">{{ planCode }}</span>
+      </div>
+      <div style="padding:clamp(14px,2vw,26px);display:grid;place-items:center">
+        <img src="media/plans/two-a.svg" ref="{{ planRef }}" alt="{{ planAlt }}" style="width:100%;height:auto;max-height:clamp(300px,52vh,540px);object-fit:contain">
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;padding:0 clamp(16px,2vw,24px) clamp(16px,2vw,22px)">
+        <sc-for list="{{ tags }}" as="t" hint-placeholder-count="3">
+          <span style="font-size:11.5px;font-weight:500;padding:6px 11px;border-radius:8px;border:1px solid rgba(202,174,135,.32);color:#CAAE87">{{ t.t }}</span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(34px,5vh,64px) clamp(18px,3.4vw,54px) 0">
+  <div style="display:grid;gap:clamp(14px,1.6vw,22px);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="3">
+      <figure style="margin:0;min-width:0">
+        <div style="overflow:hidden;border-radius:18px;background:#EFE8DA">
+          <img src="media/renders/facade-day-hero-plaza.jpg" ref="{{ g.ref }}" alt="{{ g.cap }}" loading="lazy" style="width:100%;height:clamp(180px,26vh,260px);object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(1.04)">
+        </div>
+        <figcaption style="margin-top:10px;font-size:12.5px;color:#8A8073">{{ g.cap }}</figcaption>
+      </figure>
+    </sc-for>
+  </div>
+</section>
+
+<section style="padding:clamp(34px,5.6vh,72px) clamp(18px,3.4vw,54px) 0">
+  <div style="display:grid;gap:clamp(24px,3vw,54px);grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start">
+
+    <div style="min-width:0">
+      <div style="display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9C7A4D">
+        <span style="width:26px;height:1px;background:#9C7A4D"></span>Характеристики
+      </div>
+      <div style="margin-top:clamp(16px,2.2vh,24px);border-top:1px solid #DCD2C0">
+        <sc-for list="{{ specs }}" as="s" hint-placeholder-count="8">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px solid #E7DFCE">
+            <span style="font-size:14px;color:#8A8073">{{ s.k }}</span>
+            <b style="font-size:14.5px;font-weight:600;text-align:right;font-variant-numeric:lining-nums tabular-nums">{{ s.v }}</b>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="min-width:0">
+      <div style="display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9C7A4D">
+        <span style="width:26px;height:1px;background:#9C7A4D"></span>Площади помещений
+      </div>
+      <div style="margin-top:clamp(16px,2.2vh,24px);border-top:1px solid #DCD2C0">
+        <sc-for list="{{ roomRows }}" as="r" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #E7DFCE">
+            <span style="font-size:14px;color:#4C463C;white-space:nowrap">{{ r.n }}</span>
+            <span style="flex:1;height:1px;background:#E2D9C7"></span>
+            <b style="font-size:14.5px;font-weight:600;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums">{{ r.a }}</b>
+          </div>
+        </sc-for>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 0 0">
+          <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#9A9083">Итого</span>
+          <b style="font-size:17px;font-weight:600;font-variant-numeric:lining-nums tabular-nums">{{ totalArea }}</b>
+        </div>
+      </div>
+      <p style="margin:18px 0 0;font-size:13px;line-height:1.62;color:#8A8073;text-wrap:pretty">Площади указаны по проекту и могут отличаться от обмеров БТИ в пределах допуска. Планировка показана схематично.</p>
+    </div>
+  </div>
+</section>
+
+<sc-if value="{{ showSimilar }}" hint-placeholder-val="{{ true }}">
+  <section style="padding:clamp(38px,6vh,84px) clamp(18px,3.4vw,54px) 0">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#9C7A4D">
+          <span style="width:26px;height:1px;background:#9C7A4D"></span>Похожие квартиры
+        </div>
+        <h2 style="font-family:'Prata',serif;font-weight:400;margin:16px 0 0;font-size:clamp(1.5rem,2.8vw,2.4rem);line-height:1.1;letter-spacing:-.016em">Близкие по площади и виду</h2>
+      </div>
+      <a href="{{ backHref }}" style="display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:600">Весь каталог
+        <span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1px solid #DCD2C0"><svg viewBox="0 0 14 14" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5"><path d="M2 7h10M8 3l4 4-4 4"></path></svg></span></a>
+    </div>
+
+    <div style="display:grid;gap:clamp(12px,1.3vw,18px);grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin-top:clamp(20px,2.8vh,32px)">
+      <sc-for list="{{ similar }}" as="l" hint-placeholder-count="4">
+        <article style="position:relative;display:flex;flex-direction:column;background:#F9F5EC;border:1px solid #E2D9C7;border-radius:18px;overflow:hidden;transition:border-color .45s ease,transform .55s cubic-bezier(.2,.7,.2,1),background .45s ease" style-hover="border-color:#C9A97E;background:#FBF8F1;transform:translateY(-3px)">
+          <a href="{{ l.href }}" aria-label="{{ l.aria }}" style="position:absolute;inset:0;z-index:2"></a>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 0">
+            <h3 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:17px;line-height:1.2">{{ l.type }}</h3>
+            <span style="font-size:16px;font-weight:600;letter-spacing:-.015em;color:#9C7A4D;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums">{{ l.area }}</span>
+          </div>
+          <div style="padding:7px 18px 0;font-size:12.5px;color:#8A8073;font-variant-numeric:lining-nums tabular-nums">{{ l.meta }}</div>
+          <div style="flex:1;display:grid;place-items:center;padding:12px 16px 4px;min-height:150px">
+            <img src="{{ l.plan }}" alt="" loading="lazy" style="max-height:140px;width:auto;filter:brightness(.58) contrast(1.12);opacity:.94">
+          </div>
+          <div style="border-top:1px solid #E2D9C7;padding:14px 18px 16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+            <div style="font-size:17px;font-weight:600;letter-spacing:-.015em;line-height:1.1;font-variant-numeric:lining-nums tabular-nums">{{ l.price }}
+              <small style="display:block;margin-top:6px;font-size:12px;font-weight:500;color:#9A9083">{{ l.per }}</small>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+</sc-if>
+
+<section style="padding:clamp(38px,6vh,84px) clamp(18px,3.4vw,54px) clamp(30px,5vh,60px)">
+  <div style="position:relative;overflow:hidden;border-radius:24px;background:#100F0C;color:#F4EFE5">
+    <img src="media/renders/facade-night-hero.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.46">
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(16,15,12,.94) 0%,rgba(16,15,12,.7) 58%,rgba(16,15,12,.5) 100%)"></div>
+    <div style="position:relative;padding:clamp(30px,5vh,64px) clamp(20px,3.4vw,54px)">
+      <h2 style="font-family:'Prata',serif;font-weight:400;margin:0;font-size:clamp(1.5rem,3vw,2.6rem);line-height:1.1;letter-spacing:-.016em;max-width:24ch">Посмотрите эту квартиру вживую</h2>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:clamp(18px,3vw,44px);flex-wrap:wrap;margin-top:clamp(18px,3vh,32px)">
+        <p style="margin:0;max-width:44ch;font-size:15px;line-height:1.64;color:rgba(244,239,229,.8);text-wrap:pretty">{{ ctaNote }}</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="Mega-Khujand-Home.dc.html#mk-contact" style="display:inline-flex;align-items:center;height:52px;padding:0 28px;border-radius:26px;background:#F4EFE5;color:#1A1815;font-size:14.5px;font-weight:600">Записаться на просмотр</a>
+          <a href="Mega-Khujand-Building.dc.html" style="display:inline-flex;align-items:center;height:52px;padding:0 26px;border-radius:26px;border:1px solid rgba(244,239,229,.34);color:#F4EFE5;font-size:14.5px;font-weight:600">Найти на шахматке</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<sc-if value="{{ sticky }}" hint-placeholder-val="{{ true }}">
+  <div style="position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px clamp(12px,3vw,54px) 16px;pointer-events:none;opacity:{{ ctaOp }};transform:translateY({{ ctaShift }});transition:opacity .45s ease,transform .55s cubic-bezier(.2,.7,.2,1)">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;max-width:1180px;margin:0 auto;padding:12px 14px 12px 22px;border-radius:30px;background:rgba(249,245,236,.94);backdrop-filter:blur(14px);border:1px solid #DCD2C0;box-shadow:0 18px 50px rgba(60,52,38,.2);pointer-events:auto">
+      <div style="min-width:0">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#9A9083">{{ crumb }}</div>
+        <div style="margin-top:5px;font-size:17px;font-weight:600;letter-spacing:-.015em;font-variant-numeric:lining-nums tabular-nums">{{ price }}<span style="margin-left:12px;font-size:13px;font-weight:500;color:#8A8073">{{ perM }}</span></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="{{ backHref }}" style="display:inline-flex;align-items:center;height:46px;padding:0 20px;border-radius:23px;border:1px solid #DCD2C0;font-size:13.5px;font-weight:600">К каталогу</a>
+        <a href="Mega-Khujand-Home.dc.html#mk-contact" style="display:inline-flex;align-items:center;height:46px;padding:0 24px;border-radius:23px;background:#1A1815;color:#F4EFE5;font-size:13.5px;font-weight:600">{{ ctaMain }}</a>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<footer style="position:relative;overflow:hidden;background:#100F0C;color:#F4EFE5">
+  <div style="position:relative;padding:clamp(30px,5vh,56px) clamp(18px,3.4vw,54px) clamp(22px,3.4vh,34px)">
+    <div style="display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;font-size:12.5px;color:rgba(244,239,229,.56)">
+      <span style="font-variant-numeric:lining-nums tabular-nums">© 2026 · MEGA KHUJAND</span>
+      <span>Изображения носят информационный характер</span>
+      <a href="Mega-Khujand-Home.dc.html" style="color:rgba(244,239,229,.56)">На главную</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;similarCount&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:4,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:2,&quot;max&quot;:6,&quot;section&quot;:&quot;Похожие квартиры&quot;},&quot;showSimilar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Похожие квартиры&quot;},&quot;stickyBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Поведение&quot;}}">
+const ROOM_T = ['Студия','1 комната','2 комнаты','3 комнаты','Пентхаус'];
+const PLAN_ROOMS = {
+  'studio-a':[['Гостиная',24.6],['Холл',5.1],['С/у',3.7]],
+  'studio-b':[['Гостиная',24.6],['Холл',5.1],['С/у',3.7]],
+  'studio-c':[['Гостиная',24.6],['Холл',5.1],['С/у',3.7]],
+  'studio-d':[['Гостиная',24.6],['Холл',5.1],['С/у',3.7]],
+  'one-a':[['Кухня-гостиная',25.8],['Спальня',15.4],['Холл',6.4],['С/у',3.6]],
+  'one-b':[['Кухня-гостиная',25.8],['Спальня',15.4],['Холл',6.4],['С/у',3.6]],
+  'one-c':[['Кухня-гостиная',25.8],['Спальня',15.4],['Холл',6.4],['С/у',3.6]],
+  'one-d':[['Кухня-гостиная',25.8],['Спальня',15.4],['Холл',6.4],['С/у',3.6]],
+  'two-a':[['Кухня-гостиная',28.4],['Спальня',15.2],['Спальня',14.4],['Холл',7.1],['С/у',3.9]],
+  'two-b':[['Кухня-гостиная',28.4],['Спальня',15.2],['Спальня',14.4],['Холл',7.1],['С/у',3.9]],
+  'two-c':[['Кухня-гостиная',28.4],['Спальня',15.2],['Спальня',14.4],['Холл',7.1],['С/у',3.9]],
+  'two-d':[['Кухня-гостиная',28.4],['Спальня',15.2],['Спальня',14.4],['Холл',7.1],['С/у',3.9]],
+  'three-a':[['Кухня-гостиная',39.2],['Спальня',14.1],['Спальня',13.6],['Спальня',16.8],['Холл',8.6],['С/у',4.2],['Гостевой с/у',2.4]],
+  'three-b':[['Кухня-гостиная',39.2],['Спальня',14.1],['Спальня',13.6],['Спальня',16.8],['Холл',8.6],['С/у',4.2],['Гостевой с/у',2.4]],
+  'three-c':[['Кухня-гостиная',39.2],['Спальня',14.1],['Спальня',13.6],['Спальня',16.8],['Холл',8.6],['С/у',4.2],['Гостевой с/у',2.4]],
+  'three-d':[['Кухня-гостиная',39.2],['Спальня',14.1],['Спальня',13.6],['Спальня',16.8],['Холл',8.6],['С/у',4.2],['Гостевой с/у',2.4]],
+  'pent-a':[['Кухня-гостиная',54.2],['Мастер-спальня',24.2],['Спальня',19.4],['Холл',10.4],['С/у',5],['Терраса',26.4]],
+  'pent-b':[['Кухня-гостиная',54.2],['Мастер-спальня',24.2],['Спальня',19.4],['Холл',10.4],['С/у',5],['Терраса',26.4]],
+  'pent-c':[['Кухня-гостиная',54.2],['Мастер-спальня',24.2],['Спальня',19.4],['Холл',10.4],['С/у',5],['Терраса',26.4]]
+};
+const PLANS = [
+  {p:'studio-a', r:0, a:28.4}, {p:'studio-b', r:0, a:31.6},
+  {p:'studio-c', r:0, a:26.9}, {p:'studio-d', r:0, a:33.1},
+  {p:'one-a', r:1, a:45.9}, {p:'one-b', r:1, a:48.8},
+  {p:'one-c', r:1, a:44.2}, {p:'one-d', r:1, a:47.4},
+  {p:'two-a', r:2, a:64.3}, {p:'two-b', r:2, a:68.5},
+  {p:'two-c', r:2, a:62.4}, {p:'two-d', r:2, a:66.8},
+  {p:'three-a', r:3, a:88.1}, {p:'three-b', r:3, a:93.4},
+  {p:'three-c', r:3, a:85.6}, {p:'three-d', r:3, a:90.7},
+  {p:'pent-a', r:4, a:142.8}, {p:'pent-b', r:4, a:151.6}, {p:'pent-c', r:4, a:138.4}
+];
+const FIN = ['Без отделки','Предчистовая','С отделкой'];
+const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ');
+
+let seed = 20260819;
+const rnd = () => (seed = (seed*1664525 + 1013904223) % 4294967296) / 4294967296;
+const pickOne = a => a[Math.floor(rnd()*a.length)];
+
+const LOTS = [];
+let lotNo = 108;
+for (let i = 0; i < 96; i++){
+  const pl = PLANS[Math.floor(rnd()*PLANS.length)];
+  const pent = pl.r === 4;
+  const floor = pent ? 17 + Math.floor(rnd()*3) : 2 + Math.floor(rnd()*15);
+  const area = +(pl.a + (rnd()*2.4 - 1.2)).toFixed(1);
+  const river = pent || rnd() > .58;
+  const terrace = pent || (floor >= 15 && rnd() > .55);
+  const corner = rnd() > .62;
+  let per = 9800 + floor*180 + (river?1900:0) + (terrace?1500:0) + (corner?700:0);
+  if (pent) per += 4200;
+  per += Math.round((rnd()*1400 - 700) / 100) * 100;
+  LOTS.push({
+    id:'f'+i, plan:pl.p, rooms:pl.r, area,
+    block: 1 + Math.floor(rnd()*3), sect: 1 + Math.floor(rnd()*4),
+    floor, floors: 19, no: lotNo += 1 + Math.floor(rnd()*4),
+    fin: pent ? pickOne(['Предчистовая','С отделкой']) : pickOne(FIN),
+    river, terrace, corner, rec: rnd(), free: rnd() > .17,
+    price: Math.round(per * area / 1000) * 1000
+  });
+}
+
+function lotHref(l, back){
+  const q = new URLSearchParams({
+    plan: l.plan, r: l.rooms, a: l.area, b: l.block, s: l.sect,
+    fl: l.floor, fs: l.floors, no: l.no, fin: l.fin,
+    price: l.price, river: l.river ? 1 : 0, terr: l.terrace ? 1 : 0,
+    corner: l.corner ? 1 : 0, st: l.free ? 'free' : 'book'
+  });
+  if (back) q.set('back', back);
+  return 'Mega-Khujand-Flat.dc.html?' + q.toString();
+}
+
+class Component extends DCLogic {
+  state = { ctaOn: false };
+
+  componentDidMount(){
+    const root = document.documentElement;
+    this.paint = () => {
+      root.style.setProperty('--mkdSy', (scrollY * -0.05).toFixed(1));
+      const on = scrollY > innerHeight * 0.7;
+      if (on !== this.state.ctaOn) this.setState({ctaOn: on});
+    };
+    this.onScroll = () => this.paint();
+    addEventListener('scroll', this.onScroll, {passive:true});
+    addEventListener('resize', this.onScroll);
+    addEventListener('load', this.onScroll);
+    document.addEventListener('visibilitychange', this.onScroll);
+    this.beat = setInterval(this.paint, 200);
+    this.paint();
+  }
+  componentWillUnmount(){
+    removeEventListener('scroll', this.onScroll);
+    removeEventListener('resize', this.onScroll);
+    removeEventListener('load', this.onScroll);
+    document.removeEventListener('visibilitychange', this.onScroll);
+    clearInterval(this.beat);
+  }
+
+  lot(){
+    const Q = new URLSearchParams(location.search);
+    const num = (k, d) => { const v = parseFloat(Q.get(k)); return isNaN(v) ? d : v; };
+    const base = LOTS[7];
+    const plan = Q.get('plan') && PLAN_ROOMS[Q.get('plan')] ? Q.get('plan') : base.plan;
+    const rooms = Math.max(0, Math.min(4, num('r', base.rooms)));
+    const area = num('a', base.area);
+    const price = num('price', base.price);
+    return {
+      plan, rooms, area, price,
+      block: num('b', base.block), sect: num('s', base.sect),
+      floor: num('fl', base.floor), floors: num('fs', base.floors),
+      no: num('no', base.no),
+      fin: Q.get('fin') || base.fin,
+      river: Q.get('river') != null ? Q.get('river') === '1' : base.river,
+      terrace: Q.get('terr') != null ? Q.get('terr') === '1' : base.terrace,
+      corner: Q.get('corner') != null ? Q.get('corner') === '1' : base.corner,
+      free: Q.get('st') ? Q.get('st') === 'free' : base.free,
+      back: Q.get('back') || ''
+    };
+  }
+
+  renderVals(){
+    const l = this.lot();
+    const backHref = l.back ? 'Mega-Khujand-Flats.dc.html?f=' + encodeURIComponent(l.back) : 'Mega-Khujand-Flats.dc.html';
+    const per = l.price / l.area;
+
+    const raw = PLAN_ROOMS[l.plan] || [];
+    const terrRows = raw.filter(r => r[0] === 'Терраса');
+    const inner = raw.filter(r => r[0] !== 'Терраса');
+    const sum = inner.reduce((s, r) => s + r[1], 0) || 1;
+    const k = l.area / sum;
+    const roomRows = inner.map(r => ({n: r[0], a: (r[1]*k).toFixed(1) + ' м²'}))
+      .concat(terrRows.map(r => ({n: r[0] + ' (не в площади)', a: r[1].toFixed(1) + ' м²'})));
+
+    const view = l.terrace ? 'Терраса и панорама реки'
+      : l.river ? 'Вид на Сырдарью'
+      : l.corner ? 'Панорамное остекление во двор'
+      : 'Во внутренний двор';
+
+    const gallery = [];
+    if (l.river || l.terrace) gallery.push({src:'media/renders/aerial-river-2560.jpg', cap:'Вид на Сырдарью с верхних этажей'});
+    gallery.push(l.floor >= 15
+      ? {src:'media/renders/facade-night-dusk-elevation.jpg', cap:'Фасад корпуса вечером'}
+      : {src:'media/renders/facade-day-hero-plaza.jpg', cap:'Фасад и площадь у корпуса'});
+    gallery.push(l.corner
+      ? {src:'media/renders/facade-day-corner-detail.jpg', cap:'Угловое панорамное остекление'}
+      : {src:'media/renders/courtyard-playground-collage.jpg', cap:'Внутренний двор без машин'});
+    if (gallery.length < 3) gallery.push({src:'media/renders/retail-arcade-entrance.jpg', cap:'Входная группа и торговая аркада'});
+    gallery.forEach(g => { g.ref = el => { if (el && el.getAttribute('src') !== g.src) el.src = g.src; }; });
+
+    const tags = [];
+    if (l.terrace) tags.push({t:'Терраса'});
+    if (l.river) tags.push({t:'Вид на реку'});
+    if (l.corner) tags.push({t:'Панорамное остекление'});
+    tags.push({t: l.fin});
+
+    const similar = LOTS
+      .filter(x => x.no !== l.no && x.free)
+      .map(x => ({x, d: Math.abs(x.area - l.area) + Math.abs(x.rooms - l.rooms) * 14 + Math.abs(x.floor - l.floor) * 0.4 + (x.river === l.river ? 0 : 5)}))
+      .sort((a, b) => a.d - b.d)
+      .slice(0, Math.round(this.props.similarCount ?? 4))
+      .map(({x}) => ({
+        type: ROOM_T[x.rooms],
+        area: x.area.toFixed(1) + ' м²',
+        meta: 'Корпус ' + x.block + ' · этаж ' + x.floor + ' · №' + x.no,
+        plan: 'media/plans/' + x.plan + '.svg',
+        price: fmt(x.price) + ' смн',
+        per: fmt(x.price / x.area) + ' смн за м²',
+        href: lotHref(x, l.back),
+        aria: ROOM_T[x.rooms] + ', ' + x.area + ' м², №' + x.no
+      }));
+
+    return {
+      backHref,
+      crumb: ROOM_T[l.rooms] + ' · № ' + l.no,
+      title: ROOM_T[l.rooms],
+      subline: 'Корпус ' + l.block + ' · секция ' + l.sect + ' · этаж ' + l.floor + ' из ' + l.floors + ' · квартира № ' + l.no,
+      stText: l.free ? 'Свободна' : 'Забронирована',
+      stBd: l.free ? '#C9A97E' : '#DCD2C0',
+      stBg: l.free ? 'rgba(201,169,126,.16)' : 'transparent',
+      stFg: l.free ? '#8A6A3E' : '#8A8073',
+
+      keySpecs: [
+        {k:'Площадь', v: l.area.toFixed(1) + ' м²'},
+        {k:'Комнат', v: l.rooms === 0 ? 'Студия' : l.rooms === 4 ? '3 + терраса' : String(l.rooms)},
+        {k:'Этаж', v: l.floor + ' / ' + l.floors},
+        {k:'Отделка', v: l.fin}
+      ],
+
+      price: l.free ? fmt(l.price) + ' смн' : 'Снята с продажи',
+      perM: l.free ? fmt(per) + ' смн за м²' : 'Бронь до конца месяца',
+      priceNote: l.free
+        ? 'Цена действует при 100% оплате. Доступны рассрочка до 24 месяцев и ипотека партнёрских банков.'
+        : 'Лот забронирован. Оставьте заявку — сообщим, если бронь снимут, и подберём похожий в том же стояке.',
+      ctaMain: l.free ? 'Забронировать' : 'Оставить заявку',
+      ctaNote: l.free
+        ? 'Шоурум работает ежедневно с 9:00 до 19:00. Покажем эту планировку в натуре, отделку и вид с этажа.'
+        : 'Покажем свободные квартиры с такой же планировкой и видом — в этом же корпусе.',
+
+      planRef: el => { const src = 'media/plans/' + l.plan + '.svg'; if (el && el.getAttribute('src') !== src) el.src = src; },
+      planAlt: 'Планировка: ' + ROOM_T[l.rooms] + ', ' + l.area.toFixed(1) + ' м²',
+      planCode: l.plan.toUpperCase().replace('-', ' · '),
+      tags,
+      gallery,
+
+      specs: [
+        {k:'Корпус', v:'№ ' + l.block},
+        {k:'Секция', v:'№ ' + l.sect},
+        {k:'Этаж', v: l.floor + ' из ' + l.floors},
+        {k:'Номер квартиры', v:'№ ' + l.no},
+        {k:'Общая площадь', v: l.area.toFixed(1) + ' м²'},
+        {k:'Комнатность', v: ROOM_T[l.rooms]},
+        {k:'Отделка', v: l.fin},
+        {k:'Вид из окон', v: view},
+        {k:'Высота потолков', v: l.rooms === 4 ? '3,2 м' : '2,9 м'},
+        {k:'Срок сдачи', v:'IV квартал 2027'}
+      ],
+
+      roomRows,
+      totalArea: l.area.toFixed(1) + ' м²',
+      similar,
+      showSimilar: (this.props.showSimilar ?? true) && similar.length > 0,
+      sticky: this.props.stickyBar ?? true,
+      ctaOp: this.state.ctaOn ? 1 : 0,
+      ctaShift: this.state.ctaOn ? '0%' : '130%'
+    };
+  }
+}
+</script>
+</body>
+</html>
