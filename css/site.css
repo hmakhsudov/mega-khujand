@@ -756,7 +756,7 @@ html:not(.js) .infra__panel{display:none}
 }
 .notfound{padding:clamp(50px,10vh,120px) var(--gx);text-align:center}
 .notfound h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,4vw,3.4rem);line-height:1.08;letter-spacing:-.018em}
-.notfound p{margin:16px auto 0;max-width:46ch;font-size:16px;line-height:1.6;color:var(--ink-2)}
+.notfound > p{margin:16px auto 0;max-width:46ch;font-size:16px;line-height:1.6;color:var(--ink-2)}
 .notfound .row-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px}
 .notfound .lots{margin-top:clamp(36px,6vh,64px);text-align:left}
 

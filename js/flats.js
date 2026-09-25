@@ -109,7 +109,7 @@
     var feats = [l.terrace && 'терраса', l.river && 'вид на реку', l.corner && 'угловая'].filter(Boolean).join(' · ') || '—';
     return '<li class="row' + (l.status === 'book' ? ' row--book' : '') + '">' +
       '<span class="row__type"><a class="lot__link" href="' + D.lotHref(l) + '">' + l.type +
-      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира № ' + l.no + ', ' + (open ? D.money(l.price) : 'забронирована') + '</span></a></span>' +
+      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + ', ' + (open ? D.money(l.price) : 'забронирована') + '</span></a></span>' +
       '<span aria-hidden="true">' + l.corp + ' / ' + l.sect + '</span>' +
       '<span class="row__plan" aria-hidden="true"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy" decoding="async"></span>' +
       '<span aria-hidden="true">' + D.area(l.area) + '</span>' +
@@ -118,7 +118,7 @@
       '<span aria-hidden="true">' + l.fin + '</span>' +
       '<span aria-hidden="true">' + feats + '</span>' +
       '<span class="row__price" aria-hidden="true">' + (open ? D.money(l.price) + '<small>' + (l.disc ? 'скидка ' + l.disc + '%' : D.num(D.perM(l)) + ' смн/м²') + '</small>' : 'Забронирована') + '</span>' +
-      '<span class="row__fav"><button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + MK.fav.has(l.id) + '" aria-label="В избранное: ' + l.type + ' № ' + l.no + '">' + MK.icon('heart', '') + '</button></span></li>';
+      '<span class="row__fav"><button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + MK.fav.has(l.id) + '" aria-label="В избранное: ' + l.type + ' №\u00a0' + l.no + '">' + MK.icon('heart', '') + '</button></span></li>';
   }
   function emptyHtml() {
     if (S.fav && !MK.fav.list().length) {

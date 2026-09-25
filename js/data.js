@@ -188,7 +188,7 @@
   function lotHref(l, hash) { return 'flat.html?id=' + encodeURIComponent(l.id) + (hash || ''); }
   function lotTitle(l) { return l.type + ', ' + area(l.area); }
   function lotPlace(l) { return 'Корпус ' + l.corp + ' · секция ' + l.sect + ' · этаж ' + l.floor + ' из ' + l.floors; }
-  function lotLabel(l) { return l.type + ' № ' + l.no + ', корпус ' + l.corp; }
+  function lotLabel(l) { return l.type + ' №\u00a0' + l.no + ', корпус ' + l.corp; }
   function roomsFor(l) {
     var fam = l.plan.split('-')[0];
     var base = PLAN_ROOMS[fam] || [];
