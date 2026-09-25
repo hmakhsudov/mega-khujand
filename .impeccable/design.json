@@ -1,455 +1,384 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-25T02:14:22+00:00",
+  "generatedAt": "2026-09-25T09:38:09+00:00",
   "title": "Design System: MEGA KHUJAND",
   "extensions": {
     "colorMeta": {
-      "paper": {
+      "room": {
         "role": "neutral",
-        "displayName": "Cream Stone",
-        "canonical": "oklch(95.3% 0.014 85)",
+        "displayName": "Vitrine Graphite",
+        "canonical": "#121416",
         "tonalRamp": [
-          "#0E0B05",
-          "#28251D",
-          "#464239",
-          "#656158",
-          "#868279",
-          "#A9A49B",
-          "#CDC9BF",
-          "#F3EEE4"
+          "#090B0D",
+          "#222426",
+          "#3E4042",
+          "#5B5E60",
+          "#7B7D80",
+          "#9C9FA1",
+          "#C1C4C7",
+          "#ECEFF2"
         ]
       },
-      "sand": {
+      "room-2": {
         "role": "neutral",
-        "displayName": "Sand",
-        "canonical": "oklch(91.5% 0.021 82)",
+        "displayName": "Podium Graphite",
+        "canonical": "#1A1D20",
         "tonalRamp": [
-          "#100A03",
-          "#2A241A",
-          "#484136",
-          "#676054",
-          "#898175",
-          "#ACA497",
-          "#D0C8BA",
-          "#F6EDDF"
+          "#090B0E",
+          "#212427",
+          "#3D4044",
+          "#5A5E62",
+          "#7A7E81",
+          "#9B9FA3",
+          "#C0C5C9",
+          "#EBEFF3"
         ]
       },
-      "card": {
+      "room-line": {
         "role": "neutral",
-        "displayName": "Card Linen",
-        "canonical": "oklch(97.1% 0.013 87)",
+        "displayName": "Room Rule",
+        "canonical": "rgba(238,240,238,.13)"
+      },
+      "room-line-2": {
+        "role": "neutral",
+        "displayName": "Room Rule Strong",
+        "canonical": "rgba(238,240,238,.26)"
+      },
+      "plaster": {
+        "role": "neutral",
+        "displayName": "Model Plaster",
+        "canonical": "#EEF0EE",
         "tonalRamp": [
-          "#0D0B06",
-          "#28251E",
-          "#45423A",
-          "#646159",
-          "#86827A",
-          "#A8A59C",
-          "#CDC9C0",
-          "#F2EEE5"
+          "#0A0C0A",
+          "#232423",
+          "#3F403F",
+          "#5C5E5C",
+          "#7C7E7C",
+          "#9D9F9D",
+          "#C3C5C3",
+          "#EDEFED"
         ]
       },
-      "well": {
+      "plaster-2": {
         "role": "neutral",
-        "displayName": "Plan Well",
-        "canonical": "oklch(93.3% 0.020 85)",
+        "displayName": "Plaster in Shadow",
+        "canonical": "#E3E6E3",
         "tonalRamp": [
-          "#0F0A03",
-          "#2A241A",
-          "#474136",
-          "#676154",
-          "#888275",
-          "#ABA497",
-          "#CFC8BB",
-          "#F5EEE0"
+          "#0A0C0A",
+          "#222522",
+          "#3E403E",
+          "#5C5E5C",
+          "#7B7E7B",
+          "#9C9F9C",
+          "#C2C5C2",
+          "#ECEFEC"
+        ]
+      },
+      "plaster-3": {
+        "role": "neutral",
+        "displayName": "Plaster Face",
+        "canonical": "#F7F8F7",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#232423",
+          "#3F403F",
+          "#5D5E5D",
+          "#7D7D7D",
+          "#9E9F9E",
+          "#C3C4C3",
+          "#EEEFEE"
         ]
       },
       "line": {
         "role": "neutral",
-        "displayName": "Warm Rule",
-        "canonical": "oklch(86.7% 0.027 82)",
+        "displayName": "Plaster Rule",
+        "canonical": "#C9CECB",
         "tonalRamp": [
-          "#110A01",
-          "#2B2416",
-          "#494132",
-          "#696050",
-          "#8A8171",
-          "#ADA493",
-          "#D2C8B6",
-          "#F7EDDB"
+          "#090C0A",
+          "#212523",
+          "#3D413E",
+          "#5A5F5C",
+          "#7A7E7C",
+          "#9BA09D",
+          "#C0C5C2",
+          "#EBF0ED"
         ]
       },
       "line-2": {
         "role": "neutral",
-        "displayName": "Warm Rule 2",
-        "canonical": "oklch(88.8% 0.026 85)",
+        "displayName": "Plaster Rule Light",
+        "canonical": "#D9DDDA",
         "tonalRamp": [
-          "#100A01",
-          "#2B2416",
-          "#484132",
-          "#686051",
-          "#8A8171",
-          "#ADA493",
-          "#D1C8B6",
-          "#F7EEDB"
-        ]
-      },
-      "line-3": {
-        "role": "neutral",
-        "displayName": "Warm Rule 3",
-        "canonical": "oklch(90.5% 0.024 86)",
-        "tonalRamp": [
-          "#100A02",
-          "#2A2417",
-          "#484133",
-          "#676052",
-          "#898272",
-          "#ACA494",
-          "#D0C8B8",
-          "#F6EEDD"
+          "#090C0A",
+          "#222523",
+          "#3D413E",
+          "#5B5F5C",
+          "#7B7E7C",
+          "#9C9F9D",
+          "#C1C5C2",
+          "#ECF0ED"
         ]
       },
       "ink": {
-        "role": "primary",
-        "displayName": "Graphite Ink",
-        "canonical": "oklch(21.0% 0.007 78)",
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#121416",
         "tonalRamp": [
-          "#0D0B08",
-          "#272522",
-          "#44423E",
-          "#63615D",
-          "#84827E",
-          "#A7A5A0",
-          "#CBC9C4",
-          "#F1EEEA"
+          "#090B0D",
+          "#222426",
+          "#3E4042",
+          "#5B5E60",
+          "#7B7D80",
+          "#9C9FA1",
+          "#C1C4C7",
+          "#ECEFF2"
         ]
       },
       "ink-2": {
         "role": "neutral",
-        "displayName": "Ink 2",
-        "canonical": "oklch(39.7% 0.018 81)",
+        "displayName": "Reading Ink",
+        "canonical": "#3B4144",
         "tonalRamp": [
-          "#0F0A04",
-          "#2A241B",
-          "#474137",
-          "#676056",
-          "#888176",
-          "#ABA499",
-          "#CFC8BC",
-          "#F5EDE1"
+          "#070C0E",
+          "#1F2528",
+          "#3B4144",
+          "#585F62",
+          "#787E82",
+          "#99A0A3",
+          "#BEC5C9",
+          "#E8F0F4"
         ]
       },
       "ink-3": {
         "role": "neutral",
-        "displayName": "Ink 3",
-        "canonical": "oklch(46.1% 0.022 78)",
+        "displayName": "Quiet Ink",
+        "canonical": "#596164",
         "tonalRamp": [
-          "#100A03",
-          "#2B2419",
-          "#484135",
-          "#686054",
-          "#8A8174",
-          "#ADA496",
-          "#D1C8BA",
-          "#F7EDDF"
+          "#060C0F",
+          "#1E2528",
+          "#3A4144",
+          "#575F62",
+          "#767F82",
+          "#97A0A3",
+          "#BDC6C9",
+          "#E7F0F4"
         ]
       },
-      "bronze": {
-        "role": "secondary",
-        "displayName": "Weathered Bronze",
-        "canonical": "oklch(60.2% 0.075 73)",
-        "tonalRamp": [
-          "#1C0300",
-          "#3A1D00",
-          "#5A3B09",
-          "#7B5A2E",
-          "#9E7C4E",
-          "#C29E70",
-          "#E7C293",
-          "#FFE8B7"
-        ]
-      },
-      "bronze-ink": {
-        "role": "secondary",
-        "displayName": "Bronze Ink",
-        "canonical": "oklch(49.6% 0.069 74)",
-        "tonalRamp": [
-          "#1B0400",
-          "#391E00",
-          "#583C11",
-          "#795B32",
-          "#9C7C53",
-          "#C09F74",
-          "#E5C397",
-          "#FFE8BB"
-        ]
-      },
-      "bronze-2": {
-        "role": "secondary",
-        "displayName": "Pale Bronze",
-        "canonical": "oklch(75.3% 0.069 75)",
-        "tonalRamp": [
-          "#1B0400",
-          "#381F00",
-          "#573C11",
-          "#785B32",
-          "#9B7D53",
-          "#BF9F75",
-          "#E4C397",
-          "#FFE9BC"
-        ]
-      },
-      "night": {
-        "role": "tertiary",
-        "displayName": "Night",
-        "canonical": "oklch(16.8% 0.006 92)",
-        "tonalRamp": [
-          "#0C0B08",
-          "#262522",
-          "#43423E",
-          "#62615D",
-          "#84827E",
-          "#A6A5A1",
-          "#CAC9C5",
-          "#F0EEEA"
-        ]
-      },
-      "pine-top": {
-        "role": "tertiary",
-        "displayName": "Pine Top",
-        "canonical": "oklch(39.6% 0.053 171)",
-        "tonalRamp": [
-          "#001208",
-          "#002D22",
-          "#204B3E",
-          "#406B5D",
-          "#618D7E",
-          "#83B0A1",
-          "#A7D5C5",
-          "#CCFBEA"
-        ]
-      },
-      "pine": {
-        "role": "tertiary",
-        "displayName": "Pine",
-        "canonical": "oklch(34.1% 0.047 169)",
-        "tonalRamp": [
-          "#001108",
-          "#062C21",
-          "#264A3E",
-          "#466A5D",
-          "#668C7E",
-          "#88AFA0",
-          "#ACD4C4",
-          "#D1F9E9"
-        ]
-      },
-      "pine-deep": {
-        "role": "tertiary",
-        "displayName": "Pine Deep",
-        "canonical": "oklch(29.5% 0.040 169)",
-        "tonalRamp": [
-          "#001008",
-          "#0E2B22",
-          "#2C493E",
-          "#4B695D",
-          "#6B8A7E",
-          "#8DAEA1",
-          "#B1D2C5",
-          "#D6F8EA"
-        ]
-      },
-      "gold": {
-        "role": "tertiary",
-        "displayName": "Pavilion Gold",
-        "canonical": "oklch(77.1% 0.081 77)",
+      "brass": {
+        "role": "primary",
+        "displayName": "Engraved Brass",
+        "canonical": "#B08D57",
         "tonalRamp": [
           "#1D0300",
-          "#3A1D00",
-          "#5A3B00",
-          "#7B5B26",
-          "#9E7C48",
-          "#C29F6A",
-          "#E7C38D",
-          "#FFE8B1"
+          "#391C00",
+          "#583900",
+          "#785720",
+          "#997741",
+          "#BB9862",
+          "#E2BE86",
+          "#FFE8B0"
+        ]
+      },
+      "brass-hi": {
+        "role": "primary",
+        "displayName": "Polished Brass",
+        "canonical": "#C09C63",
+        "tonalRamp": [
+          "#1D0200",
+          "#3A1C00",
+          "#583900",
+          "#78571C",
+          "#99773E",
+          "#BC985F",
+          "#E3BE84",
+          "#FFE8AD"
+        ]
+      },
+      "brass-lite": {
+        "role": "primary",
+        "displayName": "Brass on Dark",
+        "canonical": "#D8BA84",
+        "tonalRamp": [
+          "#1A0500",
+          "#361E00",
+          "#543B00",
+          "#745924",
+          "#957944",
+          "#B79A65",
+          "#DEC08A",
+          "#FFEAB3"
+        ]
+      },
+      "brass-ink": {
+        "role": "primary",
+        "displayName": "Brass Ink",
+        "canonical": "#76582A",
+        "tonalRamp": [
+          "#1B0400",
+          "#381D00",
+          "#563906",
+          "#76582A",
+          "#977749",
+          "#B9986A",
+          "#E0BE8E",
+          "#FFE9B7"
+        ]
+      },
+      "led": {
+        "role": "secondary",
+        "displayName": "Window LED",
+        "canonical": "#FFD58A",
+        "tonalRamp": [
+          "#1F0100",
+          "#3C1A00",
+          "#5B3700",
+          "#7B5600",
+          "#9D7629",
+          "#BF974D",
+          "#E7BD73",
+          "#FFE89C"
+        ]
+      },
+      "led-deep": {
+        "role": "secondary",
+        "displayName": "Deep LED",
+        "canonical": "#F2B85B",
+        "tonalRamp": [
+          "#250000",
+          "#441200",
+          "#643100",
+          "#855100",
+          "#A77100",
+          "#CB9331",
+          "#F3B95C",
+          "#FFE387"
         ]
       },
       "danger": {
-        "role": "neutral",
-        "displayName": "Danger",
-        "canonical": "oklch(47.9% 0.133 34)",
+        "role": "error",
+        "displayName": "Oxide Red",
+        "canonical": "#A8391F",
         "tonalRamp": [
-          "#240000",
-          "#490A00",
-          "#712615",
-          "#9A422E",
-          "#C0644E",
-          "#E18B77",
-          "#FFB3A0",
-          "#FFDCCA"
+          "#2F0000",
+          "#520000",
+          "#751901",
+          "#993C26",
+          "#BE5D46",
+          "#E37E66",
+          "#FFA48B",
+          "#FFCEB4"
         ]
-      },
-      "field": {
-        "role": "neutral",
-        "displayName": "Field White"
-      },
-      "line-ctl": {
-        "role": "neutral",
-        "displayName": "Control Rule"
-      },
-      "ink-hover": {
-        "role": "primary",
-        "displayName": "Warm Graphite"
-      },
-      "night-2": {
-        "role": "tertiary",
-        "displayName": "Night 2"
-      },
-      "lit-window": {
-        "role": "tertiary",
-        "displayName": "Lit Window"
-      },
-      "sale-fill": {
-        "role": "secondary",
-        "displayName": "Sale Parchment"
-      },
-      "sale-ink": {
-        "role": "secondary",
-        "displayName": "Sale Ink"
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Display",
-        "purpose": "Inner-page titles and the hero line; Prata 400 only."
+        "displayName": "Wordmark",
+        "purpose": "MEGA KHUJAND cut through the plaster in the home hero; one use only."
+      },
+      "page-title": {
+        "displayName": "Page Title",
+        "purpose": "Inner-page H1s in Unbounded Light."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section headlines, balanced wrap."
+        "purpose": "Section H2s, sentence case, balanced wrap."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Form-card titles, drawer lot numbers, service names, lot type names, big Prata figures."
+        "purpose": "Card, form, board and list-item titles."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running copy."
+        "purpose": "Running text in Manrope; leads max 52ch."
       },
-      "lead": {
-        "displayName": "Lead",
-        "purpose": "Section leads, capped at 48ch."
-      },
-      "numeric": {
-        "displayName": "Numeric",
-        "purpose": "Prices, areas, floors, spec values; tabular lining numerals."
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Prices, areas, counts in tabular lining numerals."
       },
       "label": {
-        "displayName": "Label",
-        "purpose": "Uppercase 11px group names, spec terms, table headers, status pills."
+        "displayName": "Engraved Label",
+        "purpose": "Plates, field and spec labels, statuses, table heads; 11px floor."
       },
-      "control": {
-        "displayName": "Control",
-        "purpose": "Buttons, segments, options."
+      "button": {
+        "displayName": "Button Caps",
+        "purpose": "Button text in wide caps."
+      },
+      "key": {
+        "displayName": "Key",
+        "purpose": "Text on keys, chips and section buttons."
       }
     },
     "shadows": [
       {
-        "name": "float",
-        "value": "0 18px 50px rgba(60,52,38,.16)",
-        "purpose": "Pill nav and sticky price bar."
+        "name": "overlay-bar",
+        "value": "0 16px 40px rgba(18,20,22,.3)",
+        "purpose": "Sticky price bar floating over the flat page only."
       },
       {
-        "name": "lift",
-        "value": "0 16px 36px rgba(60,52,38,.1)",
-        "purpose": "Hovered lot card, with a 3px rise."
+        "name": "overlay-drawer",
+        "value": "-24px 0 60px rgba(18,20,22,.28)",
+        "purpose": "Lot drawer sliding over the building grid only."
       },
       {
-        "name": "button-hover",
-        "value": "0 10px 26px rgba(26,24,21,.18)",
-        "purpose": "Hovered dark pill button."
-      },
-      {
-        "name": "stage",
-        "value": "0 24px 60px rgba(60,52,38,.24)",
-        "purpose": "Facade picker frame."
-      },
-      {
-        "name": "drawer",
-        "value": "-30px 0 80px rgba(60,52,38,.24)",
-        "purpose": "Side lot drawer."
-      },
-      {
-        "name": "form-on-night",
-        "value": "0 30px 80px rgba(0,0,0,.34)",
-        "purpose": "Light form card over a night render."
-      },
-      {
-        "name": "window-glow",
-        "value": "0 0 14px rgba(242,223,182,.55)",
-        "purpose": "Available cells in the evening availability grid."
-      },
-      {
-        "name": "focus-field",
-        "value": "0 0 0 3px rgba(156,122,77,.22)",
-        "purpose": "Focused text input glow."
+        "name": "focus-brass",
+        "value": "0 0 0 3px rgba(176,141,87,.35)",
+        "purpose": "Focus ring on inputs and range boxes."
       }
     ],
     "motion": [
       {
         "name": "ease",
         "value": "cubic-bezier(.2,.7,.2,1)",
-        "purpose": "Default easing for state transitions (0.3 to 0.6s)."
+        "purpose": "Default easing for fills, rules and presses (.25–.3s)."
       },
       {
         "name": "ease-out",
         "value": "cubic-bezier(.16,1,.3,1)",
-        "purpose": "Dialog entrances (menu, drawer)."
+        "purpose": "Menu (.4s) and drawer (.45s) entrances."
       },
       {
-        "name": "scroll-loop",
-        "value": "one requestAnimationFrame per frame (MK.tick)",
-        "purpose": "All scroll-linked scenes read shared --p / --e / --sy custom properties."
+        "name": "hero-scroll-clock",
+        "value": "330vh pinned stage from 900px; bar fades p .012–.072, wordmark fly-through p 0–.25, plaster fades p .235–.305, facade settles p 0–.42, dim p .30–.40, windows light bottom-up p .38–.60, console rises p .56–.64",
+        "purpose": "Home hero only; stacked with windows lit once on entry under 900px or with reduced motion."
       },
       {
-        "name": "pinned-scenes",
-        "value": "min-width 900px, not under reduced motion",
-        "purpose": "Hero 250vh, chapters 330vh, panorama 130vh, infrastructure 460vh."
-      },
-      {
-        "name": "foliage-drift",
-        "value": "40s to 62s ease-in-out alternate",
-        "purpose": "Background foliage-shadow layer; stopped under reduced motion."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "prefers-reduced-motion: reduce",
-        "purpose": "Transforms removed; opacity, colour, fill and stroke transitions kept."
+        "name": "window-light",
+        "value": "opacity .6s ease, delay floor x 55ms",
+        "purpose": "Unpinned fallback: free windows light floor by floor."
       }
     ],
     "breakpoints": [
       {
-        "name": "phone",
+        "name": "xs",
+        "value": "380px"
+      },
+      {
+        "name": "sm",
         "value": "560px"
       },
       {
-        "name": "tablet",
+        "name": "md",
         "value": "760px"
       },
       {
-        "name": "pinned",
+        "name": "stage",
         "value": "900px"
       },
       {
-        "name": "narrow-board",
-        "value": "980px"
-      },
-      {
-        "name": "compact",
+        "name": "lg",
         "value": "1000px"
       },
       {
         "name": "nav",
+        "value": "1100px"
+      },
+      {
+        "name": "xl",
         "value": "1200px"
+      },
+      {
+        "name": "picker-wide",
+        "value": "1280px"
       }
     ]
   },
@@ -457,144 +386,137 @@
     {
       "name": "Primary Button",
       "kind": "button",
-      "refersTo": "button-dark",
-      "description": "Graphite pill for the main action on light grounds.",
-      "html": "<button class=\"ds-btn ds-btn-dark\">Выбрать квартиру</button>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 28px;border-radius:999px;border:1px solid transparent;font:600 14.5px/1 var(--f-sans);cursor:pointer;transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease),transform .35s var(--ease)} .ds-btn:active{transform:translateY(1px)} .ds-btn:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px} .ds-btn-dark{background:var(--ink);color:var(--paper)} .ds-btn-dark:hover{background:#2F2A23;box-shadow:0 10px 26px rgba(26,24,21,.18)}"
+      "refersTo": "button-primary",
+      "description": "Solid brass plate with ink caps; the one committing action per group.",
+      "html": "<a class=\"ds-btn ds-btn--brass\" href=\"#\">Выбрать квартиру</a>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:var(--r);border:1px solid transparent;font:500 11.5px/1.2 var(--f-disp);letter-spacing:.09em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:background .3s var(--ease),color .3s var(--ease),border-color .3s var(--ease),transform .3s var(--ease)} .ds-btn:active{transform:translateY(1px)} .ds-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px} .ds-btn--brass{background:var(--brass);color:var(--ink)} .ds-btn--brass:hover{background:var(--brass-hi)}"
     },
     {
-      "name": "Line Button",
+      "name": "Outline Button",
       "kind": "button",
-      "refersTo": "button-line",
-      "description": "Graphite outline pill for the second action.",
-      "html": "<button class=\"ds-btn ds-btn-line\">Записаться на показ</button>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 28px;border-radius:999px;border:1px solid transparent;font:600 14.5px/1 var(--f-sans);cursor:pointer;transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease),transform .35s var(--ease)} .ds-btn:active{transform:translateY(1px)} .ds-btn:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px} .ds-btn-line{background:transparent;border-color:var(--ink);color:var(--ink)} .ds-btn-line:hover{background:var(--ink);color:var(--paper)}"
+      "refersTo": "button-outline",
+      "description": "1px ink frame; fills ink on hover. Secondary action beside brass.",
+      "html": "<a class=\"ds-btn-line\" href=\"#\">Записаться на показ</a>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-btn-line{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:var(--r);border:1px solid var(--ink);background:transparent;color:var(--ink);font:500 11.5px/1.2 var(--f-disp);letter-spacing:.09em;text-transform:uppercase;text-decoration:none;transition:background .3s var(--ease),color .3s var(--ease)} .ds-btn-line:hover{background:var(--ink);color:var(--plaster)} .ds-btn-line:focus-visible{outline:2px solid var(--ink);outline-offset:3px}"
     },
     {
-      "name": "Soft Button",
-      "kind": "button",
-      "refersTo": "button-soft",
-      "description": "Card-linen pill for tertiary actions in panels and bars.",
-      "html": "<button class=\"ds-btn ds-btn-soft\">В избранное</button>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 28px;border-radius:999px;border:1px solid transparent;font:600 14.5px/1 var(--f-sans);cursor:pointer;transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease),transform .35s var(--ease)} .ds-btn:active{transform:translateY(1px)} .ds-btn:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px} .ds-btn-soft{background:var(--card);border-color:var(--line);color:var(--ink)} .ds-btn-soft:hover{border-color:var(--bronze-2)}"
-    },
-    {
-      "name": "Segmented Control",
+      "name": "Console Keys",
       "kind": "chip",
-      "refersTo": "segment",
-      "description": "Recessed tray of options; selected fills graphite.",
-      "html": "<div class=\"ds-seg\" role=\"group\"><button class=\"ds-seg-btn\" aria-pressed=\"false\">Студия</button><button class=\"ds-seg-btn\" aria-pressed=\"true\">1</button><button class=\"ds-seg-btn\" aria-pressed=\"false\">2</button><button class=\"ds-seg-btn\" aria-pressed=\"false\">3</button></div>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-seg{display:inline-flex;gap:5px;padding:5px;border-radius:14px;background:#EDE6D9;border:1px solid #DFD6C4} .ds-seg-btn{min-width:44px;height:38px;padding:0 13px;border:0;border-radius:10px;background:none;font:600 13.5px/1 var(--f-sans);color:var(--ink-3);cursor:pointer;transition:background .3s var(--ease),color .3s var(--ease)} .ds-seg-btn:hover{color:var(--ink)} .ds-seg-btn[aria-pressed=\"true\"]{background:var(--ink);color:var(--paper)} .ds-seg-btn:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px}"
+      "refersTo": "key",
+      "description": "On/off keys with an LED dot; pressed keys invert and light the dot.",
+      "html": "<div class=\"ds-seg\"><button class=\"ds-key\" aria-pressed=\"false\">Студия</button><button class=\"ds-key\" aria-pressed=\"true\">1 спальня</button><button class=\"ds-key\" aria-pressed=\"false\">2 спальни</button></div>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-seg{display:flex;flex-wrap:wrap;gap:6px} .ds-key{display:inline-flex;align-items:center;gap:9px;min-height:42px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r);background:var(--plaster-3);color:var(--ink-2);font:600 13.5px/1.1 var(--f-sans);cursor:pointer;transition:background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease)} .ds-key::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--line)} .ds-key:hover{border-color:var(--ink-3);color:var(--ink)} .ds-key:focus-visible{outline:2px solid var(--ink);outline-offset:3px} .ds-key[aria-pressed=\"true\"]{background:var(--ink);border-color:var(--ink);color:var(--plaster)} .ds-key[aria-pressed=\"true\"]::before{background:var(--led)}"
     },
     {
-      "name": "Filter Chip",
+      "name": "Brass Plate and Status",
       "kind": "chip",
-      "refersTo": "chip",
-      "description": "Toggle chip with a check box; selected takes the bronze tint.",
-      "html": "<button class=\"ds-chip\" aria-pressed=\"true\"><span class=\"ds-chip-box\"><svg viewBox=\"0 0 10 10\"><path d=\"M1.5 5.2l2.2 2.2 4.8-4.8\"/></svg></span>С террасой</button>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-chip{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 16px;border-radius:12px;border:1px solid #DFD6C4;background:var(--card);font:500 14px/1 var(--f-sans);color:var(--ink-3);cursor:pointer;transition:border-color .3s var(--ease),background .3s var(--ease),color .3s var(--ease)} .ds-chip:hover{border-color:var(--bronze-2);color:var(--ink)} .ds-chip:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px} .ds-chip-box{display:grid;place-items:center;width:16px;height:16px;border-radius:4px;border:1.5px solid #B8AA90} .ds-chip-box svg{width:10px;height:10px;fill:none;stroke:#FFF8EC;stroke-width:2.2;opacity:0} .ds-chip[aria-pressed=\"true\"]{border-color:var(--bronze-2);background:var(--bronze-tint);color:var(--ink)} .ds-chip[aria-pressed=\"true\"] .ds-chip-box{background:var(--bronze-ink);border-color:var(--bronze-ink)} .ds-chip[aria-pressed=\"true\"] .ds-chip-box svg{opacity:1}"
-    },
-    {
-      "name": "Text Field",
-      "kind": "input",
-      "refersTo": "input",
-      "description": "Lead-form field; bronze border and glow on focus.",
-      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Телефон</span><input class=\"ds-input\" type=\"tel\" placeholder=\"+992\"></label>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-field{display:grid;gap:7px;width:320px} .ds-field-label{font:600 13px/1.4 var(--f-sans);color:var(--ink-2)} .ds-input{height:50px;padding:0 15px;border:1px solid var(--line-ctl);border-radius:12px;background:#FCFAF5;font:500 16px var(--f-sans);color:var(--ink);transition:border-color .25s ease,box-shadow .25s ease,background .25s ease} .ds-input::placeholder{color:#7C7364;font-weight:400} .ds-input:hover{border-color:#C4B597} .ds-input:focus{outline:none;border-color:var(--bronze);box-shadow:0 0 0 3px rgba(156,122,77,.22);background:#fff}"
-    },
-    {
-      "name": "Header Navigation",
-      "kind": "nav",
-      "refersTo": "header",
-      "description": "Tracked-caps brand, centred nav with bronze-ink current item, dark CTA.",
-      "html": "<header class=\"ds-hdr\"><a class=\"ds-brand\" href=\"#\">Mega Khujand</a><nav class=\"ds-nav\"><a href=\"#\">Архитектура</a><a href=\"#\" aria-current=\"page\">Квартиры</a><a href=\"#\">Шахматка</a><a href=\"#\">Контакты</a></nav><a class=\"ds-cta\" href=\"#\">Оставить заявку</a></header>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-hdr{display:flex;align-items:center;gap:32px;padding:20px 32px;border-bottom:1px solid var(--line);background:var(--paper);font-family:var(--f-sans);color:var(--ink)} .ds-brand{font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;font-weight:600;color:inherit;text-decoration:none} .ds-nav{flex:1;display:flex;justify-content:center;gap:22px;font-size:13.5px;font-weight:500} .ds-nav a{padding:10px 2px;color:inherit;text-decoration:none;transition:color .3s ease} .ds-nav a:hover,.ds-nav a[aria-current]{color:var(--bronze-ink)} .ds-cta{display:inline-flex;align-items:center;height:42px;padding:0 20px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;text-decoration:none} .ds-cta:hover{background:#2F2A23} .ds-hdr a:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px;border-radius:6px}"
+      "refersTo": "plate",
+      "description": "Engraved brass plate, and the free / discount statuses with their LED dots.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-plate\">Вариант А</span><span class=\"ds-status ds-status--free\">Свободна</span><span class=\"ds-status ds-status--sale\">Скидка 5%</span></div>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:16px;background:var(--plaster)} .ds-plate{display:inline-flex;align-items:center;min-height:28px;padding:5px 11px;border-radius:2px;background:var(--brass);color:var(--ink);font:500 11px/1.25 var(--f-disp);letter-spacing:.12em;text-transform:uppercase} .ds-status{display:inline-flex;align-items:center;gap:9px;min-height:28px;padding:0 11px;border-radius:2px;border:1px solid var(--line);font:500 11px/1 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)} .ds-status::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--line)} .ds-status--free{border-color:var(--ink);color:var(--ink)} .ds-status--free::before{background:var(--led-deep)} .ds-status--sale{border-color:var(--brass);background:var(--brass);color:var(--ink)} .ds-status--sale::before{background:var(--led)}"
     },
     {
       "name": "Lot Card",
       "kind": "card",
       "refersTo": "lot-card",
-      "description": "Flat card: Prata type, bronze-ink area, plan, tabular price; lifts on hover.",
-      "html": "<article class=\"ds-lot\"><div class=\"ds-lot-head\"><span class=\"ds-lot-type\">2-комнатная</span><span class=\"ds-lot-area\">68,4 м²</span></div><p class=\"ds-lot-meta\">Корпус 1 · секция 2 · этаж 7</p><div class=\"ds-lot-plan\"><svg viewBox=\"0 0 120 90\" width=\"150\"><path d=\"M4 4h112v82H4zM4 44h60M64 4v82M90 44v42\" fill=\"none\" stroke=\"#4C463C\" stroke-width=\"1.5\"/></svg></div><div class=\"ds-lot-foot\"><div class=\"ds-lot-price\">642 960 смн<small>9 400 смн/м²</small></div></div></article>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-lot{width:300px;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line-2);border-radius:18px;overflow:hidden;font-family:var(--f-sans);color:var(--ink);transition:border-color .45s var(--ease),transform .55s var(--ease),box-shadow .45s var(--ease),background .45s var(--ease)} .ds-lot:hover{border-color:var(--bronze-2);background:#FBF8F1;transform:translateY(-3px);box-shadow:0 16px 36px rgba(60,52,38,.1)} .ds-lot-head{display:flex;justify-content:space-between;gap:12px;padding:20px 20px 0} .ds-lot-type{font-family:var(--f-disp);font-size:19px;line-height:1.2} .ds-lot-area{font-size:18px;font-weight:600;color:var(--bronze-ink);font-variant-numeric:lining-nums tabular-nums} .ds-lot-meta{margin:8px 0 0;padding:0 20px;font-size:13px;color:var(--ink-3)} .ds-lot-plan{display:grid;place-items:center;min-height:170px} .ds-lot-foot{padding:15px 20px 18px;border-top:1px solid var(--line-2)} .ds-lot-price{font-size:20px;font-weight:600;letter-spacing:-.015em;font-variant-numeric:lining-nums tabular-nums} .ds-lot-price small{display:block;margin-top:7px;font-size:12.5px;font-weight:500;color:var(--ink-3)}"
+      "description": "Plaster tile ending in a price tag: 1px ink rule, tabular price, status LED.",
+      "html": "<article class=\"ds-lot\"><div class=\"ds-lot__head\"><span class=\"ds-lot__type\">2 спальни</span><span class=\"ds-lot__area\">78,4 м²</span></div><p class=\"ds-lot__meta\">Корпус 1 · секция 2 · этаж 9</p><div class=\"ds-lot__plan\"><svg width=\"120\" height=\"90\" viewBox=\"0 0 120 90\" fill=\"none\" stroke=\"#3B4144\" stroke-width=\"1.5\"><rect x=\"4\" y=\"4\" width=\"112\" height=\"82\"/><path d=\"M60 4v50M4 54h70M74 54v32\"/></svg></div><div class=\"ds-lot__foot\"><p class=\"ds-lot__price\">736 960 смн<small>9 400 смн/м²</small></p></div></article>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-lot{display:flex;flex-direction:column;max-width:300px;background:var(--plaster-3);border:1px solid var(--line);border-radius:var(--r);transition:border-color .3s var(--ease)} .ds-lot:hover{border-color:var(--ink)} .ds-lot__head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:18px 18px 0} .ds-lot__type{font:400 15px/1.25 var(--f-disp);letter-spacing:-.01em} .ds-lot__area{font:700 17px/1.2 var(--f-sans);font-variant-numeric:lining-nums tabular-nums} .ds-lot__meta{margin:0;padding:6px 18px 0;font:500 12.5px/1.5 var(--f-sans);color:var(--ink-3)} .ds-lot__plan{display:grid;place-items:center;padding:14px 18px 8px;min-height:150px} .ds-lot__foot{margin:0 18px;padding:14px 0 16px;border-top:1px solid var(--ink)} .ds-lot__price{position:relative;margin:0;padding-left:17px;font:800 17px/1.15 var(--f-sans);letter-spacing:-.01em;font-variant-numeric:lining-nums tabular-nums} .ds-lot__price::before{content:'';position:absolute;left:0;top:.36em;width:8px;height:8px;border-radius:50%;background:var(--led-deep)} .ds-lot__price small{display:block;margin-top:5px;font-size:12.5px;font-weight:500;color:var(--ink-3)}"
     },
     {
-      "name": "Service Card",
-      "kind": "custom",
-      "refersTo": "service-card",
-      "description": "Tall pine card with gold line icon, Prata name and gold diamond ornament.",
-      "html": "<article class=\"ds-srv\"><svg class=\"ds-srv-ico\" viewBox=\"0 0 48 48\"><path d=\"M8 40V20L24 8l16 12v20M18 40V28h12v12\"/></svg><h3>Консьерж 24/7</h3><div class=\"ds-srv-orn\"><i></i></div><p>Встретит гостей, примет доставку и подскажет, к кому обратиться.</p><span class=\"ds-srv-n\">01</span></article>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-srv{width:280px;height:460px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:120px 28px 40px;background:linear-gradient(180deg,var(--pine-top) 0%,var(--pine) 58%,var(--pine-deep) 100%);color:var(--on-dark);font-family:var(--f-sans)} .ds-srv-ico{width:56px;height:56px;fill:none;stroke:var(--gold);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round} .ds-srv h3{margin:32px 0 0;font:400 1.7rem/1.14 var(--f-disp)} .ds-srv-orn{display:flex;align-items:center;gap:12px;width:100%;max-width:220px;margin-top:20px} .ds-srv-orn::before,.ds-srv-orn::after{content:\"\";flex:1;height:1px;background:linear-gradient(to right,rgba(210,174,121,0),rgba(210,174,121,.9))} .ds-srv-orn::after{transform:scaleX(-1)} .ds-srv-orn i{width:7px;height:7px;background:var(--gold);transform:rotate(45deg)} .ds-srv p{margin:24px 0 0;font-size:15px;line-height:1.66;color:#DCE4DC} .ds-srv-n{margin-top:24px;font-family:var(--f-disp);font-size:13px;letter-spacing:.1em;color:#B3C3B8}"
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "50px near-white field with a 1px rule; brass ring on focus.",
+      "html": "<label class=\"ds-field\"><span>Телефон</span><input class=\"ds-input\" placeholder=\"+992 __ ___ __ __\"></label>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-field{display:grid;gap:7px;max-width:340px;font:700 13px var(--f-sans);color:var(--ink-2)} .ds-input{height:50px;padding:0 14px;border:1px solid var(--line);border-radius:var(--r);background:#FCFCFC;font:600 16px var(--f-sans);color:var(--ink);transition:border-color .2s ease,box-shadow .2s ease} .ds-input::placeholder{color:#6A7275;font-weight:500} .ds-input:hover{border-color:var(--ink-3)} .ds-input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(176,141,87,.35)}"
     },
     {
-      "name": "Availability Cells",
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Graphite bar with a brass-framed brand plate, brass underline on the current page, brass action.",
+      "html": "<header class=\"ds-hdr\"><a class=\"ds-brand\" href=\"#\">MEGA KHUJAND</a><nav class=\"ds-nav\"><a href=\"#\">Квартиры</a><a href=\"#\" aria-current=\"page\">Шахматка</a><a href=\"#\">На фасаде</a></nav><a class=\"ds-cta\" href=\"#\">Записаться</a></header>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-hdr{display:flex;align-items:center;gap:32px;height:64px;padding:0 24px;background:var(--room);color:var(--plaster);border-bottom:1px solid var(--room-line)} .ds-brand{display:inline-flex;align-items:center;min-height:38px;padding:0 12px;border:1px solid var(--brass);border-radius:2px;font:600 12px/1 var(--f-disp);letter-spacing:.12em;color:var(--plaster);text-decoration:none;transition:background .25s ease,color .25s ease} .ds-brand:hover{background:var(--brass);color:var(--ink)} .ds-nav{flex:1;display:flex;justify-content:center;gap:28px;font:600 14px var(--f-sans)} .ds-nav a{position:relative;padding:12px 0;color:rgba(238,240,238,.8);text-decoration:none} .ds-nav a:hover,.ds-nav a[aria-current]{color:var(--plaster)} .ds-nav a[aria-current]::after{content:'';position:absolute;left:0;right:0;bottom:4px;height:2px;background:var(--brass)} .ds-nav a:focus-visible,.ds-brand:focus-visible,.ds-cta:focus-visible{outline:2px solid var(--led);outline-offset:3px} .ds-cta{display:inline-flex;align-items:center;min-height:42px;padding:0 18px;border-radius:var(--r);background:var(--brass);color:var(--ink);font:500 11px/1.2 var(--f-disp);letter-spacing:.09em;text-transform:uppercase;text-decoration:none} .ds-cta:hover{background:var(--brass-hi)}"
+    },
+    {
+      "name": "Evening Building Grid",
       "kind": "custom",
-      "refersTo": "grid-cell",
-      "description": "Grid cells by status, day and evening (lit-window) themes.",
-      "html": "<div class=\"ds-grid\"><div class=\"ds-row\"><span class=\"ds-cell\">41</span><span class=\"ds-cell ds-sale\">42</span><span class=\"ds-cell ds-book\">43</span><span class=\"ds-cell ds-sold\">44</span></div><div class=\"ds-row ds-night\"><span class=\"ds-cell\">41</span><span class=\"ds-cell ds-sale\">42</span><span class=\"ds-cell ds-book\">43</span><span class=\"ds-cell ds-sold\">44</span></div></div>",
-      "css": ":host{--paper:#F4EFE5;--sand:#EAE2D4;--card:#F9F5EC;--well:#EFE8DA;--line:#DCD2C0;--line-2:#E2D9C7;--line-ctl:#D8CEBB;--ink:#1A1815;--ink-2:#4C463C;--ink-3:#5F574B;--bronze:#9C7A4D;--bronze-ink:#7A5C33;--bronze-2:#C9A97E;--bronze-tint:rgba(201,169,126,.16);--pine-top:#255043;--pine:#1C4034;--pine-deep:#163329;--gold:#D2AE79;--night:#100F0C;--on-dark:#F4EFE5;--f-sans:Manrope,system-ui,sans-serif;--f-disp:Prata,Georgia,serif;--ease:cubic-bezier(.2,.7,.2,1)} .ds-grid{display:grid;gap:0} .ds-row{display:flex;gap:4px;padding:14px;background:var(--card)} .ds-row.ds-night{background:#17161A} .ds-cell{display:flex;align-items:center;justify-content:center;width:40px;height:34px;border-radius:7px;border:1px solid var(--bronze-2);background:var(--paper);color:var(--ink);font:700 12px var(--f-sans);transition:transform .22s var(--ease),box-shadow .3s ease} .ds-cell:hover{transform:scale(1.1);box-shadow:0 6px 16px rgba(60,52,38,.18)} .ds-sale{background:#C9A97E;border-color:#A7834F;color:#231B0F} .ds-book{background:repeating-linear-gradient(135deg,transparent 0 3px,rgba(122,92,51,.2) 3px 4px);border-color:#BFB199;color:var(--ink-3)} .ds-sold{background:#E3DACA;border-color:#E3DACA;color:transparent} .ds-night .ds-cell{background:#F2DFB6;border-color:#F2DFB6;color:#241F16;box-shadow:0 0 14px rgba(242,223,182,.55)} .ds-night .ds-sale{background:#C9A97E;border-color:#C9A97E;box-shadow:0 0 12px rgba(201,169,126,.6)} .ds-night .ds-book{background:rgba(240,211,164,.14);border-color:rgba(240,211,164,.42);color:#E8DCC4;box-shadow:none} .ds-night .ds-sold{background:rgba(244,239,229,.05);border-color:rgba(244,239,229,.08);box-shadow:none}"
+      "refersTo": "grid-cell-free",
+      "description": "Floor-by-stack grid on graphite: free = LED, discount = brass, reserved = LED outline, sold = faint wash.",
+      "html": "<div class=\"ds-board\"><div class=\"ds-r\"><span class=\"ds-fl\">5</span><button class=\"ds-cell\">2</button><button class=\"ds-cell ds-cell--sale\">3</button><button class=\"ds-cell ds-cell--sold\"></button><button class=\"ds-cell ds-cell--book\">1</button></div><div class=\"ds-r\"><span class=\"ds-fl\">4</span><button class=\"ds-cell ds-cell--sold\"></button><button class=\"ds-cell\">2</button><button class=\"ds-cell\">1</button><button class=\"ds-cell ds-cell--sold\"></button></div></div>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-board{display:inline-grid;gap:4px;padding:18px;background:var(--room);border-radius:var(--r)} .ds-r{display:flex;gap:4px;align-items:center} .ds-fl{width:30px;padding-right:8px;text-align:right;font:600 12px var(--f-sans);color:rgba(238,240,238,.64)} .ds-cell{width:56px;height:34px;border-radius:2px;border:1px solid var(--led);background:var(--led);color:var(--ink);font:800 12.5px var(--f-sans);cursor:pointer;transition:transform .2s var(--ease)} .ds-cell:hover{transform:scale(1.1)} .ds-cell:focus-visible{outline:2px solid var(--plaster);outline-offset:2px} .ds-cell--sale{background:var(--brass);border-color:var(--brass)} .ds-cell--book{background:transparent;border-color:rgba(255,213,138,.45);color:var(--led)} .ds-cell--sold{background:rgba(238,240,238,.05);border-color:rgba(238,240,238,.06);cursor:default} .ds-cell--sold:hover{transform:none}"
+    },
+    {
+      "name": "Service Directory",
+      "kind": "custom",
+      "refersTo": "service-directory",
+      "description": "Lobby directory on podium graphite: brass rules, engraved caps names.",
+      "html": "<ul class=\"ds-dir\"><li><h3>Консьерж 24/7</h3><p>Стойка в лобби круглосуточно.</p></li><li><h3>Хранение</h3><p>Индивидуальные кладовые.</p></li></ul>",
+      "css": ":host,:root{--room:#121416;--room-2:#1A1D20;--room-line:rgba(238,240,238,.13);--room-line-2:rgba(238,240,238,.26);--plaster:#EEF0EE;--plaster-2:#E3E6E3;--plaster-3:#F7F8F7;--line:#C9CECB;--line-2:#D9DDDA;--ink:#121416;--ink-2:#3B4144;--ink-3:#596164;--brass:#B08D57;--brass-hi:#C09C63;--brass-lite:#D8BA84;--led:#FFD58A;--led-deep:#F2B85B;--f-disp:'Unbounded','Arial Black',system-ui,sans-serif;--f-sans:'Manrope',system-ui,sans-serif;--r:3px;--ease:cubic-bezier(.2,.7,.2,1)} .ds-dir{margin:0;padding:0 24px;list-style:none;background:var(--room-2);border-bottom:1px solid var(--brass)} .ds-dir li{display:grid;grid-template-columns:190px 1fr;gap:8px 28px;align-items:baseline;padding:20px 0 19px;border-top:1px solid var(--brass)} .ds-dir h3{margin:0;font:500 13px/1.35 var(--f-disp);letter-spacing:.12em;text-transform:uppercase;color:var(--plaster)} .ds-dir p{margin:0;font:400 15px/1.55 var(--f-sans);color:rgba(238,240,238,.8)}"
     }
   ],
   "narrative": {
-    "northStar": "The House Read by Its Evening Light",
-    "overview": "**Creative North Star: \"The House Read by Its Evening Light\"**\n\nThe site is built from the building's own materials: cream limestone grounds, sand-coloured alternating scenes, graphite ink, a single bronze accent, and night renders whose lit windows are the only warm glow. A buyer reads the project through its stone, arches and windows, and picks a flat on the facade or the availability grid rather than in a spreadsheet. The system refuses the category's dark \"luxury void\" as a default ground (night appears only as closing bands, the plan box and the evening theme) and refuses the generic listing grid as the main way in.\n\nDensity moves with the job. Persuade scenes on the home page are slow, full-bleed and pinned, with large Prata headlines and photographs cut into organic river, bend, lens and arch silhouettes. Operate surfaces (catalog, flat page, building grid, facade picker) are calm and tight: 1px warm rules, tabular numerals, pill and segmented controls, cards on cream. A drifting foliage-shadow layer (multiply blend) sits behind every page, so even the dense surfaces feel like they stand in a courtyard.",
+    "northStar": "The Model Under Glass",
+    "overview": "The site behaves like the sales-office model in its vitrine: a graphite room, a white plaster model of the building, brass plates that name things, and a manager's switch that lights the windows still for sale. Every surface is either the room (dark graphite, where the building is shown at dusk) or the model (cool plaster white, where plans, figures and forms are read). The two alternate down the page; they never blend.\n\nLight carries meaning, not mood. Warm LED yellow appears only where a flat can be bought: lit windows on the real dusk render, status dots, the dot on a pressed key, the free cells of the building grid. Brass is the engraved-metal voice for everything that labels or commits: plates, primary buttons, numbered legend pins, the discount status. Nothing glows, nothing is gradated for atmosphere, nothing is a pill.\n\nForm is machined rather than soft: 3px corners on anything that holds content, 2px on plates and tags, 1px engraved rules as the main structural device, and circles reserved for LEDs and numbered pins. Density is that of a sales tool: tabular figures, compact keys, lists ruled like a lobby directory.",
     "keyCharacteristics": [
-      "Cream stone and sand grounds; graphite for text and primary actions; bronze as the only accent.",
-      "Prata 400 for every display line; Manrope for everything else, with tabular lining numerals wherever a number is compared.",
-      "Real renders cut by organic clip-path masks (river, bend, lens, arch), never boxed in hard rectangles on Persuade scenes.",
-      "Pill buttons, segmented controls and 1px warm rules; depth from tone, with warm diffuse shadows only on lifted or floating elements.",
-      "Night renders close the story, always carrying a light form card.",
-      "One rAF-driven scroll loop; pinned scenes only at 900px and up, never under reduced motion."
+      "Two materials only: graphite room (#121416) and plaster model (#EEF0EE), alternating by section.",
+      "LED yellow means \"available\"; brass means \"labelled or chosen by the seller\".",
+      "Unbounded wide caps for plates, labels and buttons; Unbounded Light for headlines; Manrope for reading and every number.",
+      "Machined 3px corners, 1px rules, circular LEDs; no pills, no gradients, no glow.",
+      "Keys with an LED dot are the single on/off control across filters, form options and consoles."
     ],
     "rules": [
       {
-        "name": "The Bronze Speaks Through Ink Rule",
-        "body": "Bronze (#9C7A4D) draws lines and fills; any bronze-coloured word uses bronze-ink. If a new bronze element carries text, it is bronze-ink or it is wrong.",
+        "name": "The Lit Window Rule",
+        "body": "LED yellow means \"this flat can be bought\" and nothing else. If an element is not a free or discounted flat, a count of them, or a key that is switched on, it does not get LED.",
         "section": "colors"
       },
       {
-        "name": "The Retired Greys Rule",
-        "body": "The earlier greys (#9A9083, #A79B84, #8A8073) failed contrast and are retired. Secondary text is ink-3; there is no lighter text grey on light grounds.",
+        "name": "The Brass Plate Rule",
+        "body": "Brass is flat engraved metal: solid fill with ink text, or a 1px frame. Never a gradient, sheen or glow.",
         "section": "colors"
       },
       {
-        "name": "The Night Is a Close Rule",
-        "body": "Night grounds end a story (lead band, contact finale, footer) or frame a drawing (plan box). A light scene is the default; a night section always carries either a real render or a light form card.",
+        "name": "The Two Rooms Rule",
+        "body": "A section is either graphite room or plaster model. Content never sits on a photo-tinted or mid-grey band between them.",
         "section": "colors"
+      },
+      {
+        "name": "The Engraved Caps Rule",
+        "body": "Wide uppercase is for things that are engraved: plates, labels, buttons, directory names. Headlines are Unbounded Light in sentence case, never caps.",
+        "section": "typography"
       },
       {
         "name": "The Tabular Figures Rule",
-        "body": "Every number a buyer compares (price, price per m², area, floor, lot count in a list) sets in lining tabular numerals. Body copy keeps lining proportional numerals.",
+        "body": "Every price, area, floor and count is set in lining tabular numerals so columns and tags align like a price list.",
         "section": "typography"
       },
       {
-        "name": "The Sixteen-Pixel Field Rule",
-        "body": "Any text input, select or range box is at least 16px on touch widths, so iOS never zooms the form.",
-        "section": "typography"
-      },
-      {
-        "name": "The Flat at Rest Rule",
-        "body": "Cards, panels and boards are flat at rest, separated by tone and a 1px rule. A shadow appears only when something floats (nav, bar, drawer, picker) or responds to a pointer.",
+        "name": "The Flat Vitrine Rule",
+        "body": "Cards, keys, plates and buttons are flat at rest and on hover; they change fill or rule colour, never elevation. Hover on a tile darkens its 1px rule to ink.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "**Do** keep cream (#F4EFE5) or sand (#EAE2D4) as the ground of every new scene; reach for night only to close a story or frame a drawing.",
-      "**Do** set every compared number (price, area, floor, count) in Manrope with lining tabular numerals.",
-      "**Do** colour bronze text with bronze-ink (#7A5C33) and keep bronze (#9C7A4D) for rules, fills and progress.",
-      "**Do** use ink-3 (#5F574B) as the lightest text on light grounds.",
-      "**Do** cut real renders with the river, bend, lens or arch masks on Persuade scenes, and label stock photos as stock.",
-      "**Do** keep controls as pills and segmented trays with a graphite selected state and pale bronze (#C9A97E) hover and active outlines.",
-      "**Do** keep touch targets at least 44px and form fields at 16px on touch widths.",
-      "**Do** route new motion through the shared rAF scroll loop, pin only at 900px and up, and under reduced motion remove movement while keeping colour and opacity changes."
+      "**Do** alternate graphite room (#121416) and plaster (#EEF0EE) sections; let the render live in the graphite ones.",
+      "**Do** reserve LED (#FFD58A / #F2B85B) for availability: lit windows, free cells, status and price-tag dots, pressed-key dots, free counts.",
+      "**Do** use brass (#B08D57) as flat solid plates or 1px frames: primary buttons, plates, legend pins, discount status, the brand frame, directory rules.",
+      "**Do** build every on/off control as a key with an LED dot; pressed keys invert (ink on plaster, plaster on graphite).",
+      "**Do** end lot cards with the price tag: 1px ink rule, bold tabular price, status LED.",
+      "**Do** keep corners at 3px for containers and 2px for plates and cells; circles only for LEDs and pins.",
+      "**Do** set plate and label text at 11px minimum in Unbounded caps with 0.12–0.14em tracking.",
+      "**Do** set every figure in Manrope tabular lining numerals.",
+      "**Do** give the pinned hero a stacked, unpinned fallback under 900px and for reduced motion."
     ],
     "donts": [
-      "**Don't** make a dark \"luxury void\" the default ground of a page.",
-      "**Don't** use the retired greys (#9A9083, #A79B84, #8A8073) or any text lighter than ink-3 on light grounds.",
-      "**Don't** set prices or data tables in Prata, or set Prata in any weight but 400.",
-      "**Don't** add a second accent hue on light surfaces; pine and gold stay inside the service cards.",
-      "**Don't** add shadows to cards at rest or use cool grey or black shadows on light grounds.",
-      "**Don't** spread the eyebrow label to new sections or pages while its decision is open."
+      "**Don't** use LED yellow for decoration, highlights, hover states or anything that is not a buyable flat or an active switch.",
+      "**Don't** add gradients, sheens, glows or drop shadows to brass, buttons, cards or keys.",
+      "**Don't** use pill shapes or large radii; nothing rounder than 3px except LEDs and pins.",
+      "**Don't** return to the cream, serif and bronze \"warm premium\" look, or set headlines in a serif or in caps.",
+      "**Don't** open a page on a full-bleed render with a serif headline over it; the render sits inside the letters or inside the graphite model.",
+      "**Don't** set label or plate text below 11px, or use Unbounded for body text.",
+      "**Don't** raise tiles with shadows on hover; change the rule or fill instead."
     ]
   }
 }
