@@ -66,7 +66,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 **Not built yet:** a real lot-data feed, a connected lead endpoint, and real messenger handles.
 
-**Terminology:** ЖК (residential complex); корпус (building); секция (section); стояк (a vertical stack of flats in the same position, one per floor); этаж (floor); шахматка (availability grid by stack and floor); лот (flat for sale); комнатность (room count: студия, 1, 2, 3, пентхаус); отделка (finish: без отделки, предчистовая, с отделкой — bare shell, pre-finish, finished); lot statuses свободна, со скидкой, забронирована, продана (available, discounted, reserved, sold); сдача (handover).
+**Terminology:** the site names flat types by room count as the developer's sheets do (1-комнатная = kitchen + one living room; 2-комнатная = kitchen + living room + bedroom), never by bedroom count. ЖК (residential complex); корпус (building); секция (section); стояк (a vertical stack of flats in the same position, one per floor); этаж (floor); шахматка (availability grid by stack and floor); лот (flat for sale); комнатность (room count: студия, 1, 2, 3, пентхаус); отделка (finish: без отделки, предчистовая, с отделкой — bare shell, pre-finish, finished); lot statuses свободна, со скидкой, забронирована, продана (available, discounted, reserved, sold); сдача (handover).
 
 ## Brand Commitments
 
@@ -78,7 +78,8 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 - **Real project renders**, in `media/renders/`: `facade-night-hero.jpg`, `facade-day-hero-plaza.jpg`, `facade-day-corner-detail.jpg`, `facade-night-dusk-elevation.jpg`, `retail-storefront-boutiques.jpg`, `retail-arcade-entrance.jpg`, `courtyard-playground-aerial-render.jpg`, `courtyard-playground-collage.jpg`. `aerial-river-2560.jpg` arrived with the redesign and its source is not confirmed.
 - **Stock and mood photos**, in `media/*.jpg` at the top level: carried over from the first site and not of this project (the original design brief calls them stock). Never present them as MEGA KHUJAND.
-- **Floor plans**, in `media/plans/*.svg`: generated placeholders, not real drawings. They are replaced one-for-one by filename.
+- **Real floor plans**, in `media/plans/src/*.pdf`: the developer's plan sheets (ArchiCAD), 5 of 17 received (Б-1…Б-5, typical floor 3–6). Each gives the plan code, room count (комнатность: "1-х/2-х комнатная"), total area including balconies, the numbered room schedule, the entrance, the flat's place on the typical-floor key plan, and a furnished 3D top view. Extracted by `tools/plans-extract.py` into `js/plans-data.js`; the sheets contain spelling slips (Гостинная, Спальная) that the site corrects.
+- **Placeholder floor plans**, in `media/plans/*.svg`: generated, used only by the demo lots (catalog, grid, flat page) until lots carry real plan codes.
 - **Facade calibration**, in `calibration/cal-FINAL.json`: maps the window grid on the renders. The lots assigned to those windows are placeholders.
 - **Missing, and not to be invented:** the developer's name and profile, architects, testimonials, awards, press, construction progress, permits or legal documents, real prices, availability, handover date, phone number, showroom address, and messenger handles.
 

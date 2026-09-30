@@ -160,7 +160,7 @@
     it.a = a; it.b = b;
   });
 
-  var ROOMS = [['all', 'Все'], [0, 'Студии'], [1, '1 спальня'], [2, '2 спальни'], [3, '3 спальни'], [4, 'Пентхаусы']];
+  var ROOMS = [['all', 'Все'], [0, 'Студии'], [1, '1-комнатные'], [2, '2-комнатные'], [3, '3-комнатные'], [4, 'Пентхаусы']];
   var keys = $('[data-keys]');
   var cnt = function (r) { return open.filter(function (it) { return r === 'all' || it.lot.rooms === r; }).length; };
   ROOMS = ROOMS.filter(function (k) { return cnt(k[0]) > 0; });
@@ -286,69 +286,43 @@
     li.addEventListener('pointerleave', function () { on(false); });
   });
 
-  /* ── планировки ─────────────────────────────────────────────────── */
-  var PL = {
-    0: { d: 'Одна комната с кухонной зоной, прихожая и санузел.', files: ['studio-a', 'studio-b', 'studio-c', 'studio-d'] },
-    1: { d: 'Кухня-гостиная и отдельная спальня: день и ночь не мешают друг другу.', files: ['one-a', 'one-b', 'one-c', 'one-d'] },
-    2: { d: 'Кухня-гостиная и две изолированные спальни.', files: ['two-a', 'two-b', 'two-c', 'two-d'] },
-    3: { d: 'Кухня-гостиная, мастер-спальня, ещё две спальни и гостевой санузел.', files: ['three-a', 'three-b', 'three-c', 'three-d'] },
-    4: { d: 'Квартиры верхнего этажа с открытой террасой.', files: ['pent-a', 'pent-b', 'pent-c'] }
-  };
-  var LETTER = { a: 'А', b: 'Б', c: 'В', d: 'Г' };
-  var st = D.stats();
-  var plRoot = $('#plans');
-  var plTypes = $$('[data-type]', plRoot), plThumbs = $('[data-pl-thumbs]', plRoot), plImg = $('[data-pl-img]', plRoot);
-  var plState = { r: 2, i: 0 };
-  function variant(f) { return LETTER[f.split('-')[1]] || f.split('-')[1].toUpperCase(); }
-  function planStats(f) {
-    var ls = D.LOTS.filter(function (l) { return l.plan === f; });
-    var as = ls.map(function (l) { return l.area; });
-    return { open: ls.filter(D.isOpen).length, lo: Math.min.apply(null, as), hi: Math.max.apply(null, as) };
-  }
-  plTypes.forEach(function (b) {
-    var ts = st.byType[+b.getAttribute('data-type')];
-    $('.ptype__n', b).textContent = ts.open ? ts.open + ' своб.' : 'нет свободных';
-    $('.ptype__p', b).textContent = ts.open ? 'от ' + D.money(ts.minPrice) : 'сообщим о новых';
-    b.setAttribute('aria-label', $('.ptype__name', b).textContent + ': ' + (ts.open ? ts.open + ' ' + D.plural(ts.open, ['свободная квартира', 'свободные квартиры', 'свободных квартир']) + ', от ' + D.money(ts.minPrice) : 'свободных нет'));
-  });
-  function renderPlans(focusThumb) {
-    var t = PL[plState.r], files = t.files, f = files[plState.i];
-    var ts = st.byType[plState.r];
-    plTypes.forEach(function (b) {
-      var on = +b.getAttribute('data-type') === plState.r;
-      b.setAttribute('aria-pressed', String(on));
-      $('.led', b).classList.toggle('is-on', on);
-    });
-    $('[data-pl-desc]', plRoot).textContent = t.d;
-    var cta = $('[data-pl-cta]', plRoot);
-    cta.href = 'flats.html?rooms=' + plState.r;
-    cta.textContent = ts.open ? 'Показать ' + ts.open + ' ' + D.plural(ts.open, ['квартиру', 'квартиры', 'квартир']) : 'Смотреть каталог';
-    $('[data-pl-pick]', plRoot).href = 'picker.html?rooms=' + plState.r;
-    plThumbs.innerHTML = files.map(function (x, k) {
-      return '<button class="plans__var" type="button" data-k="' + k + '" aria-pressed="' + (k === plState.i) + '" aria-label="Вариант ' + variant(x) + '">' +
-        '<img src="' + D.planSrc(x) + '" alt="" loading="lazy" decoding="async"></button>';
+  /* ── планировки из проекта (js/plans-data.js) ────────────────────── */
+  var PLN = MK.plans;
+  if (PLN && PLN.list.length) {
+    var hp = { r: PLN.list[0].rooms, id: PLN.list[0].id };
+    var hpKeys = $('[data-hp-keys]'), hpList = $('[data-hp-list]'), hpRooms = $('[data-hp-rooms]');
+    var hpView = PLN.viewer($('[data-hp-view]'), { sizes: '(min-width: 900px) 55vw, 100vw', onHover: function (n) { hpOn(n); } });
+    var hpOn = PLN.bindRooms(hpRooms, hpView);
+    hpKeys.innerHTML = PLN.rooms().map(function (k) {
+      return '<button class="seg__btn" type="button" data-r="' + k.r + '" aria-pressed="false">' + PLN.kinds(k.r) + ' <small>' + k.n + '</small></button>';
     }).join('');
-    var name = $('.ptype__name', plTypes.filter(function (b) { return +b.getAttribute('data-type') === plState.r; })[0]).textContent;
-    plImg.src = D.planSrc(f);
-    plImg.alt = 'Планировка: ' + name.toLowerCase() + ', вариант ' + variant(f);
-    $('[data-pl-cap]', plRoot).textContent = 'Вариант ' + variant(f);
-    var ps = planStats(f);
-    $('[data-pl-meta]', plRoot).textContent = D.area(ps.lo).replace(' м²', '') + '–' + D.area(ps.hi) + (ps.open ? ' · свободно ' + ps.open : ' · свободных нет');
-    if (focusThumb) { var b = plThumbs.querySelector('[data-k="' + plState.i + '"]'); if (b) b.focus(); }
+    var hpRender = function () {
+      var list = PLN.list.filter(function (p) { return p.rooms === hp.r; });
+      if (!list.some(function (p) { return p.id === hp.id; })) hp.id = list[0].id;
+      var p = PLN.find(hp.id);
+      $$('[data-r]', hpKeys).forEach(function (b) { b.setAttribute('aria-pressed', String(+b.getAttribute('data-r') === hp.r)); });
+      hpList.innerHTML = list.map(function (x) {
+        return '<button class="ptype" type="button" data-id="' + x.id + '" aria-pressed="' + (x.id === hp.id) + '"><span class="led' + (x.id === hp.id ? ' is-on' : '') + '"></span>' +
+          '<span class="ptype__name">' + x.code + '</span><span class="ptype__n tnum">' + PLN.area(x.area) + '</span>' +
+          '<span class="ptype__p">' + PLN.summary(x) + (x.mirrorOf ? ' · зеркальная ' + x.mirrorOf : '') + '</span></button>';
+      }).join('');
+      hpView.set(p);
+      hpRooms.innerHTML = PLN.roomsHtml(p);
+      $('[data-hp-open]').href = 'plans.html?plan=' + p.id;
+      $('[data-hp-open]').textContent = 'Открыть планировку ' + p.code;
+    };
+    hpKeys.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-r]');
+      if (b) { hp.r = +b.getAttribute('data-r'); hpRender(); wish(hp.r); }
+    });
+    hpList.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-id]');
+      if (b) { hp.id = b.getAttribute('data-id'); hpRender(); }
+    });
+    $('[data-hp-ask]').addEventListener('click', function () {
+      var slot = $('#lead [data-lead-slot]');
+      if (slot && slot._lead) slot._lead.setPlan(PLN.find(hp.id));
+    });
+    hpRender();
   }
-  plTypes.forEach(function (b) {
-    b.addEventListener('click', function () { plState = { r: +b.getAttribute('data-type'), i: 0 }; renderPlans(); wish(plState.r); });
-  });
-  plThumbs.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-k]');
-    if (b) { plState.i = +b.getAttribute('data-k'); renderPlans(true); }
-  });
-  plThumbs.addEventListener('keydown', function (e) {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    var n = PL[plState.r].files.length;
-    plState.i = (plState.i + (e.key === 'ArrowRight' ? 1 : n - 1)) % n;
-    renderPlans(true);
-    e.preventDefault();
-  });
-  renderPlans();
 })();

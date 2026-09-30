@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Планировки квартир MEGA KHUJAND — 3D-вид, площади помещений, место на этаже</title>
+<meta name="description" content="Планировки квартир жилого комплекса MEGA KHUJAND в Худжанде из проектной документации: 3D-вид сверху, площади помещений по экспликации, расположение квартиры на типовом этаже, лист в PDF.">
+<meta name="theme-color" content="#121416">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MEGA KHUJAND">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Планировки квартир MEGA KHUJAND">
+<meta property="og:description" content="3D-вид сверху, площади помещений и место квартиры на этаже.">
+<meta property="og:image" content="media/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/site.css">
+<script>document.documentElement.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('rm')</script>
+</head>
+<body class="planspage">
+<a class="skip" href="#main">Перейти к содержанию</a>
+
+<header class="hdr">
+  <a class="hdr__brand" href="index.html">Mega Khujand</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="flats.html">Квартиры</a>
+    <a href="plans.html" aria-current="page">Планировки</a>
+    <a href="building.html">Шахматка</a>
+    <a href="picker.html">На фасаде</a>
+  </nav>
+  <div class="hdr__end">
+    <a class="hdr__tel tnum" href="tel:+992446000000">+992 44 600 00 00</a>
+    <a class="btn btn--dark btn--sm hdr__cta" href="#lead">Записаться на показ</a>
+    <a class="hdr__icon hdr__call" href="tel:+992446000000" aria-label="Позвонить: +992 44 600 00 00"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M6.6 2.8l2 3.6-1.5 1.7a10 10 0 0 0 4.8 4.8l1.7-1.5 3.6 2-.8 2.8c-.2.7-.9 1.1-1.6 1A15 15 0 0 1 2.8 5c-.1-.7.3-1.4 1-1.6z"/></svg></a>
+    <button class="hdr__icon hdr__burger" type="button" data-menu-open aria-controls="menu" aria-expanded="false" aria-label="Открыть меню"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7h14M3 13h14"/></svg></button>
+  </div>
+</header>
+
+<dialog class="menu on-dark" id="menu" aria-label="Меню">
+  <div class="menu__top">
+    <a class="hdr__brand" href="index.html">Mega Khujand</a>
+    <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
+  </div>
+  <nav class="menu__nav" aria-label="Меню сайта">
+    <a href="flats.html">Квартиры <small><span data-stat="open">365</span> в продаже</small></a>
+    <a href="building.html">Шахматка дома</a>
+    <a href="picker.html">Подбор на фасаде</a>
+    <a href="plans.html" aria-current="page">Планировки</a>
+    <a href="index.html#lead">Шоурум и контакты</a>
+  </nav>
+  <div class="menu__foot">
+    <a class="btn btn--dark btn--lg btn--block" href="#lead">Записаться на показ</a>
+    <div class="menu__row">
+      <a class="btn btn--soft btn--lg" href="tel:+992446000000">Позвонить</a>
+      <a class="btn btn--soft btn--lg" href="https://wa.me/992446000000" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+    <p class="small">Шоурум на набережной Сырдарьи · ежедневно, 9:00–19:00</p>
+  </div>
+</dialog>
+
+<main id="main" class="page" data-plans-page>
+  <section class="phead">
+    <nav class="crumbs" aria-label="Навигационная цепочка"><a href="index.html">Главная</a><span class="sep" aria-hidden="true">·</span><span aria-current="page">Планировки</span></nav>
+    <div class="phead__grid">
+      <div>
+        <h1 class="phead__title">Планировки<sup class="tnum" data-plans-count>5</sup></h1>
+        <p class="lead phead__lead">Планировки из проектной документации: 3D-вид сверху, площади помещений по экспликации и место квартиры на типовом этаже. Лист планировки можно скачать и показать семье.</p>
+      </div>
+      <div class="seg pkeys" role="group" aria-label="Комнатность" data-pkeys></div>
+    </div>
+  </section>
+
+  <section class="plan" id="plan" aria-label="Выбранная планировка">
+    <div class="plan__view">
+      <div class="pv" data-pview></div>
+      <div class="fp">
+        <p class="fp__head"><span class="label">Где квартира на этаже</span><span class="fp__l" data-pfloor-l></span></p>
+        <div class="fp__svg" data-pfloor></div>
+        <p class="small fp__note">Нажмите на выделенную квартиру, чтобы открыть её планировку. Остальные планировки этажа появятся здесь по мере готовности листов.</p>
+      </div>
+    </div>
+    <div class="pinfo" data-pinfo aria-live="polite"></div>
+    <noscript><p class="noscript">Планировки собираются в браузере. Включите JavaScript или позвоните в отдел продаж: <a href="tel:+992446000000">+992 44 600 00 00</a>.</p></noscript>
+  </section>
+
+  <section class="plist" aria-labelledby="plist-h">
+    <h2 class="eyebrow" id="plist-h">Все планировки</h2>
+    <div class="pcards" data-pcards></div>
+  </section>
+</main>
+
+<section class="lead-band on-dark" id="lead" aria-labelledby="lead-h">
+  <div class="lead-band__in">
+    <div class="lead-band__copy">
+      <h2 class="h3" id="lead-h">Узнайте цену и свободные квартиры с этой планировкой</h2>
+      <p class="lead">Менеджер скажет, на каких этажах есть квартиры с выбранной планировкой и сколько они стоят сейчас, и пригласит в шоурум.</p>
+      <div class="contacts">
+        <a class="tnum" href="tel:+992446000000"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M6.6 2.8l2 3.6-1.5 1.7a10 10 0 0 0 4.8 4.8l1.7-1.5 3.6 2-.8 2.8c-.2.7-.9 1.1-1.6 1A15 15 0 0 1 2.8 5c-.1-.7.3-1.4 1-1.6z"/></svg>+992 44 600 00 00<span>отдел продаж</span></a>
+        <a href="building.html"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M3 12.5h14M8 3v14M12.5 3v14"/></svg>Шахматка дома<span>все секции и этажи</span></a>
+        <div><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18s5.5-5.1 5.5-9.5a5.5 5.5 0 0 0-11 0C4.5 12.9 10 18 10 18z"/><circle cx="10" cy="8.5" r="2"/></svg>Шоурум на набережной<span>ежедневно, 9:00–19:00</span></div>
+      </div>
+    </div>
+    <div data-lead-slot data-lead-manual data-plan-lead></div>
+  </div>
+</section>
+
+<footer class="ftr on-dark">
+  <div class="ftr__in">
+    <span>© <span data-year>2026</span> · MEGA KHUJAND</span>
+    <span>Изображения носят информационный характер. Цены и сроки предварительные.</span>
+    <nav aria-label="Страницы сайта"><a href="index.html">На главную</a><a href="building.html">Шахматка</a><a href="picker.html">Подбор на фасаде</a></nav>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/plans-data.js"></script>
+<script src="js/site.js"></script>
+<script src="js/plans.js"></script>
+</body>
+</html>

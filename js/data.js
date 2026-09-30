@@ -24,12 +24,12 @@
 
   var TYPES = {
     s: { r: 0, name: 'Студия', short: 'Ст', a: [26, 34], plans: ['studio-a', 'studio-b', 'studio-c', 'studio-d'] },
-    1: { r: 1, name: '1 спальня', short: '1', a: [38, 50], plans: ['one-a', 'one-b', 'one-c', 'one-d'] },
-    2: { r: 2, name: '2 спальни', short: '2', a: [55, 74], plans: ['two-a', 'two-b', 'two-c', 'two-d'] },
-    3: { r: 3, name: '3 спальни', short: '3', a: [80, 106], plans: ['three-a', 'three-b', 'three-c', 'three-d'] },
+    1: { r: 1, name: '1-комнатная', short: '1', a: [38, 50], plans: ['one-a', 'one-b', 'one-c', 'one-d'] },
+    2: { r: 2, name: '2-комнатная', short: '2', a: [55, 74], plans: ['two-a', 'two-b', 'two-c', 'two-d'] },
+    3: { r: 3, name: '3-комнатная', short: '3', a: [80, 106], plans: ['three-a', 'three-b', 'three-c', 'three-d'] },
     4: { r: 4, name: 'Пентхаус', short: 'П', a: [132, 188], plans: ['pent-a', 'pent-b', 'pent-c'] }
   };
-  var ROOM_NAMES = ['Студия', '1 спальня', '2 спальни', '3 спальни', 'Пентхаус'];
+  var ROOM_NAMES = ['Студия', '1-комнатная', '2-комнатная', '3-комнатная', 'Пентхаус'];
   var FINISHES = ['Без отделки', 'Предчистовая', 'С отделкой'];
   var STATUS = {
     free: 'Свободна',

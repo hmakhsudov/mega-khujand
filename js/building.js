@@ -34,7 +34,7 @@
   function sec() { return HOUSE[S.b].sec[S.s]; }
   function lots(sc) { return sc.floors.reduce(function (a, r) { return a.concat(r.row.filter(Boolean)); }, []); }
   function roomOk(l) { return !S.rooms.length || S.rooms.indexOf(l.rooms) > -1; }
-  function short(key) { return key === 's' ? 'Ст' : key === '4' ? 'П' : key + ' сп'; }
+  function short(key) { return key === 's' ? 'Ст' : key === '4' ? 'П' : key + 'к'; }
   function face(l) { return l.status === 'sold' ? '' : l.rooms === 0 ? 'С' : l.rooms === 4 ? 'П' : String(l.rooms); }
 
   /* ── боковая панель ─────────────────────────────────────────────── */

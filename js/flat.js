@@ -91,7 +91,7 @@
         '<p class="flat-hero__sub">' + D.lotPlace(lot) + ' · квартира №\u00a0' + lot.no + '</p>' +
         '<dl class="kspecs">' +
           '<div><dt>Площадь</dt><dd>' + D.area(lot.area) + '</dd></div>' +
-          '<div><dt>Спальни</dt><dd>' + (lot.rooms === 0 ? 'Студия' : lot.rooms === 4 ? '2 + терраса' : lot.rooms) + '</dd></div>' +
+          '<div><dt>Комнаты</dt><dd>' + (lot.rooms === 0 ? 'Студия' : lot.rooms === 4 ? 'Пентхаус' : lot.rooms) + '</dd></div>' +
           '<div><dt>Этаж</dt><dd>' + lot.floor + ' из ' + lot.floors + '</dd></div>' +
           '<div><dt>Отделка</dt><dd>' + lot.fin + '</dd></div>' +
         '</dl>' +
@@ -113,6 +113,8 @@
         '<div class="planbox__img"><img src="' + D.planSrc(lot.plan, true) + '" alt="Планировка квартиры: ' + lot.type.toLowerCase() + ', ' + D.area(lot.area) + '. ' +
           inner.map(function (r) { return r.n.toLowerCase() + ' ' + D.area(r.a); }).join(', ') + '" width="526" height="504" decoding="async"></div>' +
         '<ul class="planbox__tags">' + MK.tags(lot).filter(function (t) { return t[1] !== 'tag--sale'; }).map(function (t) { return '<li>' + t[0] + '</li>'; }).join('') + '</ul>' +
+        (MK.plans && MK.plans.list.some(function (p) { return p.rooms === lot.rooms; })
+          ? '<a class="planbox__real" href="plans.html?rooms=' + lot.rooms + '">Планировки ' + MK.plans.kinds(lot.rooms).toLowerCase() + ' из проекта ' + MK.icon('arrow') + '</a>' : '') +
       '</figure>' +
     '</section>' +
     '<section class="gallery" aria-label="Дом и окружение">' + (win ? winFigure(win) : '') + gallery.slice(0, win ? 2 : 3).map(function (g) {

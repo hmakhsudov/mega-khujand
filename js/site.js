@@ -280,7 +280,8 @@
   var uid = 0;
   function phoneDigits(v) {
     var d = String(v).replace(/\D/g, '');
-    if (d.indexOf('992') === 0) d = d.slice(3);
+    /* код страны мог попасть дважды: префикс поля + вставленный номер */
+    while (d.indexOf('992') === 0 && d.length > 9) d = d.slice(3);
     return d.slice(0, 9);
   }
   function fmtPhone(d) {
@@ -296,6 +297,7 @@
       '<form class="form" novalidate aria-labelledby="' + id + '-t">' +
       '<div class="form__lot" data-lot hidden></div>' +
       '<input type="hidden" name="lot" value="">' +
+      '<input type="hidden" name="plan" value="">' +
       '<div class="field"><label class="field__label" for="' + id + '-name">Как к вам обращаться</label>' +
       '<input class="input" id="' + id + '-name" name="name" type="text" autocomplete="name" maxlength="80" required aria-describedby="' + id + '-name-e">' +
       '<p class="field__err" id="' + id + '-name-e"></p></div>' +
@@ -325,6 +327,12 @@
       'Корпус ' + l.corp + ' · этаж ' + l.floor + (D.isOpen(l) ? ' · ' + D.money(l.price) : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
       '<button class="form__lot-x" type="button" data-lot-x aria-label="Убрать квартиру из заявки">' + MK.icon('close') + '</button>';
   }
+  function planSummary(p) {
+    var P = MK.plans;
+    return '<span class="form__lot-plan"><img src="' + p.img.base + '-480.webp" alt=""></span>' +
+      '<span class="form__lot-txt"><b>Планировка ' + p.code + '</b>' + P.kind(p.rooms) + ', ' + P.area(p.area) + (p.floors ? ' · ' + P.floorsLabel(p) : '') + '</span>' +
+      '<button class="form__lot-x" type="button" data-lot-x aria-label="Убрать планировку из заявки">' + MK.icon('close') + '</button>';
+  }
   MK.lead = function (slot, o) {
     o = o || {};
     var id = 'lf' + (++uid);
@@ -339,16 +347,26 @@
     var btn = form.querySelector('button[type=submit]');
     var name = form.elements.name, phone = form.elements.phone;
 
+    var curPlan = null;
     function setLot(l) {
       form.elements.lot.value = l ? l.id : '';
-      lotBox.hidden = !l;
-      interest.hidden = !!l;
-      lotBox.innerHTML = l ? lotSummary(l) : '';
+      if (l) { curPlan = null; form.elements.plan.value = ''; }
+      lotBox.hidden = !l && !curPlan;
+      interest.hidden = !!l || !!curPlan;
+      lotBox.innerHTML = l ? lotSummary(l) : curPlan ? planSummary(curPlan) : '';
+    }
+    function setPlan(p) {
+      curPlan = p || null;
+      form.elements.plan.value = p ? p.code : '';
+      if (p) form.elements.lot.value = '';
+      lotBox.hidden = !p;
+      interest.hidden = !!p;
+      lotBox.innerHTML = p ? planSummary(p) : '';
     }
     lotBox.addEventListener('click', function (e) {
-      if (e.target.closest('[data-lot-x]')) { setLot(null); form.elements.interest.focus(); }
+      if (e.target.closest('[data-lot-x]')) { curPlan = null; form.elements.plan.value = ''; setLot(null); form.elements.interest.focus(); }
     });
-    setLot(o.lot || null);
+    if (o.plan) setPlan(o.plan); else setLot(o.lot || null);
 
     phone.addEventListener('focus', function () { if (!phone.value) phone.value = '+992 '; });
     phone.addEventListener('blur', function () { if (!phoneDigits(phone.value)) phone.value = ''; });
@@ -411,6 +429,7 @@
       var payload = {
         name: name.value.trim(), phone: fmtPhone(phoneDigits(phone.value)), method: method,
         lot: lot ? lot.id : null, lotLabel: lot ? D.lotLabel(lot) : null,
+        plan: form.elements.plan.value || null,
         interest: lot ? null : (form.elements.interest.value || null),
         page: location.pathname.split('/').pop() || 'index.html', at: new Date().toISOString()
       };
@@ -420,7 +439,7 @@
         done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
           '<h3 class="form-card__title">Заявка принята</h3>' +
           '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
-          (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в корпусе ' + lot.corp : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
+          (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в корпусе ' + lot.corp : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
           (D.SITE.leadEndpoint ? '' : '<p class="form__demo">Демонстрационный режим: заявка сохранена только в этом браузере и в отдел продаж не отправлена. Чтобы связаться сейчас, позвоните ' + D.SITE.phone + '.</p>') +
           '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
           '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
@@ -436,12 +455,12 @@
     done.addEventListener('click', function (e) {
       if (!e.target.closest('[data-again]')) return;
       form.reset();
-      setLot(o.lot || null);
+      if (curPlan) setPlan(curPlan); else setLot(o.lot || null);
       done.hidden = true;
       body.hidden = false;
       name.focus();
     });
-    return { setLot: setLot };
+    return { setLot: setLot, setPlan: setPlan };
   };
 
   /* ── цифры из data.js в разметке ─────────────────────────────────
@@ -472,7 +491,7 @@
   initEmbeds();
   document.querySelectorAll('[data-lead-slot]').forEach(function (s) {
     if (s.hasAttribute('data-lead-manual')) return;
-    MK.lead(s, { title: s.getAttribute('data-title') || undefined, sub: s.getAttribute('data-sub') || undefined, method: s.getAttribute('data-method') || undefined, lot: D.find(MK.params.get('lot')) });
+    s._lead = MK.lead(s, { title: s.getAttribute('data-title') || undefined, sub: s.getAttribute('data-sub') || undefined, method: s.getAttribute('data-method') || undefined, lot: D.find(MK.params.get('lot')) });
   });
   document.querySelectorAll('[data-year]').forEach(function (n) { n.textContent = new Date().getFullYear(); });
   bindData();

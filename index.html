@@ -32,9 +32,9 @@
   <a class="hdr__brand" href="index.html">Mega Khujand</a>
   <nav class="hdr__nav" aria-label="Разделы">
     <a href="flats.html">Квартиры</a>
+    <a href="plans.html">Планировки</a>
     <a href="building.html">Шахматка</a>
     <a href="picker.html">На фасаде</a>
-    <a href="#lead">Шоурум</a>
   </nav>
   <div class="hdr__end">
     <a class="hdr__tel tnum" href="tel:+992446000000">+992 44 600 00 00</a>
@@ -53,7 +53,7 @@
     <a href="flats.html">Квартиры <small><span data-stat="open">365</span> в продаже</small></a>
     <a href="building.html">Шахматка дома</a>
     <a href="picker.html">Подбор на фасаде</a>
-    <a href="#plans">Планировки</a>
+    <a href="plans.html">Планировки</a>
     <a href="#lead">Шоурум и контакты</a>
   </nav>
   <div class="menu__foot">
@@ -128,7 +128,7 @@
             <a class="btn btn--glass" href="flats.html" data-go-flats>Все квартиры</a>
           </div>
           <div class="model__keys">
-            <div class="seg seg--dark" role="group" aria-label="Подсветить квартиры по числу спален" data-keys></div>
+            <div class="seg seg--dark" role="group" aria-label="Подсветить квартиры по комнатности" data-keys></div>
           </div>
         </div>
       </div>
@@ -137,35 +137,24 @@
 
   <section class="sec plans" id="plans" aria-labelledby="plans-h">
     <div class="sec-head">
-      <h2 class="h2" id="plans-h">От&nbsp;студии до&nbsp;пентхауса</h2>
-      <p class="lead">Сколько квартир каждого типа свободно и от какой цены, считаем по текущей шахматке. Цены предварительные — уточняйте в отделе продаж.</p>
+      <h2 class="h2" id="plans-h">Планировки из&nbsp;проекта</h2>
+      <p class="lead">3D-вид сверху и площади помещений по экспликации проекта. Номера на плане совпадают с таблицей, а на странице планировки видно, где квартира на этаже.</p>
     </div>
     <div class="plans__grid">
       <div class="plans__side">
-        <div class="ptypes" role="group" aria-label="Тип квартиры" data-pl-types>
-          <button class="ptype" type="button" data-type="0" aria-pressed="false"><span class="led"></span><span class="ptype__name">Студия</span><span class="ptype__n"></span><span class="ptype__p"></span></button>
-          <button class="ptype" type="button" data-type="1" aria-pressed="false"><span class="led"></span><span class="ptype__name">1 спальня</span><span class="ptype__n"></span><span class="ptype__p"></span></button>
-          <button class="ptype" type="button" data-type="2" aria-pressed="true"><span class="led"></span><span class="ptype__name">2 спальни</span><span class="ptype__n"></span><span class="ptype__p"></span></button>
-          <button class="ptype" type="button" data-type="3" aria-pressed="false"><span class="led"></span><span class="ptype__name">3 спальни</span><span class="ptype__n"></span><span class="ptype__p"></span></button>
-          <button class="ptype" type="button" data-type="4" aria-pressed="false"><span class="led"></span><span class="ptype__name">Пентхаус</span><span class="ptype__n"></span><span class="ptype__p"></span></button>
-        </div>
-        <p class="plans__desc" data-pl-desc aria-live="polite">Кухня-гостиная и две изолированные спальни.</p>
+        <div class="seg" role="group" aria-label="Комнатность" data-hp-keys></div>
+        <div class="ptypes hp-list" role="group" aria-label="Планировка" data-hp-list></div>
         <div class="plans__act">
-          <a class="btn btn--dark" data-pl-cta href="flats.html?rooms=2">Смотреть квартиры</a>
-          <a class="btn btn--soft" data-pl-pick href="picker.html?rooms=2">На фасаде</a>
+          <a class="btn btn--dark" data-hp-open href="plans.html">Открыть планировку</a>
+          <a class="btn btn--soft" data-hp-ask href="#lead">Узнать цену</a>
         </div>
       </div>
       <figure class="plans__piece">
-        <div class="plans__board">
-          <span class="plate plans__cap" data-pl-cap>Вариант А</span>
-          <img data-pl-img src="media/plans/light/two-a.svg" alt="Планировка: 2 спальни, вариант А" width="526" height="504" loading="lazy" decoding="async">
-        </div>
-        <figcaption class="plans__foot">
-          <span class="plans__vars" role="group" aria-label="Вариант планировки" data-pl-thumbs></span>
-          <span class="plans__meta" data-pl-meta></span>
-        </figcaption>
+        <div class="pv" data-hp-view></div>
+        <figcaption class="hp-rooms" data-hp-rooms></figcaption>
       </figure>
     </div>
+    <noscript><p class="noscript">Планировки собираются в браузере — откройте <a href="plans.html">страницу планировок</a> или позвоните: <a href="tel:+992446000000">+992 44 600 00 00</a>.</p></noscript>
   </section>
 
   <section class="sec mat on-dark" id="arch" aria-labelledby="mat-h">
@@ -303,7 +292,9 @@
 </footer>
 
 <script src="js/data.js"></script>
+<script src="js/plans-data.js"></script>
 <script src="js/site.js"></script>
+<script src="js/plans.js"></script>
 <script src="js/home.js"></script>
 </body>
 </html>
