@@ -7,13 +7,22 @@
 одинаковых этажей (3–6) собирается стопка для раскладки.
 
 Режимы (python из окружения с модулем bpy):
-  look   пробные кадры для подбора света и материалов
-  seq    кадры раскладки для прокрутки → media/model/seq/
-  final  финальный кадр: основа + свет каждой квартиры отдельным слоем
-  close  крупный план каждой квартиры («кукольный домик»)
+  final          финальный кадр: основа + свет каждой квартиры отдельным слоем
+  close          крупный план каждой квартиры («кукольный домик»)
+  seq            80 кадров раскладки для прокрутки
+  all            всё перечисленное подряд
+  anchors        только подписи этажей по кадрам, без рендера
+  close-anchors  только номера комнат на крупных планах, без рендера
+  scene          сохранить сцену финального кадра в <папка>/model-floor.blend —
+                 открыть в Blender и посмотреть, покрутить, подобрать свет
 
   pip install bpy==4.5.4 shapely   # Python 3.11
-  python tools/model-render.py final
+  python tools/model-render.py all /путь/к/сырым   # затем tools/model-pack.py
+
+Считает на видеокарте, если она есть (Metal на Mac с Apple Silicon,
+OptiX/CUDA, HIP), иначе на процессоре. MK_DEVICE=CPU — только процессор.
+Можно запускать и самим Blender: blender -b -P tools/model-render.py -- all /путь
+(тогда shapely нужно поставить в Python внутри Blender).
 """
 import json
 import math
@@ -540,10 +549,41 @@ def aim(cam, az, el, dist, target=(0, 0, 0)):
     cam.rotation_euler = (t - cam.location).to_track_quat('-Z', 'Y').to_euler()
 
 
+_DEVICE = []
+
+
+def gpu():
+    """Включить видеокарту для Cycles, если она есть: Metal (Mac на Apple
+    Silicon), OptiX/CUDA (NVIDIA), HIP (AMD), oneAPI (Intel)."""
+    if _DEVICE:
+        return _DEVICE[0]
+    kind = 'CPU'
+    if os.environ.get('MK_DEVICE', '').upper() != 'CPU':
+        try:
+            prefs = bpy.context.preferences.addons['cycles'].preferences
+            for t in ('METAL', 'OPTIX', 'CUDA', 'HIP', 'ONEAPI'):
+                try:
+                    prefs.compute_device_type = t
+                except TypeError:
+                    continue
+                prefs.get_devices()
+                devs = [d for d in prefs.devices if d.type == t]
+                if devs:
+                    for d in prefs.devices:
+                        d.use = d.type == t
+                    kind = t
+                    break
+        except Exception as e:      # нет модуля cycles или настроек — считаем на CPU
+            print('GPU недоступна:', e)
+    print('Cycles:', kind)
+    _DEVICE.append(kind)
+    return kind
+
+
 def render_setup(w, h, spp, look):
     sc = bpy.context.scene
     sc.render.engine = 'CYCLES'
-    sc.cycles.device = 'CPU'
+    sc.cycles.device = 'CPU' if gpu() == 'CPU' else 'GPU'
     sc.cycles.samples = spp
     sc.cycles.use_adaptive_sampling = True
     sc.cycles.adaptive_threshold = look.get('noise', 0.03)
@@ -768,9 +808,26 @@ def close_pass(fid, w, h, spp, look, outdir):
     return close_rooms(cam, fid)
 
 
+def save_scene(outdir):
+    """Сцена финального кадра как .blend: свет квартир включён, верхние
+    этажи сняты — открыть в Blender и смотреть в режиме Rendered."""
+    sc, M, floor, plates = scene_base({})
+    studio({})
+    cam = camera(lens=50)
+    place(plates, cam, float(os.environ.get('MK_T', 1.0)))
+    dof(cam, FINAL['target'], 0.7)
+    flat_lights(0)
+    render_setup(1920, 1080, 160, {})
+    path = os.path.join(outdir, 'model-floor.blend')
+    bpy.ops.wm.save_as_mainfile(filepath=path)
+    print('saved', path)
+
+
 if __name__ == '__main__':
-    mode = sys.argv[1] if len(sys.argv) > 1 else 'final'
-    outdir = os.path.abspath(sys.argv[2] if len(sys.argv) > 2 else os.path.join(OUT, 'raw'))
+    # python tools/model-render.py all /путь  или  blender -b -P tools/model-render.py -- all /путь
+    args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
+    mode = args[0] if args else 'final'
+    outdir = os.path.abspath(args[1] if len(args) > 1 else os.path.join(OUT, 'raw'))
     os.makedirs(outdir, exist_ok=True)
     meta_path = os.path.join(outdir, 'meta.json')
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
@@ -800,4 +857,6 @@ if __name__ == '__main__':
         anchors = run_seq(n, 1440, 810, 44, {}, os.path.join(outdir, 'seq'))
         meta['seq'] = {'n': n, 'w': 1440, 'h': 810, 'floors': FLOORS, 'anchors': anchors}
         json.dump(meta, open(meta_path, 'w'))
+    if mode == 'scene':
+        save_scene(outdir)
     print('done', mode)

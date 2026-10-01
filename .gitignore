@@ -10,3 +10,7 @@
 
 # Python bytecode from tools/
 __pycache__/
+
+# Python-окружение и сырые рендеры гипсового макета
+.venv/
+media/model/raw/

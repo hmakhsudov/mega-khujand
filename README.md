@@ -78,10 +78,11 @@ pip install pymupdf pillow numpy
 python3 tools/plans-extract.py # новые листы из media/plans/src/ → media/plans/real/ и js/plans-data.js
 pip install pillow numpy scipy
 python3 tools/facade-light.py  # тёмный рендер, слой света и js/facade-light.js
-pip install bpy==4.5.4 shapely pymupdf   # Blender как модуль Python 3.11
+pip install bpy==4.5.4 shapely pymupdf   # Blender как модуль Python 3.11; на Mac с Apple Silicon считает на Metal
 python3 tools/model-floor.py                       # чертёж этажа из PDF → media/model/floor.json
 python3 tools/model-render.py all /путь/к/сырым    # Cycles: финал, крупные планы, кадры раскладки
 python3 tools/model-pack.py /путь/к/сырым          # → media/model/ и js/model-data.js
+python3 tools/model-render.py scene /путь/к/сырым  # сцена model-floor.blend — открыть в Blender
 ```
 
 **Гипсовый макет этажа.** `tools/model-floor.py` читает векторный ключ-план типового этажа из листа проекта (`media/plans/src/`) и восстанавливает этаж в метрах: стены (чёрные заливки), окна и двери (белые заливки и дуги открывания), балконы, лестницу, лифты, контуры квартир Б-1…Б-5. Мебель расставлена вручную по 3D-видам из тех же листов — `tools/model-furniture.json`. `tools/model-render.py` (Blender 4.5 как модуль Python) строит гипсовый макет и считает в Cycles: финальный кадр с отдельным светом каждой квартиры (группы света), крупный план каждой квартиры и 80 кадров раскладки; режимы `final`, `close`, `seq`, `all`, а `anchors` и `close-anchors` пересчитывают только подписи этажей и номера комнат. На 4 ядрах CPU финал и крупный план считаются около 8 минут каждый, кадр раскладки — около минуты (все 80 — примерно полтора часа). `tools/model-pack.py` поднимает чёрный фон рендера до графита страницы и гасит в него края кадра, сохраняет свет квартир как прибавку к финальному кадру (на сайте — сложение «lighter») и пишет `js/model-data.js`. Когда придут остальные листы, впишите комнаты новых квартир в `tools/model-furniture.json` и перезапустите три скрипта.
