@@ -45,7 +45,7 @@
   function Painter(cv, box, mode) {
     var ctx = cv.getContext('2d');
     var s = 1;
-    var me = { a: null, b: null, k: 0, mix: 1, base: null, layers: {}, light: {}, R: { x: 0, y: 0, w: 0, h: 0 }, mode: mode };
+    var me = { a: null, mix: 1, base: null, layers: {}, light: {}, R: { x: 0, y: 0, w: 0, h: 0 }, mode: mode };
     IDS.forEach(function (id) { me.light[id] = 0; });
     /* холст занимает ровно прямоугольник кадра: края гаснут маской CSS */
     me.size = function () {
@@ -53,7 +53,7 @@
       if (!W || !H) return me.R;
       var w = me.mode === 'cover' ? Math.max(W, H / AR) : Math.min(W, H / AR);
       me.R = { x: (W - w) / 2, y: (H - w * AR) / 2, w: w, h: w * AR, W: W, H: H };
-      s = Math.min(dpr(), M.final.w / w);
+      s = Math.min(dpr(), 1600 / w);        /* больше 1600 точек кадрам не нужно */
       cv.style.left = me.R.x + 'px';
       cv.style.top = me.R.y + 'px';
       cv.style.width = w + 'px';
@@ -73,7 +73,7 @@
       ctx.globalAlpha = 1;
       ctx.clearRect(0, 0, cv.width, cv.height);
       var fin = me.base ? me.mix : 0;
-      if (fin < 1) { put(me.a, 1); if (me.b && me.k > 0.004) put(me.b, me.k); }
+      if (fin < 1) put(me.a, 1);
       put(me.base, fin);
       if (fin > 0) {
         ctx.globalCompositeOperation = 'lighter';
@@ -129,50 +129,70 @@
     };
   }
 
-  /* кадры раскладки: сначала первый и последний, потом каждый 16-й, 8-й…
-     — при быстрой прокрутке всегда есть соседние кадры для наплыва */
-  function Seq(need, every, onLoad) {
-    var S = M.seq, n = S.n, w = pickW(S.widths, need), fr = new Array(n), q = [], busy = 0, seen = {};
+  /* кадры раскладки. Сжатые байты (fetch → Blob, ~30 КБ на кадр) лежат
+     все, а расшифрованы — вне основного потока, ImageBitmap — только кадры
+     рядом с текущим, с запасом по ходу прокрутки. Память ограничена
+     ~15 кадрами вместо всех 80, прокрутка не ждёт декодера: пока нужный
+     кадр не готов, на холсте ближайший готовый. Порядок загрузки: первый
+     и последний, потом каждый 16-й, 8-й… — при быстрой прокрутке есть
+     опора по всей длине. */
+  function Seq(need, every, onReady) {
+    var S = M.seq, n = S.n, w = pickW(S.widths, need), blob = new Array(n), q = [], busy = 0, seen = {};
     var add = function (i) { if (i >= 0 && i < n && !seen[i]) { seen[i] = 1; q.push(i); } };
     add(0); add(n - 1);
     [16, 8, 4, 2, 1].forEach(function (st) { if (st >= every) for (var i = 0; i < n; i += st) add(i); });
     var total = q.length, got = 0;
+    var AHEAD = 6, BEHIND = 3, KEEP = 8;
+    var bm = {}, wip = {}, decoding = 0, cur = 0, dir = 1;
     function src(i) { return S.src + w + '/f' + ('00' + i).slice(-3) + '.webp'; }
     function pump() {
       while (busy < 4 && q.length) {
         (function (i) {
           busy++;
-          load(src(i)).then(function (im) { fr[i] = im; got++; onLoad(i); }, function () { got++; })
+          fetch(src(i)).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); })
+            .then(function (b) { blob[i] = b; got++; warm(); }, function () { got++; })
             .then(function () { busy--; pump(); });
         })(q.shift());
       }
     }
-    /* кадры рядом с текущим держим расшифрованными (ImageBitmap, вне
-       основного потока), дальние отпускаем: прокрутка не ждёт декодера */
-    var bm = {}, wip = {};
-    function warm(c) {
-      if (!window.createImageBitmap) return;
-      for (var i = Math.max(0, c - 3); i <= Math.min(n - 1, c + 4); i++) {
-        if (fr[i] && !bm[i] && !wip[i]) (function (i) {
-          wip[i] = 1;
-          createImageBitmap(fr[i]).then(function (b) { wip[i] = 0; if (Math.abs(i - c) > 8) b.close(); else bm[i] = b; }, function () { wip[i] = 0; });
-        })(i);
-      }
-      Object.keys(bm).forEach(function (k) { if (Math.abs(k - c) > 8) { bm[k].close(); delete bm[k]; } });
+    function bitmap(b) {
+      if (window.createImageBitmap) return createImageBitmap(b);
+      var u = URL.createObjectURL(b);
+      return load(u).then(function (im) { URL.revokeObjectURL(u); return im; });
     }
-    var pic = function (i) { return bm[i] || fr[i]; };
+    function drop(b) { if (b && b.close) b.close(); }
+    function decode(i) {
+      wip[i] = 1;
+      decoding++;
+      bitmap(blob[i]).then(function (b) {
+        wip[i] = 0;
+        decoding--;
+        if (Math.abs(i - cur) > KEEP) drop(b);
+        else { bm[i] = b; onReady(i); }
+        warm();
+      }, function () { wip[i] = 0; decoding--; });
+    }
+    function warm() {
+      for (var d = 0; d <= AHEAD && decoding < 3; d++) {
+        var ahead = cur + dir * d, back = cur - dir * d;
+        if (ahead >= 0 && ahead < n && blob[ahead] && !bm[ahead] && !wip[ahead]) decode(ahead);
+        if (d <= BEHIND && decoding < 3 && back >= 0 && back < n && blob[back] && !bm[back] && !wip[back]) decode(back);
+      }
+      Object.keys(bm).forEach(function (k) { if (Math.abs(k - cur) > KEEP) { drop(bm[k]); delete bm[k]; } });
+    }
     return {
       n: n,
       start: function () { if (!busy && q.length === total) pump(); },
       done: function () { return got >= total; },
-      at: function (f) {
-        var i0 = Math.floor(f), lo = -1, hi = -1, i;
-        warm(Math.round(f));
-        for (i = Math.min(i0, n - 1); i >= 0; i--) if (fr[i]) { lo = i; break; }
-        for (i = Math.max(i0 + 1, 0); i < n; i++) if (fr[i]) { hi = i; break; }
-        if (lo < 0 && hi < 0) return null;
-        if (lo < 0 || hi < 0) return { a: pic(lo < 0 ? hi : lo), b: null, k: 0 };
-        return { a: pic(lo), b: pic(hi), k: MK.clamp01((f - lo) / (hi - lo)) };
+      /* ближайший расшифрованный кадр к f */
+      frame: function (f) {
+        var c = MK.clamp(Math.round(f), 0, n - 1);
+        if (c !== cur) { dir = c > cur ? 1 : -1; cur = c; warm(); }
+        for (var d = 0; d <= KEEP; d++) {
+          if (bm[c - dir * d]) return bm[c - dir * d];
+          if (bm[c + dir * d]) return bm[c + dir * d];
+        }
+        return null;
       }
     };
   }
@@ -211,6 +231,7 @@
     var mqScene = matchMedia('(min-width: 900px)');
     var P = Painter(cv, frame, 'contain');
     var seq = null, f = 0, hot = null, pinned = null, live = false, hideT = 0;
+    var drawn = { a: undefined, fin: -1, lit: -1 };
     var ORDER = IDS.slice().sort(function (a, b) { return M.final.flats[a].label[0] - M.final.flats[b].label[0]; });
     var ramp = {};                /* включение света по шкале: 0…1 */
     IDS.forEach(function (id) { ramp[id] = 0; });
@@ -245,6 +266,7 @@
       layer.style.width = R.w + 'px';
       layer.style.height = R.h + 'px';
       root.classList.toggle('is-narrow', frame.clientWidth < 620);
+      drawn = { a: undefined, fin: -1, lit: -1 };   /* холст очищен — нарисовать заново */
     }
 
     /* ── свет и бирка ─────────────────────────────────────────────── */
@@ -352,16 +374,18 @@
       if (!on) setPinned(null);
     }
     /* t — раскладка 0…1, fin — финальный кадр, lit — доля включённого света */
-    function state(t, fin, lit) {
+    function state(t, fin, lit, force) {
       f = t * ((seq ? seq.n : 1) - 1);
-      var fr = seq ? seq.at(f) : null;
-      P.a = fr ? fr.a : null;
-      P.b = fr ? fr.b : null;
-      P.k = fr ? fr.k : 0;
-      P.mix = fin;
+      var a = seq ? seq.frame(f) : null;
       ORDER.forEach(function (id, i) { ramp[id] = smooth(lit * (ORDER.length + 1.5) - i * 1.1); });
-      IDS.forEach(function (id) { P.light[id] = ramp[id] * tw.cur[id]; });
-      P.render();
+      /* холст перерисовываем, только если сменился кадр, наплыв или свет */
+      if (force || a !== drawn.a || fin !== drawn.fin || lit !== drawn.lit) {
+        drawn = { a: a, fin: fin, lit: lit };
+        P.a = a;
+        P.mix = fin;
+        IDS.forEach(function (id) { P.light[id] = ramp[id] * tw.cur[id]; });
+        P.render();
+      }
       if (P.drawn) root.classList.add('is-cv');
       floors(t);
       caption(t < 0.3 ? 0 : t < 0.72 ? 1 : 2);
@@ -375,13 +399,13 @@
       if (!seq) {
         /* кадры раскладки идут в движении: хватает 1,6 пикселя на точку */
         var need = (P.R.w || frame.clientWidth) * Math.min(dpr(), 1.6);
-        seq = Seq(need, scene() ? 1 : 2, function () { MK.tick(); if (mode !== 'scene') redraw(); });
+        seq = Seq(need, scene() ? 1 : 2, function () { redraw(); });
       }
       seq.start();
-      P.loadFinal().then(function () { MK.tick(); redraw(); });
+      P.loadFinal().then(function () { redraw(true); });
     }
     var last = { t: 0, fin: 0, lit: 0 };
-    function redraw() { state(last.t, last.fin, last.lit); }
+    function redraw(force) { state(last.t, last.fin, last.lit, force); }
     function go(t, fin, lit) { last = { t: t, fin: fin, lit: lit }; redraw(); }
 
     function play() {
@@ -409,7 +433,7 @@
       root.setAttribute('data-m3d-mode', m);
       cancelAnimationFrame(playRaf);
       layout();
-      if (m === 'still') { P.loadFinal().then(function () { go(1, 1, 1); }); go(1, 1, 1); caption(2); }
+      if (m === 'still') { P.loadFinal().then(function () { redraw(true); }); go(1, 1, 1); caption(2); }
       else if (m === 'play') { if (played) go(1, 1, 1); else go(0, 0, 0); }
       MK.tick();
     }
@@ -434,7 +458,7 @@
       }, { threshold: 0.45 }).observe(frame);
     }
     var rz = 0;
-    addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { layout(); redraw(); }, 80); });
+    addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { layout(); redraw(true); }, 80); });
     if (mqScene.addEventListener) mqScene.addEventListener('change', setMode);
     var mqR = matchMedia('(prefers-reduced-motion: reduce)');
     if (mqR.addEventListener) mqR.addEventListener('change', setMode);
