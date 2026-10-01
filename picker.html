@@ -72,15 +72,14 @@
       <div class="pk__fit">
       <div class="pk__frame" data-frame>
         <div data-shot></div>
-        <svg class="pk__svg" viewBox="0 0 2400 1339" preserveAspectRatio="xMidYMid slice" tabindex="0" role="group" aria-label="Квартиры на фасаде" aria-describedby="pk-help" data-svg>
-          <g data-polys></g>
-        </svg>
+        <canvas class="pk__cv" aria-hidden="true" data-fcv></canvas>
+        <svg class="pk__svg" viewBox="0 0 2400 1339" preserveAspectRatio="xMidYMid slice" tabindex="0" role="group" aria-label="Квартиры на фасаде" aria-describedby="pk-help" data-svg></svg>
         <div class="pk__tip" aria-hidden="true" data-tip><b></b><span></span></div>
       </div>
       <div class="pk__over">
         <div class="seg seg--glass" role="group" aria-label="Ракурс" data-views></div>
         <button class="pk__ovbtn" type="button" data-ov aria-pressed="true"><svg class="ico" viewBox="0 0 18 12" aria-hidden="true" style="width:17px;height:12px"><path d="M1 6s3-4.6 8-4.6S17 6 17 6s-3 4.6-8 4.6S1 6 1 6z"/><circle cx="9" cy="6" r="1.9"/></svg><span>Подсветка</span></button>
-        <div class="pk__legend" aria-label="Обозначения"><span><i class="pk-free"></i>свободна</span><span><i class="pk-book"></i>бронь</span><span><i class="pk-sold"></i>продана</span></div>
+        <div class="pk__legend" aria-label="Обозначения" data-legend></div>
       </div>
       </div>
       <p class="sr-only" id="pk-help">Стрелки выбирают квартиру на фасаде: влево и вправо — по стоякам, вверх и вниз — по этажам. Enter открывает карточку квартиры. Тот же список — справа.</p>
@@ -121,7 +120,9 @@
 </dialog>
 
 <script src="js/data.js"></script>
+<script src="js/facade-light.js"></script>
 <script src="js/site.js"></script>
+<script src="js/facade.js"></script>
 <script src="js/picker.js"></script>
 </body>
 </html>

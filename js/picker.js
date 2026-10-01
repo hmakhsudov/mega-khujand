@@ -1,5 +1,6 @@
-/* Подбор на фасаде: полигоны окон по гомографии плоскостей рендера,
-   лоты — те же, что в шахматке и каталоге (data.js) */
+/* Подбор на фасаде. Вечером — свет в окнах свободных квартир и выбор
+   по этажам (js/facade.js), днём — метки на окнах по гомографии плоскостей
+   рендера. Лоты — те же, что в шахматке и каталоге (data.js) */
 (function () {
   'use strict';
   var D = window.MK_DATA;
@@ -20,12 +21,12 @@
         r.row.forEach(function (l) {
           if (!l) return;
           var p = D.windowQuad(pl, sc, l, H);
-          items.push({ lot: l, plane: pi, pts: p.map(function (x) { return x[0].toFixed(1) + ',' + x[1].toFixed(1); }).join(' '),
+          items.push({ lot: l, plane: pi, quad: p,
             cx: (p[0][0] + p[1][0]) / 2, cy: (p[0][1] + p[1][1] + p[2][1] + p[3][1]) / 4, top: Math.min(p[0][1], p[1][1]) });
         });
       });
     });
-    return { k: view.k, title: view.title, img: view.img, corp: view.corp, sects: view.planes.map(function (p) { return p.sect; }), items: items };
+    return { k: view.k, title: view.title, img: view.k === 'dusk' && window.MK_LIGHT ? 'facade-night-dark' : view.img, corp: view.corp, sects: view.planes.map(function (p) { return p.sect; }), items: items };
   });
   var byId = {};
   VIEWS.forEach(function (v, vi) { v.items.forEach(function (it) { byId[it.lot.id] = { vi: vi, it: it }; }); });
@@ -46,39 +47,75 @@
   }
 
   /* ── фасад ──────────────────────────────────────────────────────── */
-  var svg = $('[data-svg]'), polysG = $('[data-polys]'), frame = $('[data-frame]'), tip = $('[data-tip]');
-  var polys = {};
+  var svg = $('[data-svg]'), frame = $('[data-frame]'), tip = $('[data-tip]'), cv = $('[data-fcv]');
+  var F = null, marks = {}, selG = null;
+  var lit = function (l) { return D.isOpen(l) && match(l); };
+  function night() { return view().k === 'dusk' && !!MK.facade; }
   function renderFacade() {
     var v = view();
-    $('[data-shot]').innerHTML = MK.pic(v.img, 'MEGA KHUJAND, ' + v.title.toLowerCase() + ': подсветка квартир корпуса ' + v.corp, { eager: true, sizes: '(min-width: 900px) 70vw, 100vw' });
-    polysG.textContent = '';
-    polys = {};
-    v.items.forEach(function (it) {
-      var p = document.createElementNS(NS, 'polygon');
-      p.setAttribute('points', it.pts);
-      p.setAttribute('data-id', it.lot.id);
-      polysG.appendChild(p);
-      polys[it.lot.id] = p;
-    });
-    svg.classList.toggle('is-night', v.k === 'dusk');
+    $('[data-shot]').innerHTML = MK.pic(v.img, 'MEGA KHUJAND, ' + v.title.toLowerCase() + ': корпус ' + v.corp, { eager: true, sizes: '(min-width: 900px) 70vw, 100vw' });
+    svg.textContent = '';
+    svg.removeAttribute('class');
+    svg.classList.add('pk__svg');
+    F = null; marks = {};
+    if (night()) {
+      cv.hidden = false;
+      F = MK.facade(svg, { canvas: cv, mode: 'io' });
+      /* в списке и стрелками — только квартиры, у которых окна видны на рендере */
+      v.items = F.lots.map(function (it) {
+        var top = Math.min.apply(null, it.win.map(function (q) { return Math.min(q[0][1], q[1][1]); }));
+        return { lot: it.lot, plane: v.sects.indexOf(it.lot.sect), cx: it.cx, cy: it.cy, top: top, f: it };
+      });
+      v.items.forEach(function (it) { byId[it.lot.id] = { vi: S.v, it: it }; });
+      requestAnimationFrame(function () { F.lightUp(); });
+    } else {
+      cv.hidden = true;
+      var dots = document.createElementNS(NS, 'g');
+      selG = document.createElementNS(NS, 'g');
+      v.items.forEach(function (it) {
+        var c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', it.cx.toFixed(1)); c.setAttribute('cy', it.cy.toFixed(1)); c.setAttribute('r', '9');
+        dots.appendChild(c);
+        marks[it.lot.id] = c;
+      });
+      svg.appendChild(dots); svg.appendChild(selG);
+      svg.setAttribute('viewBox', '0 0 2400 1339');
+    }
+    svg.classList.toggle('is-night', night());
     svg.setAttribute('aria-label', 'Фасад, ' + v.title.toLowerCase() + ': корпус ' + v.corp + ', секции ' + v.sects.join(', ') + '. ' + $('#pk-help').textContent);
     $('[data-views]').innerHTML = VIEWS.map(function (x, i) {
       return '<button class="seg__btn" type="button" data-view="' + i + '" aria-pressed="' + (i === S.v) + '">' + x.title + '</button>';
     }).join('');
-    $('[data-note]').textContent = 'На этом ракурсе — корпус ' + v.corp + ', секции ' + v.sects.join(', ') + '. Остальные секции — на шахматке. Подсветка нанесена на рендер комплекса; площади и цены предварительные.';
+    $('[data-legend]').innerHTML = night()
+      ? '<span><i class="pk-lit"></i>горит свет — свободна</span><span><i class="pk-dark"></i>темно — бронь или продана</span>'
+      : '<span><i class="pk-free"></i>свободна</span><span><i class="pk-book"></i>бронь</span><span><i class="pk-sold"></i>продана</span>';
+    $('[data-note]').textContent = 'На этом ракурсе — корпус ' + v.corp + ', секции ' + v.sects.join(', ') + '. Остальные секции — на шахматке. ' +
+      (night() ? 'Свет нанесён на рендер комплекса по окнам квартир' : 'Метки нанесены на рендер комплекса') + '; площади и цены предварительные.';
   }
   function paintPolys() {
     var on = filtersOn();
-    svg.classList.toggle('is-filter', on);
-    frame.classList.toggle('is-filter', on);
+    frame.classList.toggle('is-filter', on && !night());
+    frame.classList.toggle('is-off', !S.ov);
+    var hotId = S.hover || S.sel;
+    if (F) {
+      F.paint(lit);
+      F.focusLot(hotId && byId[hotId] && byId[hotId].vi === S.v ? byId[hotId].it.f : null);
+      return;
+    }
     view().items.forEach(function (it) {
-      var p = polys[it.lot.id], l = it.lot, ok = match(l);
+      var c = marks[it.lot.id], l = it.lot, ok = match(l);
       var cls = 'st-' + (l.status === 'sale' ? 'free' : l.status);
       if (on) cls += ok ? ' is-match' : ' is-out';
       if (l.id === S.sel || l.id === S.hover) cls += ' is-hot';
-      p.setAttribute('class', cls);
+      c.setAttribute('class', cls);
     });
-    svg.classList.toggle('is-off', !S.ov);
+    selG.textContent = '';
+    if (hotId && byId[hotId] && byId[hotId].vi === S.v) {
+      var q = byId[hotId].it.quad, p = document.createElementNS(NS, 'polygon');
+      p.setAttribute('points', q.map(function (x) { return x[0].toFixed(1) + ',' + x[1].toFixed(1); }).join(' '));
+      p.setAttribute('class', 'pk__pick');
+      selG.appendChild(p);
+    }
   }
 
   /* подсказка над окном */
@@ -88,12 +125,15 @@
     var l = rec.it.lot;
     $('b', tip).textContent = l.type + ' · ' + D.area(l.area);
     $('span', tip).textContent = 'Этаж ' + l.floor + ' · № ' + l.no + ' · ' + (D.isOpen(l) ? D.money(l.price) + (l.disc ? ' (−' + l.disc + '%)' : '') : D.STATUS[l.status].toLowerCase());
-    /* позиция по реальному прямоугольнику окна: рендер может быть обрезан (cover) */
-    var pr = polys[id].getBoundingClientRect(), fr = frame.getBoundingClientRect();
-    var x = (pr.left + pr.width / 2 - fr.left) / fr.width * 100, y = (pr.top - fr.top) / fr.height * 100;
+    /* позиция по окну на экране: рендер обрезан по кадру (cover) */
+    var m = svg.getScreenCTM(), fr = frame.getBoundingClientRect();
+    if (!m) return;
+    var pt = svg.createSVGPoint(); pt.x = rec.it.cx; pt.y = rec.it.top;
+    pt = pt.matrixTransform(m);
+    var x = (pt.x - fr.left) / fr.width * 100, y = (pt.y - fr.top) / fr.height * 100;
     tip.style.left = MK.clamp(x, 9, 91) + '%';
     tip.style.top = y + '%';
-    tip.style.transform = y < 12 ? 'translate(-50%, 34px)' : 'translate(-50%, calc(-100% - 10px))';
+    tip.style.transform = y < 12 ? 'translate(-50%, 34px)' : 'translate(-50%, calc(-100% - 12px))';
     tip.classList.add('is-on');
   }
 
@@ -154,28 +194,46 @@
   }
 
   /* ── события ────────────────────────────────────────────────────── */
-  polysG.addEventListener('mouseover', function (e) {
-    var p = e.target.closest('polygon'); if (!p) return;
-    S.hover = p.getAttribute('data-id'); paintPolys(); showTip(S.hover);
-  });
-  polysG.addEventListener('mouseout', function (e) {
-    if (!e.target.closest('polygon')) return;
-    S.hover = null; paintPolys(); if (S.sel) showTip(S.sel); else tip.classList.remove('is-on');
-  });
-  /* клик или тап выбирает ближайшее окно — на телефоне окна меньше пальца */
-  svg.addEventListener('click', function (e) {
-    if (!S.ov) return;
+  function svgPt(e) {
     var m = svg.getScreenCTM();
-    if (!m) return;
+    if (!m) return null;
     var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
-    var loc = pt.matrixTransform(m.inverse());
+    return pt.matrixTransform(m.inverse());
+  }
+  /* ближайшая квартира к точке: вечером — по этажу под курсором */
+  function nearest(loc) {
+    if (F) {
+      var f = F.lotAt(loc.x, loc.y, function (l) { return !filtersOn() || match(l); });
+      return f ? byId[f.lot.id].it : null;
+    }
     var best = null, bd = Infinity;
     view().items.forEach(function (it) {
       if (filtersOn() && !match(it.lot)) return;
       var dx = (it.cx - loc.x), dy = (it.cy - loc.y) * 1.4, d = dx * dx + dy * dy;
       if (d < bd) { bd = d; best = it; }
     });
-    if (best && bd < 90 * 90) select(best.lot.id, { tip: true, reveal: true });
+    return best && bd < 70 * 70 ? best : null;
+  }
+  svg.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse' || !S.ov) return;
+    var loc = svgPt(e); if (!loc) return;
+    if (F) F.focusFloor(F.floorAt(loc.x, loc.y));
+    var it = nearest(loc), id = it ? it.lot.id : null;
+    if (id === S.hover) return;
+    S.hover = id; paintPolys();
+    if (id) showTip(id); else if (S.sel) showTip(S.sel); else tip.classList.remove('is-on');
+  });
+  svg.addEventListener('pointerleave', function () {
+    if (F) F.focusFloor(null);
+    S.hover = null; paintPolys(); if (S.sel) showTip(S.sel); else tip.classList.remove('is-on');
+  });
+  /* клик или тап выбирает ближайшее окно — на телефоне окна меньше пальца */
+  svg.addEventListener('click', function (e) {
+    if (!S.ov) return;
+    var loc = svgPt(e); if (!loc) return;
+    if (F) F.focusFloor(F.floorAt(loc.x, loc.y));
+    var it = nearest(loc);
+    if (it) select(it.lot.id, { tip: true, reveal: true });
   });
   /* клавиатура: стрелки по стоякам и этажам в пределах плоскости */
   svg.addEventListener('keydown', function (e) {

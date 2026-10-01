@@ -67,8 +67,8 @@
       $('[data-code]', root).textContent = p.code;
       board.style.setProperty('--ar', (p.img.w / p.img.h).toFixed(4));
       fit.innerHTML = PL.pic(p, 960, opts.sizes || '(min-width: 1000px) 56vw, 100vw', 'pv__img', opts.eager) +
-        p.items.filter(function (i) { return i.x != null; }).map(function (i) {
-          return '<span class="pv__pin" data-n="' + i.n + '" style="--x:' + i.x + '%;--y:' + i.y + '%" aria-hidden="true">' + i.n + '</span>';
+        p.items.filter(function (i) { return i.x != null; }).map(function (i, k) {
+          return '<span class="pv__pin" data-n="' + i.n + '" style="--x:' + i.x + '%;--y:' + i.y + '%;--i:' + k + '" aria-hidden="true">' + i.n + '</span>';
         }).join('') +
         (p.entry && p.entry.y >= 0 && p.entry.y <= 100 ? (function (e) {
           /* подпись сдвигаем по направлению стрелки из листа — к двери, не на номер */
@@ -272,4 +272,5 @@
   });
   renderCards();
   renderPlan(false);
+  if (MK.motion) MK.motion();
 })();

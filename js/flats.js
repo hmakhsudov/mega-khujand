@@ -244,4 +244,5 @@
 
   readUrl();
   render();
+  if (MK.motion) MK.motion();
 })();

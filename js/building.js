@@ -60,6 +60,7 @@
     var st = l.status === 'sale' ? 'свободна, скидка ' + l.disc + '%' : D.STATUS[l.status].toLowerCase();
     return 'Этаж ' + l.floor + ', квартира № ' + l.no + ', ' + l.type + ', ' + D.area(l.area) + ', ' + st + (D.isOpen(l) ? ', ' + D.money(l.price) : '');
   }
+  var lastWave = null;
   function renderGrid() {
     var sc = sec();
     var rows = sc.floors.slice().reverse();
@@ -78,13 +79,16 @@
         if (!l) return '';
         var cls = 'cell cell--' + l.status + (l.span === 2 ? ' cell--w' : '') + (roomOk(l) ? '' : ' is-dim') + (l.id === S.sel ? ' is-sel' : '');
         var tip = '№ ' + l.no + ' · ' + l.type + ' · ' + D.area(l.area) + (D.isOpen(l) ? ' · ' + D.money(l.price) : ' · ' + D.STATUS[l.status].toLowerCase());
-        return '<span role="gridcell"' + (l.span === 2 ? ' aria-colspan="2"' : '') + ' class="grid__cell"><button type="button" class="' + cls + '" data-id="' + l.id + '" data-r="' + ri + '" data-x="' + x + '" tabindex="-1" aria-label="' + cellLabel(l) + '" title="' + tip + '"' +
+        return '<span role="gridcell"' + (l.span === 2 ? ' aria-colspan="2"' : '') + ' class="grid__cell"><button type="button" class="' + cls + '" style="--d:' + (rows.length - 1 - ri + (x % 3) * 0.4).toFixed(1) + '" data-id="' + l.id + '" data-r="' + ri + '" data-x="' + x + '" tabindex="-1" aria-label="' + cellLabel(l) + '" title="' + tip + '"' +
           (l.status === 'sold' ? ' aria-disabled="true"' : '') + '>' + face(l) + '</button></span>';
       }).join('');
       return '<div class="grid__row" role="row"><span class="grid__fl' + (mark ? ' is-mark' : '') + '" role="rowheader">' + r.f + '</span>' + cells + '</div>';
     }).join('');
     var com = '<div class="grid__row" role="row"><span class="grid__fl" role="rowheader">1</span><span class="grid__com" role="gridcell">Коммерция и лобби</span></div>';
-    gridBox.innerHTML = '<div class="grid" style="--cols:' + sc.cols + '" role="grid" aria-label="' + HOUSE[S.b].name + ', секция ' + sc.i + ': квартиры по этажам и стоякам" aria-describedby="grid-hint" aria-rowcount="' + (rows.length + 2) + '">' + head + body + com + '</div>';
+    /* новая секция зажигается снизу вверх; фильтры перекрашивают без волны */
+    var key = S.b + ':' + S.s, wave = key !== lastWave;
+    lastWave = key;
+    gridBox.innerHTML = '<div class="grid' + (wave ? ' is-wave' : '') + '" style="--cols:' + sc.cols + '" role="grid" aria-label="' + HOUSE[S.b].name + ', секция ' + sc.i + ': квартиры по этажам и стоякам" aria-describedby="grid-hint" aria-rowcount="' + (rows.length + 2) + '">' + head + body + com + '</div>';
     $('[data-board-title]').textContent = HOUSE[S.b].name + ' · секция № ' + sc.i;
     $('[data-board-sub]').textContent = sc.from + '–' + sc.to + ' этаж · ' + sc.cols + ' ' + D.plural(sc.cols, ['квартира', 'квартиры', 'квартир']) + ' на этаже · верхний этаж — пентхаусы';
     $('[data-sect-prev]').disabled = S.s === 0;
@@ -203,4 +207,5 @@
       c.scrollIntoView({ block: 'center', inline: 'nearest' });
     });
   }
+  if (MK.motion) MK.motion();
 })();

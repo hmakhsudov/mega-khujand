@@ -100,6 +100,51 @@
     });
   }
 
+  /* ── движение: витрина включает свет ───────────────────────────────
+     Рендеры при появлении «включаются» из темноты, заголовки выходят
+     из-под плиты, строки списков и номера на рендерах встают по очереди.
+     Без JS и при уменьшенном движении всё видно сразу. */
+  var RV = [
+    ['.sec-head .h2,.sec-head .h3,.phead__title,.lead-band__copy .h2,.lead-band__copy .h3,.yard__panel .h3,.similar__head .h3,.pinfo__h', 'head'],
+    ['.mat__shot,.site__shot,.yard__shot,.srv__shot,.phead__media,.gallery__img,.planbox__img', 'photo'],
+    ['.legend-list,.srv__dir,.contacts,.dl,.kspecs,.pv__rooms', 'rows'],
+    ['.sec-head .lead,.phead__lead,.showroom,.mat__spec,.srv__foot,.plans__act', 'fade']
+  ];
+  var rvIo = null;
+  MK.motion = function (root) {
+    if (!rvIo) return;
+    RV.forEach(function (r) {
+      (root || document).querySelectorAll(r[0]).forEach(function (el) {
+        if (el.hasAttribute('data-rv')) return;
+        el.setAttribute('data-rv', r[1]);
+        if (r[1] === 'rows') Array.prototype.forEach.call(el.children, function (c, i) { c.style.setProperty('--i', Math.min(i, 9)); });
+        /* заголовок срезан своей же маской — наблюдаем за родителем */
+        var t = r[1] === 'head' ? el.parentElement : el;
+        (t._rv = t._rv || []).push(el);
+        rvIo.observe(t);
+      });
+    });
+    (root || document).querySelectorAll('[data-pins]').forEach(function (fig) {
+      if (fig.hasAttribute('data-rv')) return;
+      fig.setAttribute('data-rv', 'pins');
+      fig.querySelectorAll('.pin').forEach(function (p, i) { p.style.setProperty('--i', i); });
+      (fig._rv = fig._rv || []).push(fig);
+      rvIo.observe(fig);
+    });
+  };
+  function initMotion() {
+    if (!('IntersectionObserver' in window)) return;
+    rvIo = new IntersectionObserver(function (en) {
+      en.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        (e.target._rv || [e.target]).forEach(function (x) { x.classList.add('is-in'); });
+        rvIo.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
+    doc.classList.add('mo');
+    MK.motion();
+  }
+
   /* ── мобильное меню ─────────────────────────────────────────────── */
   function initMenu() {
     var menu = document.getElementById('menu');
@@ -487,6 +532,7 @@
 
   /* ── старт ──────────────────────────────────────────────────────── */
   initReveal();
+  initMotion();
   initMenu();
   initEmbeds();
   document.querySelectorAll('[data-lead-slot]').forEach(function (s) {
