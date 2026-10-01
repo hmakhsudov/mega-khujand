@@ -7,3 +7,6 @@
 
 # Impeccable review captures
 .impeccable/review/
+
+# Python bytecode from tools/
+__pycache__/

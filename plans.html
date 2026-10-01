@@ -78,9 +78,16 @@
     <div class="plan__view">
       <div class="pv" data-pview></div>
       <div class="fp">
-        <p class="fp__head"><span class="label">Где квартира на этаже</span><span class="fp__l" data-pfloor-l></span></p>
+        <div class="fp__head">
+          <p><span class="label">Где квартира на этаже</span> <span class="fp__l" data-pfloor-l></span></p>
+          <div class="seg fp__views" role="group" aria-label="Вид этажа" data-fviews hidden>
+            <button class="seg__btn" type="button" data-fview="model" aria-pressed="true">Макет</button>
+            <button class="seg__btn" type="button" data-fview="plan" aria-pressed="false">Схема</button>
+          </div>
+        </div>
+        <div class="fp__m3d" data-pfloor3d hidden></div>
         <div class="fp__svg" data-pfloor></div>
-        <p class="small fp__note">Нажмите на выделенную квартиру, чтобы открыть её планировку. Остальные планировки этажа появятся здесь по мере готовности листов.</p>
+        <p class="small fp__note" data-fnote>Нажмите на выделенную квартиру, чтобы открыть её планировку. Остальные планировки этажа появятся здесь по мере готовности листов.</p>
       </div>
     </div>
     <div class="pinfo" data-pinfo aria-live="polite"></div>
@@ -118,7 +125,9 @@
 
 <script src="js/data.js"></script>
 <script src="js/plans-data.js"></script>
+<script src="js/model-data.js"></script>
 <script src="js/site.js"></script>
+<script src="js/model.js"></script>
 <script src="js/plans.js"></script>
 </body>
 </html>

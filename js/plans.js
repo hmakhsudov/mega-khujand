@@ -50,23 +50,40 @@
     url: function (p) { return new URL('plans.html?plan=' + p.id, location.href).href; }
   };
 
-  /* ── просмотрщик: кадр плана, номера помещений, вход ─────────────── */
+  /* ── просмотрщик: кадр плана, номера помещений, вход ───────────────
+     opts.model — переключатель «Лист / Макет»: крупный план гипсового
+     макета квартиры (js/model.js) с теми же номерами помещений */
   PL.viewer = function (root, opts) {
     opts = opts || {};
-    var cur = null;
+    var cur = null, view = 'sheet';
+    var closeOf = function (p) { return opts.model && MK.model3d && p ? MK.model3d.close(p.id) : null; };
     root.innerHTML =
       '<div class="pv__board">' +
         '<span class="plate pv__code" data-code></span>' +
+        (opts.model ? '<div class="seg pv__views" role="group" aria-label="Вид планировки" data-views hidden>' +
+          '<button class="seg__btn" type="button" data-view="sheet" aria-pressed="true">Лист проекта</button>' +
+          '<button class="seg__btn" type="button" data-view="model" aria-pressed="false">Макет</button></div>' : '') +
         '<div class="pv__fit" data-fit></div>' +
         (opts.zoom === false ? '' : '<button class="pv__zoom" type="button" data-zoom>' +
           '<svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M8.5 1.5h4v4M5.5 12.5h-4v-4M12.5 1.5L8 6M1.5 12.5L6 8"/></svg>Увеличить</button>') +
       '</div>';
-    var fit = $('[data-fit]', root), board = $('.pv__board', root);
+    var fit = $('[data-fit]', root), board = $('.pv__board', root), views = $('[data-views]', root);
     function set(p) {
       cur = p;
+      var c = closeOf(p), sizes = opts.sizes || '(min-width: 1000px) 56vw, 100vw';
+      if (views) {
+        views.hidden = !c;
+        $$('[data-view]', views).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === (c ? view : 'sheet'))); });
+      }
       $('[data-code]', root).textContent = p.code;
+      board.classList.toggle('is-model', !!(c && view === 'model'));
+      if (c && view === 'model') {
+        board.style.setProperty('--ar', (c.w / c.h).toFixed(4));
+        fit.innerHTML = MK.model3d.closeHtml(p, sizes);
+        return;
+      }
       board.style.setProperty('--ar', (p.img.w / p.img.h).toFixed(4));
-      fit.innerHTML = PL.pic(p, 960, opts.sizes || '(min-width: 1000px) 56vw, 100vw', 'pv__img', opts.eager) +
+      fit.innerHTML = PL.pic(p, 960, sizes, 'pv__img', opts.eager) +
         p.items.filter(function (i) { return i.x != null; }).map(function (i, k) {
           return '<span class="pv__pin" data-n="' + i.n + '" style="--x:' + i.x + '%;--y:' + i.y + '%;--i:' + k + '" aria-hidden="true">' + i.n + '</span>';
         }).join('') +
@@ -84,8 +101,16 @@
       if (e.target.closest('.pv__pin') && opts.onHover) opts.onHover(null);
     });
     root.addEventListener('click', function (e) {
-      if (e.target.closest('[data-zoom]') && cur) PL.zoom(cur);
+      var v = e.target.closest('[data-view]');
+      if (v && cur) {
+        view = v.getAttribute('data-view');
+        MK.session.set('mk-pv-view', view);
+        set(cur);
+        return;
+      }
+      if (e.target.closest('[data-zoom]') && cur) PL.zoom(cur, closeOf(cur) && view === 'model' ? 'model' : 'sheet');
     });
+    if (opts.model && MK.session.get('mk-pv-view') === 'model') view = 'model';
     return {
       set: set,
       hot: function (n) { $$('.pv__pin', root).forEach(function (x) { x.classList.toggle('is-on', +x.getAttribute('data-n') === n); }); }
@@ -113,7 +138,7 @@
 
   /* во весь экран: крупный кадр, прокрутка и масштаб пальцами */
   var zoomDlg = null;
-  PL.zoom = function (p) {
+  PL.zoom = function (p, view) {
     if (!zoomDlg) {
       zoomDlg = document.createElement('dialog');
       zoomDlg.className = 'pv-zoom';
@@ -122,11 +147,13 @@
       zoomDlg.addEventListener('click', function (e) { if (e.target === zoomDlg || e.target.closest('[data-close]')) zoomDlg.close(); });
       zoomDlg.addEventListener('close', function () { document.documentElement.style.overflow = ''; });
     }
+    var c = view === 'model' && MK.model3d ? MK.model3d.close(p.id) : null;
+    var src = c ? c.src + Math.max.apply(null, c.widths) + '.webp' : p.img.base + '-1600.webp';
     zoomDlg.innerHTML = '<div class="pv-zoom__bar"><span class="plate">' + p.code + '</span><span>' + PL.kind(p.rooms) + ', ' + PL.area(p.area) + '</span>' +
       '<button class="menu__close" type="button" data-close aria-label="Закрыть">' + MK.icon('close') + '</button></div>' +
-      '<div class="pv-zoom__scroll"><img src="' + p.img.base + '-1600.webp" alt="3D-вид сверху: планировка ' + p.code + '" width="' + p.img.w + '" height="' + p.img.h + '"></div>';
+      '<div class="pv-zoom__scroll' + (c ? ' is-model' : '') + '"><img src="' + src + '" alt="' + (c ? 'Гипсовый макет квартиры ' + p.code + ' с мебелью' : '3D-вид сверху: планировка ' + p.code) + '" width="' + (c ? c.w : p.img.w) + '" height="' + (c ? c.h : p.img.h) + '"></div>';
     if (typeof zoomDlg.showModal === 'function') { zoomDlg.showModal(); document.documentElement.style.overflow = 'hidden'; }
-    else window.open(p.img.base + '-1600.webp', '_blank');
+    else window.open(src, '_blank');
   };
 
   /* ── ключ-план этажа: квартиры с планировками кликабельны ──────── */
@@ -203,7 +230,7 @@
 
   var keys = $('[data-pkeys]'), cards = $('[data-pcards]'), info = $('[data-pinfo]');
   var cnt = $('[data-plans-count]'); if (cnt) cnt.textContent = P.list.length;
-  var viewer = PL.viewer($('[data-pview]'), { eager: true, onHover: function (n) { onRoom(n); } });
+  var viewer = PL.viewer($('[data-pview]'), { eager: true, model: true, onHover: function (n) { onRoom(n); } });
   var onRoom = PL.bindRooms(info, viewer);
   var floor = null, floorKey = null;
   var lead = MK.lead($('[data-plan-lead]'), { title: 'Узнать цену и наличие', sub: 'Сообщим, на каких этажах есть квартиры с этой планировкой и сколько они стоят сейчас.', plan: S.plan, method: 'call' });
@@ -241,11 +268,37 @@
       $('[data-pfloor-l]').textContent = P.floors[p.floor] ? P.floors[p.floor].label : '';
     }
     floor.select(p.id);
+    floorView(p);
     lead.setPlan(p);
     paintCards();
     document.title = 'Планировка ' + p.code + ' — ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' — MEGA KHUJAND';
     if (push) history.replaceState(null, '', location.pathname + '?plan=' + p.id);
   }
+  /* этаж: гипсовый макет со светом выбранной квартиры или схема из листа */
+  var fviews = $('[data-fviews]'), f3el = $('[data-pfloor3d]'), f2el = $('[data-pfloor]'), fnote = $('[data-fnote]');
+  var f3 = null, fview = MK.session.get('mk-fp-view') === 'plan' ? 'plan' : 'model';
+  var NOTE = {
+    model: 'Свет горит в выбранной квартире, приглушённый — в других квартирах с планировками. Нажмите на квартиру, чтобы открыть её планировку.',
+    plan: fnote ? fnote.textContent : ''
+  };
+  function floorView(p) {
+    var has = !!(MK.model3d && MK.model3d.data.final.flats[p.id]);
+    var v = has ? fview : 'plan';
+    if (fviews) fviews.hidden = !has;
+    if (v === 'model' && !f3) f3 = MK.model3d.floor(f3el, { onSelect: function (id) { choose(id, true); } });
+    f3el.hidden = v !== 'model';
+    f2el.hidden = v === 'model';
+    if (f3) { f3.select(p.id); if (v === 'model') f3.show(); }
+    $$('[data-fview]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-fview') === v)); });
+    if (fnote) fnote.textContent = NOTE[v];
+  }
+  if (fviews) fviews.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-fview]');
+    if (!b) return;
+    fview = b.getAttribute('data-fview');
+    MK.session.set('mk-fp-view', fview);
+    floorView(S.plan);
+  });
   function choose(id, scroll) {
     var p = PL.find(id);
     if (!p) return;

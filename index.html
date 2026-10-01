@@ -133,6 +133,40 @@
     </div>
   </section>
 
+  <section class="m3d on-dark" id="floor" aria-labelledby="m3d-h" data-m3d>
+    <div class="m3d__stage">
+      <div class="m3d__head">
+        <h2 class="m3d__h" id="m3d-h">Типовой этаж изнутри</h2>
+        <div class="m3d__caps">
+          <p class="m3d__cap" data-m3d-cap aria-hidden="true">Этажи с 3-го по 6-й спроектированы по одному плану. Макет собран по чертежу этажа из проектной документации: стены, окна, двери и балконы на своих местах.</p>
+          <p class="m3d__cap" data-m3d-cap aria-hidden="true">Снимаем верхние этажи, как крышку с макета. Мебель — по 3D-видам из листов планировок.</p>
+          <p class="m3d__cap is-on" data-m3d-cap>Свет горит в квартирах, планировки которых уже на сайте.<span data-m3d-hint></span></p>
+        </div>
+      </div>
+      <div class="m3d__frame" data-m3d-frame>
+        <noscript>
+          <picture class="m3d__still">
+            <source type="image/avif" srcset="media/model/final-lit-960.avif 960w, media/model/final-lit-1280.avif 1280w, media/model/final-lit-1920.avif 1920w" sizes="100vw">
+            <source type="image/webp" srcset="media/model/final-lit-960.webp 960w, media/model/final-lit-1280.webp 1280w, media/model/final-lit-1920.webp 1920w" sizes="100vw">
+            <img src="media/model/final-lit-1280.webp" alt="Гипсовый макет типового этажа: квартиры со стенами, мебелью и балконами, вид сверху под углом; в квартирах с планировками горит свет" width="1920" height="1080" loading="lazy" decoding="async">
+          </picture>
+        </noscript>
+        <canvas class="m3d__cv" role="img" aria-label="Гипсовый макет типового этажа: этажи 3–6 расходятся, верхние снимаются, в квартирах с планировками загорается свет" data-m3d-cv></canvas>
+        <div class="m3d__layer" data-m3d-layer>
+          <svg class="m3d__hit" viewBox="0 0 1000 562.5" preserveAspectRatio="none" aria-hidden="true" focusable="false" tabindex="-1" data-m3d-hit></svg>
+          <div aria-hidden="true" data-m3d-fls></div>
+          <div class="model__tag" aria-hidden="true" data-m3d-tag hidden></div>
+        </div>
+      </div>
+      <div class="m3d__keys">
+        <div class="seg seg--dark" role="group" aria-label="Квартиры этажа" data-m3d-keys></div>
+      </div>
+      <div class="m3d__act">
+        <a class="btn btn--dark" href="plans.html">Все планировки</a>
+      </div>
+    </div>
+  </section>
+
   <section class="sec plans" id="plans" aria-labelledby="plans-h">
     <div class="sec-head">
       <h2 class="h2" id="plans-h">Планировки из&nbsp;проекта</h2>
@@ -292,9 +326,11 @@
 <script src="js/data.js"></script>
 <script src="js/plans-data.js"></script>
 <script src="js/facade-light.js"></script>
+<script src="js/model-data.js"></script>
 <script src="js/site.js"></script>
 <script src="js/facade.js"></script>
 <script src="js/plans.js"></script>
+<script src="js/model.js"></script>
 <script src="js/home.js"></script>
 </body>
 </html>

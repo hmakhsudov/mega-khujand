@@ -540,6 +540,61 @@ fieldset.field > legend + *{clear:both}
   .js:not(.rm) .hero__stage.is-open .veil{visibility:hidden}
 }
 
+/* Макет этажа (js/model.js): кадры Cycles на холсте. На широком экране
+   этажи раскрываются по прокрутке и по очереди загорается свет квартир,
+   на телефоне раскладка играет один раз. Без JS, при уменьшенном движении
+   и экономии трафика — финальный кадр. */
+.m3d{position:relative;background:var(--room);color:var(--on-dark)}
+.m3d__stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"frame frame" "head act"}
+.m3d__frame{grid-area:frame;position:relative;overflow:hidden;aspect-ratio:16/9;background:var(--room)}
+.m3d__still{position:absolute;inset:0}
+.m3d__still img{width:100%;height:100%;object-fit:cover}
+/* края кадров гаснут в графит витрины уже в самих картинках (tools/model-pack.py) */
+.m3d__cv{position:absolute;left:0;top:0;width:100%;height:100%;max-width:none;pointer-events:none}
+.m3d__layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.m3d__hit{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.m3d.is-live .m3d__hit,.fp__m3d.is-cv .m3d__hit{pointer-events:auto}
+.m3d__flat path{fill:transparent;cursor:pointer}
+.m3d__flat:focus{outline:none}
+.m3d__flat:focus-visible path{stroke:var(--plaster);stroke-width:1.5;stroke-dasharray:5 4;vector-effect:non-scaling-stroke}
+.m3d__fl{transition:none;will-change:left,top,opacity}
+.m3d.is-narrow .m3d__fl{display:none}
+.m3d .model__tag{z-index:4}
+.m3d__head,.m3d__act{padding:clamp(18px,2.4vw,26px) var(--gx);border-top:1px solid var(--room-line)}
+.m3d__head{grid-area:head;padding-right:0}
+.m3d__act{grid-area:act;display:flex;align-items:center;justify-content:flex-end;padding-left:clamp(20px,3vw,48px)}
+.m3d__h{font:300 clamp(1.3rem,2.1vw,1.9rem)/1.12 var(--f-disp);letter-spacing:-.02em}
+.m3d__caps{display:grid;margin-top:8px;max-width:64ch}
+.m3d__cap{grid-area:1/1;font-size:14.5px;line-height:1.5;color:var(--on-dark-2);text-wrap:pretty;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
+.m3d__cap.is-on{opacity:1;visibility:visible;transition:opacity .45s ease .12s}
+/* клавиши квартир: на широком экране — табличкой в тёмном углу кадра */
+.m3d__keys{grid-area:frame;align-self:start;justify-self:start;z-index:3;max-width:calc(100% - var(--gx) * 2);margin:clamp(14px,2.2vh,24px) var(--gx) 0}
+.m3d__keys .seg__btn{background-color:rgba(18,20,22,.55)}
+.m3d .seg__btn.is-hot{border-color:var(--on-dark-2);color:var(--on-dark)}
+.m3d .seg__btn.is-pin,.m3d .seg__btn.is-pin:hover{background:var(--plaster);border-color:var(--plaster);color:var(--ink)}
+.m3d .seg__btn.is-pin small{color:var(--ink-3)}
+.m3d.is-live .m3d__keys .seg__btn::before{background:var(--led)}
+.m3d.is-live .m3d__keys .seg__btn.is-pin::before{background:var(--led-deep)}
+.m3d.has-hot .m3d__keys .seg__btn:not(.is-hot):not(.is-pin)::before{background:rgba(238,240,238,.22)}
+.m3d[data-m3d-mode] .m3d__keys{transition:opacity .45s var(--ease-out),translate .45s var(--ease-out),visibility 0s}
+.m3d[data-m3d-mode]:not(.is-live) .m3d__keys{opacity:0;visibility:hidden;translate:0 -6px;transition:opacity .2s ease,translate .2s ease,visibility 0s .2s}
+@media (max-width:1279px){.m3d__keys .seg__btn small{display:none}}
+/* закреплённая сцена от 900px: кадр над пультом, пульт внизу экрана */
+.m3d[data-m3d-mode="scene"]{height:240vh}
+.m3d[data-m3d-mode="scene"] .m3d__stage{position:sticky;top:var(--hh);height:calc(100svh - var(--hh));grid-template-rows:minmax(0,1fr) auto}
+.m3d[data-m3d-mode="scene"] .m3d__frame{aspect-ratio:auto;min-height:0}
+@media (max-width:899px){
+  .m3d__stage{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "frame" "keys" "act"}
+  .m3d__frame{aspect-ratio:4/3}
+  .m3d__head{padding:clamp(48px,8vh,72px) var(--gx) 18px;border-top:0}
+  .m3d__keys{grid-area:keys;justify-self:stretch;max-width:none;margin:16px 0 0}
+  .m3d__keys .seg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:0 var(--gx)}
+  .m3d__keys .seg::-webkit-scrollbar{display:none}
+  .m3d__keys .seg__btn{flex:0 0 auto;background-color:rgba(238,240,238,.04)}
+  .m3d__keys .seg__btn small{display:inline}
+  .m3d__act{justify-content:flex-start;padding:14px var(--gx) clamp(40px,7vh,64px);border-top:0}
+}
+
 /* Планировки: гипсовые детали на столе */
 .plans{background:var(--plaster)}
 .plans__grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.35fr);gap:clamp(24px,4vw,72px);margin-top:clamp(28px,5vh,56px);align-items:start}
@@ -1099,6 +1154,22 @@ fieldset.field > legend + *{clear:both}
 .fp__svg{margin-top:12px}
 .fp__svg svg{display:block;width:100%;height:auto}
 .fp__note{margin-top:10px}
+.fp__head{align-items:center}
+.fp__head p{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.fp__views,.pv__views{gap:4px}
+.fp__views .seg__btn,.pv__views .seg__btn{min-height:34px;padding:0 11px;font-size:13px}
+/* этаж макетом: тот же кадр, что на главной, свет — в выбранной квартире */
+.fp__m3d{position:relative;margin-top:12px;aspect-ratio:16/9;border-radius:2px;background:var(--room);overflow:hidden}
+.m3d__code{position:absolute;z-index:2;translate:-50% -50%;padding:3px 7px;border-radius:2px;background:rgba(18,20,22,.74);color:var(--on-dark);font:600 10.5px/1.25 var(--f-disp);letter-spacing:.06em;white-space:nowrap;pointer-events:none;transition:background-color .2s ease,color .2s ease}
+.m3d__code.is-hot{background:var(--room)}
+.m3d__code.is-sel{background:var(--plaster-3);color:var(--ink)}
+@media (max-width:560px){
+  .fp__m3d{aspect-ratio:4/3}
+  .m3d__code{padding:2px 5px;font-size:9.5px}
+}
+.pv__views{position:absolute;right:10px;top:10px;z-index:3}
+.pv__board.is-model .pv__img{border-radius:2px;-webkit-mask-image:none;mask-image:none}
+.pv-zoom__scroll.is-model{background:var(--room)}
 .kp-w{fill:var(--ink-2)}
 .kp-b{fill:var(--plaster-3)}
 .kp-l{stroke:var(--ink-2)}

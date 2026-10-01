@@ -360,6 +360,14 @@ The real dusk render with every window switched off, and warm interior light dra
 - **Console:** the free count in LED, plaster and glass actions, and a row of room-count keys that re-light only matching flats.
 - **Picker:** the same module drives the evening view; the day view marks free flats with small LED dots ringed in ink, reserved flats with smaller plaster dots, and sold flats with nothing.
 
+### Floor Model (signature)
+The typical floor as a white plaster model, rendered in Cycles from the vector key plan in the plan sheets (walls, glazing, doors, balconies, stair, lifts), with furniture placed after the sheets' 3D views. The render's blacks are lifted to the graphite room and the canvas edges fade into it, so the model stands in the room rather than in a picture.
+- **Exploded floors:** from 900px the section pins (240vh) and scroll scrubs 80 frames. The four typical floors stand as one block, then part with lift-readout labels on each slab ("6 этаж"…). The upper three fly off and the camera settles over the remaining slab, labelled "3–6 этажи". Adjacent frames crossfade, and frames load sparse to dense.
+- **Lights:** warm light then comes on flat by flat, from per-flat light layers rendered in Cycles and added on the canvas. Hovering a flat or its key raises that flat to 180% and dims the others to 14%. A plaster tag shows the code and комнатность, area and floors, and "Открыть планировку".
+- **Console:** the heading; a caption that follows the stage (block → lifting the floors → lights); one key per flat whose LED dot follows that flat's light; a plaster "Все планировки" button.
+- **Phones:** a 4:3 frame cropped to the model, where the sequence plays once on view. Reduced motion and Save-Data show the lit final frame.
+- **Plans page:** the same final frame in the key-plan card ("Макет / Схема"), with the selected flat lit, the others at 26% and codes on small graphite plates; a click switches the plan. The plan viewer adds "Лист проекта / Макет", a close-up of the flat as a lit plaster dollhouse with the schedule's numbered pins.
+
 ### Building Grid (signature)
 Floors by stacks in 34px cells (40px on touch) with 4px gaps and 2px corners. It opens in evening mode on a graphite board: free cells are LED, discounted cells LED with an ink corner notch, reserved cells an LED outline with LED text, sold cells a faint plaster wash with no text. The daytime "scheme" mode uses the same cells on plaster-face with deep-LED borders. Opening a section lights the cells bottom to top. A legend of 16px swatches and a free-share bar in deep LED sit in the side panel.
 
@@ -395,6 +403,7 @@ Armed only under prefers-reduced-motion: no-preference and once the script marks
 - **Do** set every figure in Manrope tabular lining numerals.
 - **Do** select on the facade floor first: slab lines, dimmed neighbours, the lift readout, then the flat.
 - **Do** give the pinned hero a stacked, unpinned fallback under 900px and make every reveal visible at once with reduced motion.
+- **Do** keep the floor model plaster-white on graphite; warm light goes only into flats whose plans are published.
 
 ### Don't:
 - **Don't** use LED yellow for decoration, highlights, hover states or anything that is not a buyable flat or an active switch.
@@ -407,3 +416,4 @@ Armed only under prefers-reduced-motion: no-preference and once the script marks
 - **Don't** fade or flash the plaster away in the hero; the wordmark zooms until its stroke fills the frame and the plaster is gone.
 - **Don't** set label or plate text below 11px, or use Unbounded for body text.
 - **Don't** raise tiles with shadows on hover; change the rule or fill instead.
+- **Don't** label the floor model with a корпус or section, or present its furniture as part of the project; it is illustrative, after the sheets' 3D views.
