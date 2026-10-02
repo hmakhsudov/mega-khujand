@@ -33,6 +33,12 @@
     var p = plan(idsOf(P)[0]);
     return p ? p.code.split('-')[0] : '';
   }
+  /* подпись плиты: «Блок А · этажи 3–7», «Блоки Б и В · этажи 3–6» */
+  function plateInfo(k) { return (MK.plans && MK.plans.floors[k]) || {}; }
+  function plateName(k) {
+    var b = plateInfo(k).block, s = series(M.plates[k]);
+    return (b || s) + ' · этажи ' + floorsText(M.plates[k]);
+  }
 
   function pickW(widths, need) {
     var ws = widths.slice().sort(function (a, b) { return a - b; });
@@ -276,9 +282,7 @@
     if (sw && KEYS.length > 1) {
       /* группа подписана «Типовой этаж»: имя кнопки — её видимый текст */
       sw.innerHTML = KEYS.map(function (k) {
-        var Q = M.plates[k], s = series(Q);
-        return '<button class="seg__btn" type="button" data-plate="' + k + '" aria-pressed="false">' +
-          (s ? s + ' · ' : '') + 'этажи ' + floorsText(Q) + '</button>';
+        return '<button class="seg__btn" type="button" data-plate="' + k + '" aria-pressed="false">' + plateName(k) + '</button>';
       }).join('');
       sw.hidden = false;
       sw.addEventListener('click', function (e) {
@@ -317,7 +321,8 @@
       var from = $('[data-m3d-from]', root), to = $('[data-m3d-to]', root);
       if (from) from.textContent = FL[0] + '-го';
       if (to) to.textContent = FL[FL.length - 1] + '-й';
-      cv.setAttribute('aria-label', 'Гипсовый макет типового этажа: этажи ' + floorsText(P) + ' расходятся, верхние снимаются, в квартирах загорается свет');
+      var nm = plateName(k).replace(' · ', ': ');
+      cv.setAttribute('aria-label', 'Гипсовый макет типового этажа, ' + nm.charAt(0).toLowerCase() + nm.slice(1) + ' расходятся, верхние снимаются, в квартирах загорается свет');
       if (sw) $$('[data-plate]', sw).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-plate') === k)); });
       hot = undefined;
       pinned = null;
@@ -561,7 +566,7 @@
       P = M.plates[k];
       IDS = idsOf(P);
       Pt.plate(P);
-      svg.setAttribute('aria-label', P.label + ': выберите квартиру');
+      svg.setAttribute('aria-label', (plateInfo(k).label || P.label) + ': выберите квартиру');
       $$('.m3d__code', layer).forEach(function (c) { c.remove(); });
       layer.insertAdjacentHTML('beforeend', IDS.map(function (id) {
         var p = plan(id), F = P.final.flats[id];

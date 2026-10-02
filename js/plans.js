@@ -26,7 +26,11 @@
       P.list.forEach(function (p) { seen[p.rooms] = (seen[p.rooms] || 0) + 1; });
       return Object.keys(seen).map(Number).sort().map(function (r) { return { r: r, n: seen[r] }; });
     },
-    floorsLabel: function (p) { return p.floors ? 'этажи ' + p.floors[0] + '–' + p.floors[1] : ''; },
+    /* «блок А, этажи 3–7»; блоки Б и В спроектированы одинаково и идут вместе */
+    floorsLabel: function (p) {
+      var f = P.floors[p.floor], b = f && f.block ? f.block.charAt(0).toLowerCase() + f.block.slice(1) + ', ' : '';
+      return p.floors ? b + 'этажи ' + p.floors[0] + '–' + p.floors[1] : '';
+    },
     pic: function (p, w, sizes, cls, eager) {
       var set = function (ext) { return [480, 960, 1600].map(function (x) { return p.img.base + '-' + x + '.' + ext + ' ' + x + 'w'; }).join(', '); };
       return '<picture><source type="image/avif" srcset="' + set('avif') + '" sizes="' + sizes + '">' +

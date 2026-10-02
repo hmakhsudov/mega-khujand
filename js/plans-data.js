@@ -3,7 +3,8 @@
 window.MK_PLANS = {
  "floors": {
   "a-3-7": {
-   "label": "Типовой этаж 3–7",
+   "label": "Блок А, типовой этаж 3–7",
+   "block": "Блок А",
    "svg": "media/plans/real/floor-a-3-7.svg",
    "box": [
     96.3,
@@ -13,7 +14,8 @@ window.MK_PLANS = {
    ]
   },
   "b-3-6": {
-   "label": "Типовой этаж 3–6",
+   "label": "Блоки Б и В, типовой этаж 3–6",
+   "block": "Блоки Б и В",
    "svg": "media/plans/real/floor-b-3-6.svg",
    "box": [
     109.4,

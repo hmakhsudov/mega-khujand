@@ -32,6 +32,9 @@ ENTRY_FILL = (0.66, 0.06, 0.01)   # красная стрелка входа (н
 MARK_FILL = (0.89, 0.68, 0.17)    # жёлтые кружки с номерами
 SHEET_X = 430                     # правее — 3D-вид, левее — экспликация и ключ-план
 NAMES = {'Гостинная': 'Гостиная', 'Спальная': 'Спальня', 'С/у': 'Санузел'}
+# блоки серий — со слов архитектора (2026-10): буква кода — блок; у блоков Б и В
+# одинаковые типовые этажи, листы есть только для Б, поэтому они показаны вместе
+BLOCKS = {'a': 'Блок А', 'b': 'Блоки Б и В'}
 LAT = {'А': 'a', 'Б': 'b', 'В': 'v', 'Г': 'g', 'Д': 'd', 'Е': 'e'}
 
 
@@ -352,7 +355,9 @@ def main():
             kb = d['kbox']
             with open(os.path.join(OUT, 'floor-%s.svg' % fkey), 'w') as f:
                 f.write(keyplan_svg(d['drawings'], kb))
-            floorsvg[fkey] = {'label': 'Типовой этаж %s' % fl.replace('-', '–'), 'svg': 'media/plans/real/floor-%s.svg' % fkey,
+            block = BLOCKS.get(series)
+            floorsvg[fkey] = {'label': (block + ', типовой этаж ' if block else 'Типовой этаж ') + fl.replace('-', '–'), 'block': block,
+                              'svg': 'media/plans/real/floor-%s.svg' % fkey,
                               'box': [round(v, 1) for v in kb]}
         elif fkey in floorsvg and d['kbox'] and max(abs(a - b) for a, b in zip(floorsvg[fkey]['box'], d['kbox'])) > 0.5:
             print('  ! ключ-план', d['code'], 'не совпадает с первым листом серии — другая плита?')
