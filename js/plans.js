@@ -34,16 +34,17 @@
         '<img src="' + p.img.base + '-' + w + '.webp" alt="3D-вид сверху: планировка ' + p.code + ', ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + '"' +
         (cls ? ' class="' + cls + '"' : '') + ' width="' + p.img.w + '" height="' + p.img.h + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async"></picture>';
     },
-    /* помещения — прозой: кухня, спальни, санузлы, балконы */
+    /* помещения — прозой: кухня, спальни, санузлы, балконы, веранда */
     summary: function (p) {
       var by = function (n) { return p.items.filter(function (i) { return i.name === n; }); };
       var out = [];
       var k = by('Кухня')[0]; if (k) out.push('кухня ' + PL.area(k.area));
       var g = by('Гостиная')[0]; if (g) out.push('гостиная ' + PL.area(g.area));
       by('Спальня').forEach(function (s) { out.push('спальня ' + PL.area(s.area)); });
-      var su = by('Санузел').length, bl = by('Балкон').length;
+      var su = by('Санузел').length, bl = by('Балкон').length, ve = by('Веранда').length;
       if (su) out.push(su + ' ' + MK_DATA.plural(su, ['санузел', 'санузла', 'санузлов']));
       if (bl) out.push(bl + ' ' + MK_DATA.plural(bl, ['балкон', 'балкона', 'балконов']));
+      if (ve) out.push(ve === 1 ? 'веранда' : ve + ' ' + MK_DATA.plural(ve, ['веранда', 'веранды', 'веранд']));
       return out.join(' · ');
     },
     shareText: function (p) { return 'Планировка ' + p.code + ' · ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' — MEGA KHUJAND'; },
@@ -278,11 +279,11 @@
   var fviews = $('[data-fviews]'), f3el = $('[data-pfloor3d]'), f2el = $('[data-pfloor]'), fnote = $('[data-fnote]');
   var f3 = null, fview = MK.session.get('mk-fp-view') === 'plan' ? 'plan' : 'model';
   var NOTE = {
-    model: 'Свет горит в выбранной квартире, приглушённый — в других квартирах с планировками. Нажмите на квартиру, чтобы открыть её планировку.',
+    model: 'Свет горит в выбранной квартире, приглушённый — в других квартирах этажа. Нажмите на квартиру, чтобы открыть её планировку.',
     plan: fnote ? fnote.textContent : ''
   };
   function floorView(p) {
-    var has = !!(MK.model3d && MK.model3d.data.final.flats[p.id]);
+    var has = !!(MK.model3d && MK.model3d.plateOf(p.id));
     var v = has ? fview : 'plan';
     if (fviews) fviews.hidden = !has;
     if (v === 'model' && !f3) f3 = MK.model3d.floor(f3el, { onSelect: function (id) { choose(id, true); } });

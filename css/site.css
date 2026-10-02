@@ -562,7 +562,9 @@ fieldset.field > legend + *{clear:both}
 .m3d .model__tag{z-index:4}
 .m3d__head,.m3d__act{padding:clamp(18px,2.4vw,26px) var(--gx);border-top:1px solid var(--room-line)}
 .m3d__head{grid-area:head;padding-right:0}
-.m3d__act{grid-area:act;display:flex;align-items:center;justify-content:flex-end;padding-left:clamp(20px,3vw,48px)}
+.m3d__act{grid-area:act;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 16px;padding-left:clamp(20px,3vw,48px)}
+/* выбор плиты: у каждой серии листов свой типовой этаж */
+.m3d__plates{gap:4px}
 .m3d__h{font:300 clamp(1.3rem,2.1vw,1.9rem)/1.12 var(--f-disp);letter-spacing:-.02em}
 .m3d__caps{display:grid;margin-top:8px;max-width:64ch}
 .m3d__cap{grid-area:1/1;font-size:14.5px;line-height:1.5;color:var(--on-dark-2);text-wrap:pretty;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s}
@@ -593,6 +595,11 @@ fieldset.field > legend + *{clear:both}
   .m3d__keys .seg__btn{flex:0 0 auto;background-color:rgba(238,240,238,.04)}
   .m3d__keys .seg__btn small{display:inline}
   .m3d__act{justify-content:flex-start;padding:14px var(--gx) clamp(40px,7vh,64px);border-top:0}
+  /* на телефоне выбор плиты — над кадром, до раскладки */
+  .m3d__stage:has(.m3d__plates:not([hidden])){grid-template-areas:"head" "plates" "frame" "keys" "act"}
+  .m3d__stage:has(.m3d__plates:not([hidden])) .m3d__act{display:contents}
+  .m3d__plates{grid-area:plates;margin:0 var(--gx) 16px}
+  .m3d__stage:has(.m3d__plates:not([hidden])) .m3d__act > .btn{grid-area:act;justify-self:start;margin:14px var(--gx) clamp(40px,7vh,64px)}
 }
 
 /* Планировки: гипсовые детали на столе */

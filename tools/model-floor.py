@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Геометрия типового этажа для 3D-макета.
+"""Геометрия типовых этажей для 3D-макета.
 
 Ключ-план этажа в листах планировок (media/plans/src/*.pdf) — векторный
 чертёж ArchiCAD: стены залиты чёрным, окна — белые прямоугольники в проёмах,
-двери — тонкие створки и дуги распашки, балконы — большие дуги. Из него
-собирается media/model/floor.json в метрах (x вправо, y вверх, центр этажа
-в нуле):
+двери — тонкие створки и дуги распашки, балконы — большие дуги. У каждой
+серии листов свой типовой этаж (А — этажи 3–7, Б — 3–6, см. floors в
+js/plans-data.js), плита строится по первому листу серии. Всё собирается
+в media/model/floor.json — plates[<этаж>] в метрах (x вправо, y вверх,
+центр плиты в нуле):
 
   walls     стены (контур и отверстия);
   doors     проёмы дверей: над ними перемычка, у наружных — стекло;
   windows   проёмы окон: подоконник, перемычка, стекло;
   balconies полукруглые балконы: дуга ограждения;
-  stair     лестница: прямоугольник маршей и число ступеней;
+  stairs    лестницы: марш (прямоугольник и число ступеней), второй марш;
   lifts     шахты лифтов;
   slab      плита перекрытия;
   flats     квартиры из листов (код, комнатность, площадь, контур).
@@ -20,7 +22,6 @@
 Запуск из корня репозитория:
   pip install pymupdf shapely && python3 tools/model-floor.py
 """
-import glob
 import json
 import math
 import os
@@ -100,29 +101,31 @@ def mrr(p):
     return L, S, ends
 
 
-def main():
-    plans = load_plans()
-    fk = sorted(plans['floors'])[0]
+def kpoly(s):
+    v = [float(x) for x in re.findall(r'-?[\d.]+', s)]
+    return Polygon(list(zip(v[0::2], v[1::2])))
+
+
+def plate(plans, fk):
+    """Плита одного типового этажа по ключ-плану первого листа серии."""
     floor = plans['floors'][fk]
+    mine = sorted((p for p in plans['list'] if p['floor'] == fk and p.get('key')), key=lambda p: p['pdf'])
     x0, y0, x1, y1 = floor['box']
     box = pymupdf.Rect(x0, y0, x1, y1)
-    sheet = sorted(glob.glob(os.path.join(ROOT, 'media/plans/src/*.pdf')))[0]
+    sheet = os.path.join(ROOT, mine[0]['pdf'])
     page = pymupdf.open(sheet)[0]
     dr = [d for d in page.get_drawings() if box.contains(pymupdf.Rect(d['rect']).tl)]
 
-    # масштаб: метры на единицу чертежа — по площадям квартир из листов
-    def kpoly(s):
-        v = [float(x) for x in re.findall(r'-?[\d.]+', s)]
-        return Polygon(list(zip(v[0::2], v[1::2])))
-    ks = [math.sqrt(p['area'] / kpoly(p['key']).area) for p in plans['list'] if p.get('key')]
+    # масштаб: метры на единицу чертежа — по площадям квартир этой плиты
+    ks = [math.sqrt(p['area'] / kpoly(p['key']).area) for p in mine]
     K = sum(ks) / len(ks)
     U = lambda m: m / K
 
     black, white, arcs, strokes = [], [], [], []
     for d in dr:
         if d['type'] == 'f':
-            if d['fill'] and tuple(round(c, 2) for c in d['fill']) == (1.0, 0.47, 0.47):
-                continue                     # подсветка квартиры в листе
+            if d['fill'] and max(d['fill']) - min(d['fill']) > 0.1:
+                continue                     # подсветка квартиры в листе (цвет у листов разный)
             for r in rings(d['items']):
                 if len(r) < 3:
                     continue
@@ -245,26 +248,74 @@ def main():
             continue
         balconies.append(cs)
 
-    # лестница: параллельные проступи одной длины с ровным шагом
+    # лестницы: марши — параллельные проступи одной длины с ровным шагом.
+    # Проступи бывают горизонтальными (марш идёт вдоль y, плита Б) и
+    # вертикальными (вдоль x, плита А): ищем в обеих ориентациях, swap
+    # меняет x и y местами. Марши рядом — одна лестничная клетка.
     free = [s for s in strokes if not s.within(walls.buffer(U(0.02)))]
-    horiz = [s for s in free if abs(s.coords[0][1] - s.coords[1][1]) < 1e-3 and 0.9 <= s.length * K <= 3.6]
-    groups = {}
-    for s in horiz:
-        xs = sorted((s.coords[0][0], s.coords[1][0]))
-        key = (round(xs[0] / U(0.08)), round(xs[1] / U(0.08)))
-        groups.setdefault(key, []).append((s.coords[0][1], xs))
-    stair = None
-    for key, g in groups.items():
-        ys = sorted(set(round(y, 2) for y, _ in g))
-        if len(ys) < 6:
-            continue
-        steps = [b - a for a, b in zip(ys, ys[1:])]
-        st = sorted(steps)[len(steps) // 2]
-        if not (0.2 <= st * K <= 0.4):
-            continue
-        xs = g[0][1]
-        if stair is None or len(ys) > stair['n']:
-            stair = {'x0': xs[0], 'x1': xs[1], 'y0': ys[0], 'y1': ys[-1], 'n': len(ys), 'step': st}
+
+    def flights_of(swap):
+        P = (lambda q: (q[1], q[0])) if swap else (lambda q: q)
+        groups = {}
+        for s in free:
+            a, b = P(s.coords[0]), P(s.coords[1])
+            if abs(a[1] - b[1]) > 1e-3 or not (0.9 <= abs(a[0] - b[0]) * K <= 3.6):
+                continue
+            xs = sorted((a[0], b[0]))
+            key = (round(xs[0] / U(0.08)), round(xs[1] / U(0.08)))
+            groups.setdefault(key, []).append((a[1], xs))
+        out = []
+        for key, g in groups.items():
+            ys = sorted(set(round(y, 2) for y, _ in g))
+            if len(ys) < 6:
+                continue
+            steps = [b - a for a, b in zip(ys, ys[1:])]
+            st = sorted(steps)[len(steps) // 2]
+            if not (0.2 <= st * K <= 0.4):
+                continue
+            run = [ys[0]]                     # подряд идущие проступи — один марш
+            for y in ys[1:] + [None]:
+                if y is not None and y - run[-1] <= st * 1.6:
+                    run.append(y)
+                    continue
+                if len(run) >= 6:
+                    xs = g[0][1]
+                    out.append({'x0': xs[0], 'x1': xs[1], 'y0': run[0], 'y1': run[-1], 'n': len(run), 'step': st, 'swap': swap})
+                if y is not None:
+                    run = [y]
+        return out
+
+    stairs = []
+    for f in sorted(flights_of(False) + flights_of(True), key=lambda f: -f['n']):
+        home = next((s for s in stairs if s[0]['swap'] == f['swap']
+                     and min(abs(f['x0'] - s[0]['x1']), abs(s[0]['x0'] - f['x1'])) < U(0.6)
+                     and min(f['y1'], s[0]['y1']) - max(f['y0'], s[0]['y0']) > U(1.0)), None)
+        if home is None:
+            stairs.append([f])
+        elif len(home) < 2:
+            home.append(f)
+
+    def landing(s):
+        """Промежуточная площадка — там, где линия хода поворачивает от
+        одного марша к другому: отрезок поперёк маршей между их осями,
+        за концом маршей. Точка в координатах листа или None."""
+        if len(s) < 2:
+            return None
+        a, b = s
+        P = (lambda q: (q[1], q[0])) if a['swap'] else (lambda q: q)
+        ca, cb = (a['x0'] + a['x1']) / 2, (b['x0'] + b['x1']) / 2
+        d = abs(ca - cb)
+        v0, v1 = min(a['y0'], b['y0']), max(a['y1'], b['y1'])
+        best = None                           # ближайший к концу маршей (дальше — окна, стены)
+        for seg in free:
+            p, q = P(seg.coords[0]), P(seg.coords[1])
+            if abs(p[1] - q[1]) > 1e-3 or not (0.5 * d <= abs(p[0] - q[0]) <= 1.5 * d):
+                continue
+            mu, v = (p[0] + q[0]) / 2, p[1]
+            gap = v - v1 if v > v1 else v0 - v
+            if abs(mu - (ca + cb) / 2) < 0.3 * d and U(0.05) < gap < U(2.0) and (best is None or gap < best[0]):
+                best = (gap, P((mu, v)))
+        return best[1] if best else None
 
     # лифты: пары диагоналей крест-накрест
     diag = [s for s in free if abs(s.coords[0][0] - s.coords[1][0]) > 1e-3 and abs(s.coords[0][1] - s.coords[1][1]) > 1e-3 and s.length * K > 1.2]
@@ -281,9 +332,8 @@ def main():
 
     # квартиры из листов
     flats = {}
-    for p in plans['list']:
-        if p.get('key'):
-            flats[p['id']] = {'code': p['code'], 'rooms': p['rooms'], 'area': p['area'], 'poly': list(kpoly(p['key']).exterior.coords)[:-1]}
+    for p in mine:
+        flats[p['id']] = {'code': p['code'], 'rooms': p['rooms'], 'area': p['area'], 'poly': list(kpoly(p['key']).exterior.coords)[:-1]}
 
     # в метры: x вправо, y вверх, центр плиты в нуле
     cx, cy = slab.centroid.x, slab.centroid.y
@@ -297,28 +347,41 @@ def main():
         ext = r.buffer(U(0.12)).intersects(slab.exterior)
         return {'quad': [M(p) for p in cs], 'outer': bool(ext)}
 
+    def flight(f):
+        a, b = ((f['y0'], f['x0']), (f['y1'], f['x1'])) if f['swap'] else ((f['x0'], f['y0']), (f['x1'], f['y1']))
+        return {'box': [M(a), M(b)], 'axis': 'x' if f['swap'] else 'y', 'treads': f['n'], 'step': round(f['step'] * K, 3)}
+
     data = {
         'source': os.path.relpath(sheet, ROOT),
         'floor': fk,
+        'label': floor['label'],
+        'floors': mine[0]['floors'],
         'scale': round(K, 6),
         'size': [round((slab.bounds[2] - slab.bounds[0]) * K, 3), round((slab.bounds[3] - slab.bounds[1]) * K, 3)],
         'walls': [{'outer': ring(p.exterior.coords), 'holes': [ring(h.coords) for h in p.interiors]} for p in wall_list],
         'doors': [opening(k, r) for k, r in openings if k == 'door'],
         'windows': [opening(k, r) for k, r in openings if k == 'window'],
         'balconies': [[M(p) for p in b] for b in balconies],
-        'stair': None if not stair else {
-            'box': [M((stair['x0'], stair['y0'])), M((stair['x1'], stair['y1']))],
-            'treads': stair['n'], 'step': round(stair['step'] * K, 3)},
+        # марш с большим числом ступеней и, если найден, второй марш рядом;
+        # axis — вдоль какой оси идёт марш, landing — точка поворота линии хода
+        'stairs': [dict(flight(s[0]), pair=flight(s[1])['box'] if len(s) > 1 else None,
+                        landing=M(landing(s)) if landing(s) else None) for s in stairs],
         'lifts': [[M((b[0], b[1])), M((b[2], b[3]))] for b in lifts],
         'slab': ring(slab.exterior.coords),
         'flats': {k: dict(v, poly=[M(p) for p in v['poly']]) for k, v in flats.items()},
     }
+    print('%s: scale %.4f m/unit · floor %.1f × %.1f m · walls %d · doors %d · windows %d · balconies %d · stairs %d · lifts %d · flats %d'
+          % (fk, K, data['size'][0], data['size'][1], len(data['walls']), len(data['doors']), len(data['windows']),
+             len(data['balconies']), len(stairs), len(lifts), len(flats)))
+    return data
+
+
+def main():
+    plans = load_plans()
+    data = {'plates': {fk: plate(plans, fk) for fk in sorted(plans['floors'])}}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w', encoding='utf-8') as fh:
         json.dump(data, fh, ensure_ascii=False, separators=(',', ':'))
-    print('scale %.4f m/unit · floor %.1f × %.1f m · walls %d · doors %d · windows %d · balconies %d · stair %s · lifts %d · flats %d'
-          % (K, data['size'][0], data['size'][1], len(data['walls']), len(data['doors']), len(data['windows']),
-             len(data['balconies']), 'yes' if stair else 'no', len(lifts), len(flats)))
 
 
 if __name__ == '__main__':

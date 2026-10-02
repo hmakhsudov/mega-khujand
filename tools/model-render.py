@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Гипсовый макет типового этажа в Blender (Cycles) и кадры для сайта.
+"""Гипсовый макет типовых этажей в Blender (Cycles) и кадры для сайта.
 
-Читает media/model/floor.json (tools/model-floor.py) и строит макет:
+Читает media/model/floor.json (tools/model-floor.py) и для каждой плиты
+(типового этажа серии листов: А — этажи 3–7, Б — 3–6) строит макет:
 стены с проёмами дверей и окон, стекло и рамы, полукруглые балконы
-с ограждением, лестницу, шахты лифтов, плиту перекрытия. Из четырёх
-одинаковых этажей (3–6) собирается стопка для раскладки.
+с ограждением, лестницы, шахты лифтов, плиту перекрытия. Из одинаковых
+этажей плиты собирается стопка для раскладки (у А пять плит, у Б четыре).
+Сырые кадры каждой плиты — в своей подпапке: <папка>/<плита>/.
 
 Режимы (python из окружения с модулем bpy):
   final          финальный кадр: основа + свет каждой квартиры отдельным слоем
@@ -13,11 +15,13 @@
   all            всё перечисленное подряд
   anchors        только подписи этажей по кадрам, без рендера
   close-anchors  только номера комнат на крупных планах, без рендера
-  scene          сохранить сцену финального кадра в <папка>/model-floor.blend —
+  scene          сохранить сцену финального кадра в <папка>/model-floor-<плита>.blend —
                  открыть в Blender и посмотреть, покрутить, подобрать свет
 
   pip install bpy==4.5.4 shapely   # Python 3.11
   python tools/model-render.py all /путь/к/сырым   # затем tools/model-pack.py
+  python tools/model-render.py close /путь a-3-7   # только одна плита
+  MK_FLATS=a1,a8 python tools/model-render.py close /путь   # только эти квартиры
 
 Считает на видеокарте, если она есть (Metal на Mac с Apple Silicon,
 OptiX/CUDA, HIP), иначе на процессоре. MK_DEVICE=CPU — только процессор.
@@ -45,11 +49,29 @@ DOOR_H = 2.15
 OUTER_DOOR_H = 2.3
 SILL = 0.85
 HEAD = 2.4
-FLOORS = [3, 4, 5, 6]
+FINAL_AZ = -32.0    # азимут камеры финального кадра
 FURN = os.path.join(ROOT, 'tools/model-furniture.json')
 
-D = json.load(open(FLOOR, encoding='utf-8'))
+PLATES = json.load(open(FLOOR, encoding='utf-8'))['plates']
 F = json.load(open(FURN, encoding='utf-8'))
+D = {}              # геометрия текущей плиты (use)
+FLOORS = []         # её этажи: стопка раскладки
+SPAN = 1.0          # её ширина в кадре относительно плиты Б: масштаб камеры раскладки
+REF_SPAN = 38.87    # ширина плиты Б в кадре финала (азимут −32°), м: у Б масштаб 1
+
+
+def use(plate):
+    """Сделать плиту текущей: геометрия, этажи стопки, масштаб камеры;
+    комнаты прежней плиты забываются (ROOMS соберёт scene_base)."""
+    global D, FLOORS, SPAN, ROOMS
+    D = PLATES[plate]
+    ROOMS = {}
+    f0, f1 = D['floors']
+    FLOORS = list(range(f0, f1 + 1))
+    a = math.radians(FINAL_AZ)
+    r = [x * math.cos(a) + y * math.sin(a) for x, y in D['slab']]
+    SPAN = (max(r) - min(r)) / REF_SPAN
+    return D
 
 
 # ── материалы ─────────────────────────────────────────────────────────
@@ -186,36 +208,52 @@ def to_obj(bm, name, mats, coll):
 
 
 def stair_geometry(bm, mi):
-    """Двухмаршевая лестница: найденный марш и второй рядом, площадка у верха."""
-    s = D.get('stair')
-    if not s:
-        return
-    (ax, ay), (bx, by) = s['box']
-    x0, x1 = sorted((ax, bx))
-    y0, y1 = sorted((ay, by))
-    n = max(8, s['treads'] + 1)
-    w = x1 - x0
-    gap = 0.12
-    # второй марш — с той стороны, где в лестничной клетке есть место
-    from shapely.geometry import Polygon, Point, box as sbox
+    """Двухмаршевые лестницы: найденный марш, второй рядом (из чертежа или
+    с той стороны, где в клетке есть место) и промежуточная площадка там,
+    где на чертеже поворачивает линия хода. Марш идёт вдоль y (плита Б) или
+    вдоль x (плита А): считаем в осях марша (u — поперёк, v — вдоль)."""
+    from shapely.geometry import Polygon, box as sbox
     from shapely.ops import unary_union
     walls = unary_union([Polygon(clean(wl['outer']), [clean(h) for h in wl['holes']]).buffer(0) for wl in D['walls']])
-    right = sbox(x1 + gap, y0, x1 + gap + w, y1)
-    left = sbox(x0 - gap - w, y0, x0 - gap, y1)
-    second = right if right.intersection(walls).area < left.intersection(walls).area else left
-    sx0, sy0, sx1, sy1 = second.bounds
-    rise = WALL_H / 2 / n
-    run = (y1 - y0) / n
-    for i in range(n):
-        # первый марш поднимается к площадке (к большему y)
-        prism(bm, [(x0, y0 + run * i), (x1, y0 + run * i), (x1, y0 + run * (i + 1)), (x0, y0 + run * (i + 1))], [], 0, rise * (i + 1), mi)
-        # второй — от площадки обратно вниз по плану, вверх по высоте
-        prism(bm, [(sx0, y1 - run * (i + 1)), (sx1, y1 - run * (i + 1)), (sx1, y1 - run * i), (sx0, y1 - run * i)], [], 0, WALL_H / 2 + rise * (i + 1), mi)
-    lx0, lx1 = min(x0, sx0), max(x1, sx1)
-    land = sbox(lx0, y1, lx1, y1 + 1.25).difference(walls)
-    for p in getattr(land, 'geoms', [land]):
-        if p.geom_type == 'Polygon' and p.area > 0.2:
-            prism(bm, list(p.exterior.coords), [], 0, WALL_H / 2, mi)
+    for s in D.get('stairs', []):
+        along_x = s.get('axis') == 'x'
+        UV = (lambda x, y: (y, x)) if along_x else (lambda x, y: (x, y))   # мир → оси марша (и обратно)
+        (ax, ay), (bx, by) = [UV(*p) for p in s['box']]
+        x0, x1 = sorted((ax, bx))
+        y0, y1 = sorted((ay, by))
+        n = max(8, s['treads'] + 1)
+        w = x1 - x0
+        gap = 0.12
+        box_w = lambda u0, v0, u1, v1: sbox(*UV(u0, v0), *UV(u1, v1))
+        if s.get('pair'):
+            (px, py), (qx, qy) = [UV(*p) for p in s['pair']]
+            sx0, sx1 = sorted((px, qx))
+        else:
+            right = box_w(x1 + gap, y0, x1 + gap + w, y1)
+            left = box_w(x0 - gap - w, y0, x0 - gap, y1)
+            sx0, sx1 = (x1 + gap, x1 + gap + w) if right.intersection(walls).area < left.intersection(walls).area else (x0 - gap - w, x0 - gap)
+        lx0, lx1 = min(x0, sx0), max(x1, sx1)
+        # площадка — где на чертеже поворачивает линия хода; без неё — у
+        # того конца маршей, где до стены свободнее
+        hi = box_w(lx0, y1, lx1, y1 + 1.25)
+        lo = box_w(lx0, y0 - 1.25, lx1, y0)
+        if s.get('landing'):
+            up = UV(*s['landing'])[1] > (y0 + y1) / 2
+        else:
+            up = hi.difference(walls).area >= lo.difference(walls).area
+        rise = WALL_H / 2 / n
+        run = (y1 - y0) / n
+        P = lambda pts: [UV(u, v) for u, v in pts]
+        for i in range(n):
+            # первый марш поднимается к площадке, второй — от неё дальше вверх
+            a0, a1 = (y0 + run * i, y0 + run * (i + 1)) if up else (y1 - run * (i + 1), y1 - run * i)
+            b0, b1 = (y1 - run * (i + 1), y1 - run * i) if up else (y0 + run * i, y0 + run * (i + 1))
+            prism(bm, P([(x0, a0), (x1, a0), (x1, a1), (x0, a1)]), [], 0, rise * (i + 1), mi)
+            prism(bm, P([(sx0, b0), (sx1, b0), (sx1, b1), (sx0, b1)]), [], 0, WALL_H / 2 + rise * (i + 1), mi)
+        land = (hi if up else lo).difference(walls)
+        for p in getattr(land, 'geoms', [land]):
+            if p.geom_type == 'Polygon' and p.area > 0.2:
+                prism(bm, list(p.exterior.coords), [], 0, WALL_H / 2, mi)
 
 
 # ── мебель по 3D-видам из листов ──────────────────────────────────────
@@ -229,8 +267,8 @@ def room_rects():
     faces = [g for g in getattr(free, 'geoms', [free]) if g.area > 0.2]
     out = {}
     for fid, spec in F.items():
-        if fid.startswith('_'):
-            continue
+        if fid.startswith('_') or fid not in D['flats']:
+            continue                          # квартира другой плиты
         src = F[spec['mirror']] if 'mirror' in spec else spec
         rooms = []
         for i, r in enumerate(spec['rooms']):
@@ -633,23 +671,25 @@ def ease_out(t):
     return 1 - (1 - t) ** 3
 
 
-FINAL = {'az': -32.0, 'el': 54.0, 'dist': 80.0, 'target': (0.0, 0.6, 0.0)}
+FINAL = {'az': FINAL_AZ, 'el': 54.0, 'dist': 80.0, 'target': (0.0, 0.6, 0.0)}
 CLOSE_LOOK = {'key': 0.42, 'top': (0.07, 0.075, 0.08)}
 
 
 def pose(t):
-    """Положение этажей и камеры в момент t ∈ [0, 1]."""
+    """Положение этажей и камеры в момент t ∈ [0, 1]. Расстояния — для
+    плиты Б; плита шире в кадре (А) — камера дальше и этажи улетают выше
+    в той же пропорции (SPAN), кадр тот же по композиции."""
     g = 4.6 * smooth(t / 0.34)
     z = []
     for i in range(len(FLOORS)):
-        lift = 0.0 if i == 0 else (smooth((t - 0.34) / 0.42) ** 1.5) * (52 + 14 * i)
+        lift = 0.0 if i == 0 else (smooth((t - 0.34) / 0.42) ** 1.5) * (52 + 14 * i) * SPAN
         z.append(i * (FTF + g) + lift)
     k1 = smooth(t / 0.34)                    # первая фаза: стопка раскрывается
     k2 = smooth((t - 0.30) / 0.70)           # вторая: камера идёт к этажу
     az = -56 + (FINAL['az'] + 56) * smooth(t)
     el = 12 + 16 * k1 + (FINAL['el'] - 28) * k2
-    dist = 98 + 14 * k1 + (FINAL['dist'] - 112) * k2
-    zc = 1.5 * (FTF + g) + 1.2
+    dist = (98 + 14 * k1 + (FINAL['dist'] - 112) * k2) * SPAN
+    zc = (len(FLOORS) - 1) / 2 * (FTF + g) + 1.2
     tx, ty, tz = FINAL['target']
     target = (tx * k2, ty * k2, zc + (tz - zc) * k2)
     return z, az, el, dist, target
@@ -789,8 +829,10 @@ def close_camera(fid, w, h, look):
 
 def close_rooms(cam, fid, z=2.0):
     """Номера помещений: центр комнаты на высоте 2 м — номер встаёт внутри
-    проёма комнаты в кадре; у пола его закрыла бы ближняя стена санузла."""
-    return [{'name': r['name'], 'at': project(cam, [((r['rect'][0] + r['rect'][2]) / 2, (r['rect'][1] + r['rect'][3]) / 2, z)])[0]}
+    проёма комнаты в кадре; у пола его закрыла бы ближняя стена санузла.
+    Площадь комнаты — чтобы model-pack различил одноимённые (два санузла)."""
+    return [{'name': r['name'], 'at': project(cam, [((r['rect'][0] + r['rect'][2]) / 2, (r['rect'][1] + r['rect'][3]) / 2, z)])[0],
+             'area': round((r['rect'][2] - r['rect'][0]) * (r['rect'][3] - r['rect'][1]), 2)}
             for r in ROOMS[fid]]
 
 
@@ -808,35 +850,39 @@ def close_pass(fid, w, h, spp, look, outdir):
     return close_rooms(cam, fid)
 
 
-def save_scene(outdir):
+def save_scene(outdir, plate):
     """Сцена финального кадра как .blend: свет квартир включён, верхние
     этажи сняты — открыть в Blender и смотреть в режиме Rendered."""
     sc, M, floor, plates = scene_base({})
+    series = sorted(f['code'] for f in D['flats'].values())[0].split('-')[0]
+    sc.name = '%s · этажи %d–%d' % (series, FLOORS[0], FLOORS[-1])
     studio({})
     cam = camera(lens=50)
     place(plates, cam, float(os.environ.get('MK_T', 1.0)))
     dof(cam, FINAL['target'], 0.7)
     flat_lights(0)
     render_setup(1920, 1080, 160, {})
-    path = os.path.join(outdir, 'model-floor.blend')
+    path = os.path.join(outdir, 'model-floor-%s.blend' % plate)
     bpy.ops.wm.save_as_mainfile(filepath=path)
     print('saved', path)
 
 
-if __name__ == '__main__':
-    # python tools/model-render.py all /путь  или  blender -b -P tools/model-render.py -- all /путь
-    args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
-    mode = args[0] if args else 'final'
-    outdir = os.path.abspath(args[1] if len(args) > 1 else os.path.join(OUT, 'raw'))
+def run(mode, plate, outdir):
+    """Все кадры одной плиты в <папка>/<плита>/ со своим meta.json."""
+    use(plate)
     os.makedirs(outdir, exist_ok=True)
     meta_path = os.path.join(outdir, 'meta.json')
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
+    meta['plate'] = {'key': plate, 'label': D['label'], 'floors': FLOORS}
+    only = [f for f in os.environ.get('MK_FLATS', '').split(',') if f]
     if mode in ('final', 'all'):
         meta['final'] = {'w': 1920, 'h': 1080, 'flats': final_pass(1920, 1080, 160, {'fstop': 0.7}, outdir)}
         json.dump(meta, open(meta_path, 'w'))
     if mode in ('close', 'all'):
         meta.setdefault('close', {})
         for fid in ROOMS or room_rects():
+            if only and fid not in only:
+                continue
             meta['close'][fid] = {'w': 1600, 'h': 1200, 'rooms': close_pass(fid, 1600, 1200, 128, CLOSE_LOOK, outdir)}
             json.dump(meta, open(meta_path, 'w'))
     if mode == 'close-anchors':
@@ -857,6 +903,20 @@ if __name__ == '__main__':
         anchors = run_seq(n, 1440, 810, 44, {}, os.path.join(outdir, 'seq'))
         meta['seq'] = {'n': n, 'w': 1440, 'h': 810, 'floors': FLOORS, 'anchors': anchors}
         json.dump(meta, open(meta_path, 'w'))
-    if mode == 'scene':
-        save_scene(outdir)
+
+
+if __name__ == '__main__':
+    # python tools/model-render.py all /путь [плита]  или  blender -b -P tools/model-render.py -- all /путь
+    args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
+    mode = args[0] if args else 'final'
+    outdir = os.path.abspath(args[1] if len(args) > 1 else os.path.join(OUT, 'raw'))
+    plates = args[2:] or sorted(PLATES)
+    os.makedirs(outdir, exist_ok=True)
+    for plate in plates:
+        print('плита', plate, '·', PLATES[plate]['label'])
+        if mode == 'scene':
+            use(plate)
+            save_scene(outdir, plate)
+        else:
+            run(mode, plate, os.path.join(outdir, plate))
     print('done', mode)
