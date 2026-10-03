@@ -658,6 +658,8 @@ fieldset.field > legend + *{clear:both}
 .legend-list li.is-on .num{background:var(--plaster);box-shadow:inset 0 0 0 1px var(--ink)}
 .legend-list h3{font:400 clamp(1rem,1.3vw,1.15rem)/1.25 var(--f-disp);letter-spacing:-.01em}
 .legend-list p{margin-top:5px;font-size:14px;line-height:1.55;color:var(--ink-2)}
+.legend-list p a{font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.legend-list p a:hover{text-decoration-color:currentColor}
 .on-dark .legend-list{border-color:var(--room-line)}
 .on-dark .legend-list li{border-color:var(--room-line)}
 .on-dark .legend-list p{color:var(--on-dark-2)}
@@ -1199,6 +1201,28 @@ fieldset.field > legend + *{clear:both}
 .pcard__t{font:400 15px/1.25 var(--f-disp);letter-spacing:-.01em}
 .pcard__m{font-size:13px;line-height:1.5;color:var(--ink-2)}
 .pcard__f{font-size:12.5px;font-weight:600;color:var(--ink-3)}
+/* первые два этажа — торговые помещения: тихий раздел после всех планировок */
+.podium{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(22px,3vw,52px) clamp(20px,3vw,52px);align-items:start;margin:0 var(--gx);padding:48px 0 clamp(46px,7vw,90px);border-top:1px solid var(--line);scroll-margin-top:calc(var(--hh) + 12px)}
+.podium__lead{margin-top:12px;font-size:15px;line-height:1.6;color:var(--ink-2);max-width:46ch;text-wrap:pretty}
+.podium__shot{margin-top:clamp(16px,2.4vh,24px)}
+.podium__shot img{display:block;width:100%;height:auto;border-radius:var(--r)}
+.podium__shot figcaption{margin-top:8px}
+.podium__list{display:grid;gap:clamp(10px,1.2vw,14px)}
+.podium__b{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);align-items:center;gap:8px 18px;padding:12px;border-radius:var(--r);border:1px solid var(--line);background:var(--plaster-3)}
+.podium__img{display:block;aspect-ratio:2/1}
+.podium__img img{display:block;width:100%;height:100%;object-fit:contain}
+.podium__body{display:grid;gap:6px;justify-items:start;padding-right:4px}
+.podium__t{font:400 15px/1.25 var(--f-disp);letter-spacing:-.01em}
+.podium__m{font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.podium__f{font-size:12.5px;line-height:1.6;color:var(--ink-3)}
+.podium__f a{color:var(--ink-2);font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.podium__f a:hover{color:var(--ink);text-decoration-color:currentColor}
+.podium__note{grid-column:1/-1}
+@media (max-width:900px){.podium{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){
+  .podium__b{grid-template-columns:minmax(0,1fr)}
+  .podium__body{padding:0 4px 4px}
+}
 @media (max-width:1000px){
   .plan{grid-template-columns:minmax(0,1fr)}
   .plan__view{display:contents}

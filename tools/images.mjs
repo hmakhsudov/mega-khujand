@@ -1,5 +1,6 @@
 // Пересобирает media/opt/: AVIF и WebP в трёх ширинах + JPG-запасной.
 // Запуск из корня репозитория: npm i --no-save sharp && node tools/images.mjs
+// Только некоторые рендеры: node tools/images.mjs retail-storefront-boutiques …
 import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,7 +9,9 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const OUT = path.join(ROOT, 'media/opt');
 fs.mkdirSync(OUT, { recursive: true });
 
-const renders = fs.readdirSync(path.join(ROOT, 'media/renders')).filter(f => f.endsWith('.jpg'));
+const only = process.argv.slice(2);
+const renders = fs.readdirSync(path.join(ROOT, 'media/renders'))
+  .filter(f => f.endsWith('.jpg') && (!only.length || only.includes(path.basename(f, '.jpg'))));
 const jobs = [
   ...renders.map(f => ({ src: path.join(ROOT, 'media/renders', f), widths: [640, 1280, 1920] }))
 ];

@@ -216,8 +216,10 @@ def parse(path):
     page = doc[0]
     dr = page.get_drawings()
     sp = list(spans(page))
+    kind = next((t for t, r, sz in sp if 'КОМНАТН' in t), None)
+    if kind is None or not page.get_images():
+        return None                       # не лист квартиры: нет комнатности или 3D-вида
     code = next(t for t, r, sz in sp if re.fullmatch(r'[А-ЯA-Z]-\d+', t))
-    kind = next(t for t, r, sz in sp if 'КОМНАТН' in t)
     rooms = int(re.match(r'(\d+)', kind).group(1))
     area = num(next(t for t, r, sz in sp if sz > 40).split()[0])
     fl = next(t for t, r, sz in sp if t.startswith('План') and 'этаж' in t)
@@ -316,6 +318,10 @@ def main():
     plans, floorsvg = [], {}
     for p in pdfs:
         d = parse(p)
+        if d is None:
+            print('  ! %s — не лист планировки квартиры, пропускаю (листы 1–2 этажей — в media/plans/commerce/src/, '
+                  'tools/commerce-extract.py)' % os.path.basename(p))
+            continue
         pid = ''.join(LAT.get(ch, ch.lower()) for ch in d['code'] if ch != '-')
         im = Image.open(__import__('io').BytesIO(d['raw'])).convert('RGB')
         if d['mirror']:

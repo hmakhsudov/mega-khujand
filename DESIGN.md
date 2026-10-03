@@ -374,6 +374,9 @@ Floors by stacks in 34px cells (40px on touch) with 4px gaps and 2px corners. It
 ### Key Plan
 The floor's key plan on a plaster-face card: flats as faint ink washes with quiet-ink outlines, darker on hover, and the selected flat filled solid ink with a plaster code.
 
+### Commercial Floors (quiet)
+Floors 1–2 are trade premises, and commercial buyers are not the audience, so they get no stage. They appear only as a section after "Все планировки" on the plans page, below a hairline rule, under an eyebrow heading rather than an h2 headline. A short note and the storefront render (small, with "вывески условные") sit on the left. On the right, one plaster-face card per block holds a simplified plan redrawn from the sheet: ink walls and columns, quiet-ink lines, no axes, dimensions or labels. Beside it are the hall area from the room schedule and underlined PDF links. The home page links to the section only from the "Первые два этажа" legend item.
+
 ### Service Directory
 A lobby directory on podium graphite: rows separated by strong 1px room rules top and bottom, service names in engraved Unbounded caps at 13px, descriptions in Manrope beside them.
 
