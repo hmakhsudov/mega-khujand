@@ -201,9 +201,7 @@
   MK.tags = function (l) {
     var t = [];
     if (l.status === 'sale') t.push(['−' + l.disc + '%', 'tag--sale']);
-    if (l.terrace) t.push(['Терраса', 'tag--accent']);
-    if (l.river) t.push(['Вид на реку', 'tag--accent']);
-    if (l.corner) t.push(['Угловая', '']);
+    if (l.veranda) t.push(['Веранда', 'tag--accent']);
     t.push([l.fin, '']);
     return t;
   };
@@ -220,8 +218,8 @@
       '<div class="lot__head"><h3 class="lot__type"><a class="lot__link" href="' + D.lotHref(l) + '">' + l.type +
       '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + st + '</span></a></h3>' +
       '<span class="lot__area" aria-hidden="true">' + D.area(l.area) + '</span></div>' +
-      '<p class="lot__meta" aria-hidden="true">' + (o.sm ? 'Корпус ' + l.corp + ' · этаж ' + l.floor + ' · №\u00a0' + l.no : D.lotPlace(l) + ' · №\u00a0' + l.no) + '</p>' +
-      '<div class="lot__plan"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy" decoding="async"></div>' +
+      '<p class="lot__meta" aria-hidden="true">' + (o.sm ? 'Блок ' + l.blk + ' · этаж ' + l.floor + ' · №\u00a0' + l.no : D.lotPlace(l) + ' · №\u00a0' + l.no) + '</p>' +
+      '<div class="lot__plan"><img src="' + D.planSrc(l.plan) + '" alt="" width="480" height="420" loading="lazy" decoding="async"></div>' +
       (o.sm ? '' : '<ul class="lot__tags">' + MK.tags(l).map(function (t) { return '<li class="tag ' + t[1] + '">' + t[0] + '</li>'; }).join('') + '</ul>') +
       '<div class="lot__foot"><p class="lot__price">' + MK.priceHtml(l) + '</p>' +
       (o.noFav ? '' : '<button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + fav + '" aria-label="В избранное: ' + l.type + ' №\u00a0' + l.no + '">' + MK.icon('heart', '') + '</button>') +
@@ -356,7 +354,7 @@
       '<div class="field" data-interest><label class="field__label" for="' + id + '-int">Что ищете <i>— необязательно</i></label>' +
       '<span class="select select--block"><select id="' + id + '-int" name="interest">' +
       '<option value="">Пока присматриваюсь</option>' +
-      D.ROOM_NAMES.map(function (n) { return '<option>' + n + '</option>'; }).join('') +
+      D.ROOM_TYPES.map(function (r) { return '<option>' + D.ROOM_NAMES[r] + '</option>'; }).join('') +
       '</select></span></div>' +
       '<div class="hp" aria-hidden="true"><label>Компания<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>' +
       '<div data-alert role="alert"></div>' +
@@ -369,7 +367,7 @@
   function lotSummary(l) {
     return '<span class="form__lot-plan"><img src="' + D.planSrc(l.plan) + '" alt=""></span>' +
       '<span class="form__lot-txt"><b>' + l.type + ' №\u00a0' + l.no + ', ' + D.area(l.area) + '</b>' +
-      'Корпус ' + l.corp + ' · этаж ' + l.floor + (D.isOpen(l) ? ' · ' + D.money(l.price) : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
+      'Блок ' + l.blk + ' · этаж ' + l.floor + (D.isOpen(l) ? ' · ' + D.money(l.price) : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
       '<button class="form__lot-x" type="button" data-lot-x aria-label="Убрать квартиру из заявки">' + MK.icon('close') + '</button>';
   }
   function planSummary(p) {
@@ -484,7 +482,7 @@
         done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
           '<h3 class="form-card__title">Заявка принята</h3>' +
           '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
-          (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в корпусе ' + lot.corp : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
+          (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в блоке ' + lot.blk : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
           (D.SITE.leadEndpoint ? '' : '<p class="form__demo">Демонстрационный режим: заявка сохранена только в этом браузере и в отдел продаж не отправлена. Чтобы связаться сейчас, позвоните ' + D.SITE.phone + '.</p>') +
           '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
           '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
@@ -513,8 +511,8 @@
      а скрипт держит их в согласии с data.js. */
   function bindData() {
     var s = D.stats();
-    var val = { total: D.num(s.total), open: D.num(s.open), corps: s.corps, sections: s.sections, minPrice: D.money(s.minPrice), maxFloor: s.maxFloor };
-    var raw = { total: s.total, open: s.open, corps: s.corps, sections: s.sections };
+    var val = { total: D.num(s.total), open: D.num(s.open), blocks: s.blocks, minPrice: D.money(s.minPrice), maxFloor: s.maxFloor };
+    var raw = { total: s.total, open: s.open, blocks: s.blocks };
     document.querySelectorAll('[data-stat]').forEach(function (n) {
       var k = n.getAttribute('data-stat');
       if (k in val) n.textContent = val[k];

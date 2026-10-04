@@ -14,8 +14,8 @@
   var B = { price: bounds('price', 10000), area: bounds('area', 1), floor: bounds('floor', 1) };
   var SORTS = ['rec', 'price-asc', 'price-desc', 'area-asc', 'area-desc', 'floor-asc', 'floor-desc'];
   function defaults() {
-    return { rooms: [], price: B.price.slice(), area: B.area.slice(), floor: B.floor.slice(), corp: '', fin: '',
-      terrace: false, river: false, corner: false, open: true, fav: false, sort: 'rec', view: 'grid' };
+    return { rooms: [], price: B.price.slice(), area: B.area.slice(), floor: B.floor.slice(), blk: '', fin: '',
+      veranda: false, open: true, fav: false, sort: 'rec', view: 'grid' };
   }
   var S = defaults();
   var STEP = { grid: 12, list: 30 };
@@ -25,10 +25,9 @@
   /* ── состояние ⇄ адресная строка ────────────────────────────────── */
   function readUrl() {
     var q = MK.params;
-    var rooms = (q.get('rooms') || '').split(',').filter(function (x) { return /^[0-4]$/.test(x); }).map(Number);
+    var rooms = (q.get('rooms') || '').split(',').filter(function (x) { return /^[1-3]$/.test(x); }).map(Number);
     var h = location.hash.replace('#', '');
-    if (!rooms.length && /^[0-4]$/.test(h)) rooms = [+h];
-    if (!rooms.length && h === 'pent') rooms = [4];
+    if (!rooms.length && /^[1-3]$/.test(h)) rooms = [+h];
     S.rooms = rooms.filter(function (r, i, a) { return a.indexOf(r) === i; });
     ['price', 'area', 'floor'].forEach(function (k) {
       var m = /^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/.exec(q.get(k) || '');
@@ -36,9 +35,10 @@
       var a = MK.clamp(+m[1], B[k][0], B[k][1]), b = MK.clamp(+m[2], B[k][0], B[k][1]);
       S[k] = a <= b ? [a, b] : [b, a];
     });
-    if (/^[1-3]$/.test(q.get('corp') || '')) S.corp = q.get('corp');
+    var bq = D.block(q.get('blk') || '');
+    if (bq && !bq.pending) S.blk = bq.k;
     if (D.FINISHES.indexOf(q.get('fin')) > -1) S.fin = q.get('fin');
-    ['terrace', 'river', 'corner', 'fav'].forEach(function (k) { S[k] = q.get(k) === '1'; });
+    ['veranda', 'fav'].forEach(function (k) { S[k] = q.get(k) === '1'; });
     S.open = q.get('open') !== '0';
     if (SORTS.indexOf(q.get('sort')) > -1) S.sort = q.get('sort');
     if (q.get('view') === 'list') S.view = 'list';
@@ -48,9 +48,9 @@
     var d = defaults();
     if (S.rooms.length) q.set('rooms', S.rooms.slice().sort().join(','));
     ['price', 'area', 'floor'].forEach(function (k) { if (S[k][0] !== d[k][0] || S[k][1] !== d[k][1]) q.set(k, S[k][0] + '-' + S[k][1]); });
-    if (S.corp) q.set('corp', S.corp);
+    if (S.blk) q.set('blk', D.block(S.blk).lat);
     if (S.fin) q.set('fin', S.fin);
-    ['terrace', 'river', 'corner', 'fav'].forEach(function (k) { if (S[k]) q.set(k, '1'); });
+    ['veranda', 'fav'].forEach(function (k) { if (S[k]) q.set(k, '1'); });
     if (!S.open) q.set('open', '0');
     if (S.sort !== 'rec') q.set('sort', S.sort);
     if (S.view !== 'grid') q.set('view', S.view);
@@ -62,7 +62,7 @@
     var d = defaults(), n = 0;
     if (S.rooms.length) n++;
     ['price', 'area', 'floor'].forEach(function (k) { if (S[k][0] !== d[k][0] || S[k][1] !== d[k][1]) n++; });
-    ['corp', 'fin', 'terrace', 'river', 'corner', 'fav'].forEach(function (k) { if (S[k]) n++; });
+    ['blk', 'fin', 'veranda', 'fav'].forEach(function (k) { if (S[k]) n++; });
     if (!S.open) n++;
     return n;
   }
@@ -75,8 +75,8 @@
         l.price >= S.price[0] && l.price <= S.price[1] &&
         l.area >= S.area[0] && l.area <= S.area[1] &&
         l.floor >= S.floor[0] && l.floor <= S.floor[1] &&
-        (!S.corp || String(l.corp) === S.corp) && (!S.fin || l.fin === S.fin) &&
-        (!S.terrace || l.terrace) && (!S.river || l.river) && (!S.corner || l.corner) &&
+        (!S.blk || l.blk === S.blk) && (!S.fin || l.fin === S.fin) &&
+        (!S.veranda || l.veranda) &&
         (!S.open || D.isOpen(l)) && (!favs || favs.indexOf(l.id) > -1);
     });
     var by = {
@@ -92,7 +92,7 @@
   }
 
   /* ── разметка выдачи ────────────────────────────────────────────── */
-  var COLS = [['Тип'], ['Корп. / секц.'], ['План'], ['Площадь', 'area'], ['Этаж', 'floor'], ['№'], ['Отделка'], ['Особенности'], ['Стоимость', 'price'], ['']];
+  var COLS = [['Тип'], ['Блок'], ['План'], ['Площадь', 'area'], ['Этаж', 'floor'], ['№'], ['Отделка'], ['Особенности'], ['Стоимость', 'price'], ['']];
   function headHtml() {
     var cur = S.sort.split('-');
     return '<div class="rows__head">' + COLS.map(function (c) {
@@ -106,11 +106,11 @@
   }
   function rowHtml(l) {
     var open = D.isOpen(l);
-    var feats = [l.terrace && 'терраса', l.river && 'вид на реку', l.corner && 'угловая'].filter(Boolean).join(' · ') || '—';
+    var feats = l.veranda ? 'веранда' : '—';
     return '<li class="row' + (l.status === 'book' ? ' row--book' : '') + '">' +
       '<span class="row__type"><a class="lot__link" href="' + D.lotHref(l) + '">' + l.type +
       '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + ', ' + (open ? D.money(l.price) : 'забронирована') + '</span></a></span>' +
-      '<span aria-hidden="true">' + l.corp + ' / ' + l.sect + '</span>' +
+      '<span aria-hidden="true">' + l.blk + ' · ' + l.code + '</span>' +
       '<span class="row__plan" aria-hidden="true"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy" decoding="async"></span>' +
       '<span aria-hidden="true">' + D.area(l.area) + '</span>' +
       '<span aria-hidden="true">' + l.floor + ' из ' + l.floors + '</span>' +
@@ -181,7 +181,7 @@
   function syncControls() {
     $$('[data-room]').forEach(function (b) { b.setAttribute('aria-pressed', String(S.rooms.indexOf(+b.getAttribute('data-room')) > -1)); });
     $$('[data-chip]').forEach(function (b) { b.setAttribute('aria-pressed', String(!!S[b.getAttribute('data-chip')])); });
-    $('[data-f="corp"]').value = S.corp;
+    $('[data-f="blk"]').value = S.blk;
     $('[data-f="fin"]').value = S.fin;
     $('[data-sort]').value = S.sort;
     $$('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === S.view)); });

@@ -34,16 +34,10 @@
   }
   var ease = function (t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return 1 - Math.pow(1 - t, 3); };
 
-  var CORP = 2;
-  /* окна квартиры: стояки x … x+span−1 на её этаже */
+  /* окно квартиры в слое света: плоскость рендера, привязанная к её блоку */
   function lotWindows(l) {
-    if (l.corp !== CORP) return [];
-    var out = [];
-    for (var i = 0; i < l.span; i++) {
-      var q = LT.cells[l.sect + ':' + l.floor + ':' + (l.x + i)];
-      if (q) out.push(q);
-    }
-    return out;
+    var k = D.lightKey(l), q = k && LT.cells[k];
+    return q ? [q] : [];
   }
 
   /* svg — пустой <svg>, canvas — холст под ним; оба поверх тёмного рендера

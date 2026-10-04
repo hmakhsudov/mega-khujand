@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Шахматка дома MEGA KHUJAND — квартиры по корпусам, секциям и этажам</title>
-<meta name="description" content="Шахматка жилого комплекса MEGA KHUJAND: свободные, забронированные и проданные квартиры по корпусам, секциям, стоякам и этажам. Цены и планировки каждой квартиры.">
+<title>Шахматка дома MEGA KHUJAND — квартиры по блокам и этажам</title>
+<meta name="description" content="Шахматка жилого комплекса MEGA KHUJAND: четыре блока, квартиры с 3-го по 18-й этаж. Свободные, забронированные и проданные квартиры, этаж гипсовым макетом и планировка каждой квартиры из проекта.">
 <meta name="theme-color" content="#121416">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MEGA KHUJAND">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Шахматка дома MEGA KHUJAND">
-<meta property="og:description" content="Все квартиры по корпусам, секциям и этажам — со статусами и ценами.">
+<meta property="og:description" content="Весь дом вечером: свободные квартиры горят в окнах четырёх блоков.">
 <meta property="og:image" content="media/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -46,7 +46,7 @@
     <button class="menu__close" type="button" data-menu-close aria-label="Закрыть меню"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
   </div>
   <nav class="menu__nav" aria-label="Меню сайта">
-    <a href="flats.html">Квартиры <small><span data-stat="open">365</span> в продаже</small></a>
+    <a href="flats.html">Квартиры <small><span data-stat="open">157</span> в продаже</small></a>
     <a href="building.html" aria-current="page">Шахматка дома</a>
     <a href="picker.html">Подбор на фасаде</a>
     <a href="plans.html">Планировки</a>
@@ -63,77 +63,43 @@
 </dialog>
 
 <main id="main" class="page">
-  <section class="phead" data-e>
-    <nav class="crumbs" aria-label="Навигационная цепочка"><a href="index.html">Главная</a><span class="sep" aria-hidden="true">·</span><a href="flats.html">Квартиры</a><span class="sep" aria-hidden="true">·</span><span aria-current="page">Шахматка</span></nav>
-    <div class="phead__grid">
-      <div>
-        <h1 class="phead__title">Шахматка дома</h1>
-        <p class="lead phead__lead"><span data-stat="corps">3</span>&nbsp;<span data-stat-word="corps" data-forms="корпус|корпуса|корпусов">корпуса</span>, <span data-stat="sections">9</span>&nbsp;<span data-stat-word="sections" data-forms="секция|секции|секций">секций</span>, <span data-stat="total">832</span>&nbsp;<span data-stat-word="total" data-forms="квартира|квартиры|квартир">квартиры</span>. Выберите этаж и стояк — свободные квартиры подсвечены, как окна, в которых ещё горит свет.</p>
-      </div>
-      <div class="phead__media">
-        <picture>
-          <source type="image/avif" srcset="media/opt/facade-night-dusk-elevation-640.avif 640w, media/opt/facade-night-dusk-elevation-1280.avif 1280w" sizes="(min-width: 700px) 50vw, 100vw">
-          <source type="image/webp" srcset="media/opt/facade-night-dusk-elevation-640.webp 640w, media/opt/facade-night-dusk-elevation-1280.webp 1280w" sizes="(min-width: 700px) 50vw, 100vw">
-          <img src="media/opt/facade-night-dusk-elevation-1280.jpg" alt="Фасад комплекса в сумерках, окна с тёплым светом" width="2400" height="1339" decoding="async" fetchpriority="high">
-        </picture>
+  <section class="vit on-dark" aria-labelledby="vit-h" data-vit>
+    <div class="vit__head">
+      <nav class="crumbs" aria-label="Навигационная цепочка"><a href="index.html">Главная</a><span class="sep" aria-hidden="true">·</span><a href="flats.html">Квартиры</a><span class="sep" aria-hidden="true">·</span><span aria-current="page">Шахматка</span></nav>
+      <div class="vit__top">
+        <div class="vit__intro">
+          <h1 class="vit__h" id="vit-h">Шахматка дома</h1>
+          <p class="vit__lead">Четыре блока, квартиры с&nbsp;3-го по&nbsp;18-й этаж. Свободные квартиры горят, как окна вечером. Нажмите на окно — этаж откроется гипсовым макетом, а рядом — планировка и цена квартиры.</p>
+        </div>
+        <div class="vit__console">
+          <p class="vit__count" aria-live="polite"><b class="tnum" data-free-n>157</b><span data-free-of>свободно из 352 квартир</span></p>
+          <div class="seg" role="group" aria-label="Комнатность" data-rooms></div>
+        </div>
       </div>
     </div>
-  </section>
-
-  <div class="bld">
-    <aside class="bld__side" aria-label="Выбор корпуса, секции и фильтры">
-      <div>
-        <span class="label" id="b-corp-l">Корпус</span>
-        <div class="seg" role="group" aria-labelledby="b-corp-l" data-corps></div>
+    <div class="vit__bar" data-bar hidden>
+      <button class="btn btn--glass btn--sm" type="button" data-home><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4"/></svg>Весь дом</button>
+      <div class="seg" role="group" aria-label="Блок" data-blks></div>
+    </div>
+    <div class="vit__stage" data-stage></div>
+    <div class="vit__foot">
+      <div class="vit__legend" aria-label="Обозначения">
+        <span><i class="win win--free" aria-hidden="true"></i>Свободна</span>
+        <span><i class="win win--sale" aria-hidden="true"></i>Со скидкой</span>
+        <span><i class="win win--book" aria-hidden="true"></i>Забронирована</span>
+        <span><i class="win win--sold" aria-hidden="true"></i>Продана</span>
       </div>
-      <div>
-        <span class="label" id="b-sect-l">Секция</span>
-        <div class="sect-list" role="group" aria-labelledby="b-sect-l" data-sects></div>
-      </div>
-      <div>
-        <span class="label" id="b-rooms-l">Комнаты</span>
-        <div class="chips" role="group" aria-labelledby="b-rooms-l" data-rooms>
-          <button class="chip chip--sm" type="button" data-room="0" aria-pressed="false">Студия</button>
-          <button class="chip chip--sm" type="button" data-room="1" aria-pressed="false">1</button>
-          <button class="chip chip--sm" type="button" data-room="2" aria-pressed="false">2</button>
-          <button class="chip chip--sm" type="button" data-room="3" aria-pressed="false">3</button>
-          <button class="chip chip--sm" type="button" data-room="4" aria-pressed="false">Пентхаус</button>
-        </div>
-      </div>
-      <div class="freebox">
-        <p class="freebox__n" aria-live="polite"><b data-free-n>0</b><span data-free-of></span></p>
-        <div class="freebar" aria-hidden="true"><i data-free-bar></i></div>
-        <div class="seg" role="group" aria-label="Оформление схемы">
-          <button class="seg__btn" type="button" data-night="0" aria-pressed="false">Схема</button>
-          <button class="seg__btn" type="button" data-night="1" aria-pressed="true">Окна вечером</button>
-        </div>
-      </div>
-      <div class="legend" aria-label="Обозначения">
-        <span><i class="lg-free"></i>Свободна</span>
-        <span><i class="lg-sale"></i>Со скидкой</span>
-        <span><i class="lg-book"></i>Забронирована</span>
-        <span><i class="lg-sold"></i>Продана</span>
-      </div>
-    </aside>
-
-    <section class="board" aria-labelledby="board-h" data-board>
-      <div class="board__head">
-        <button class="round-btn" type="button" data-sect-prev aria-label="Предыдущая секция"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2L4 8l6 6"/></svg></button>
-        <div class="board__title"><h2 id="board-h"><b data-board-title>Секция</b></h2><span data-board-sub></span></div>
-        <button class="round-btn" type="button" data-sect-next aria-label="Следующая секция"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2l6 6-6 6"/></svg></button>
-      </div>
-      <div class="board__scroll"><div data-grid></div></div>
-      <p class="board__hint" id="grid-hint">Нажмите на ячейку — откроется карточка квартиры с планировкой и ценой. С клавиатуры: стрелки — по этажам и стоякам, Enter — карточка.</p>
+      <p class="small vit__note">Статусы и цены — демонстрационные, до выгрузки из отдела продаж. Планировки — из листов проекта: этажи 3–7 блока А и 3–6 блоков Б и В; выше показан тот же типовой этаж, планировки уточняются. 1–2 этажи — <a href="plans.html#commerce">торговые помещения</a>.</p>
       <noscript><p class="noscript">Шахматка строится в браузере. Включите JavaScript или посмотрите <a href="flats.html">каталог</a> — либо позвоните: <a href="tel:+992446000000">+992 44 600 00 00</a>.</p></noscript>
-    </section>
-  </div>
+    </div>
+  </section>
 
   <section class="facade-sec" id="facade" aria-labelledby="facade-h">
     <div class="sec-head">
       <div>
         <h2 class="h3" id="facade-h">Та же шахматка на фасаде</h2>
       </div>
-      <p class="lead">Подсветка нанесена на реальный рендер и собрана из тех же данных, что таблица выше: корпус → секция → стояк → этаж. Наведите на окно — покажем тип, этаж и цену.</p>
+      <p class="lead">Свет нанесён на реальный рендер по тем же квартирам, что в шахматке выше. Наведите на окно — покажем тип, этаж и цену.</p>
     </div>
     <div class="embed" data-embed="picker.html?embed=1" data-embed-auto="900" data-embed-title="Подбор квартир на фасаде MEGA KHUJAND">
       <div class="embed__poster">
@@ -162,31 +128,9 @@
         <div><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18s5.5-5.1 5.5-9.5a5.5 5.5 0 0 0-11 0C4.5 12.9 10 18 10 18z"/><circle cx="10" cy="8.5" r="2"/></svg>Шоурум на набережной<span>ежедневно, 9:00–19:00</span></div>
       </div>
     </div>
-    <div data-lead-slot data-title="Оставьте заявку" data-sub="Назовите корпус и этаж — менеджер расскажет о свободных квартирах и пригласит на показ."></div>
+    <div data-lead-slot data-title="Оставьте заявку" data-sub="Назовите блок и этаж — менеджер расскажет о свободных квартирах и пригласит на показ."></div>
   </div>
 </section>
-
-<dialog class="drawer" id="drawer" aria-labelledby="drw-no" aria-describedby="drw-kind">
-  <div class="drawer__head">
-    <div>
-      <p class="drawer__kind" id="drw-kind" data-d-kind></p>
-      <h2 class="drawer__no" id="drw-no" data-d-no></h2>
-    </div>
-    <button class="round-btn" type="button" data-d-close aria-label="Закрыть карточку"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
-  </div>
-  <div class="drawer__body">
-    <a class="drawer__plan" data-d-plan-link href="flats.html"><img data-d-plan src="media/plans/light/two-a.svg" alt=""></a>
-    <dl class="specgrid" data-d-specs></dl>
-    <p class="small drawer__note" data-d-note></p>
-  </div>
-  <div class="drawer__foot">
-    <p><b class="drawer__price" data-d-price></b><span class="drawer__per" data-d-per></span></p>
-    <div class="drawer__act">
-      <a class="btn btn--dark" data-d-cta href="flats.html">Забронировать</a>
-      <a class="btn btn--soft" data-d-more href="flats.html">Подробнее</a>
-    </div>
-  </div>
-</dialog>
 
 <footer class="ftr on-dark">
   <div class="ftr__in">
@@ -196,8 +140,12 @@
   </div>
 </footer>
 
+<script src="js/plans-data.js"></script>
 <script src="js/data.js"></script>
+<script src="js/model-data.js"></script>
 <script src="js/site.js"></script>
+<script src="js/plans.js"></script>
+<script src="js/model.js"></script>
 <script src="js/building.js"></script>
 </body>
 </html>

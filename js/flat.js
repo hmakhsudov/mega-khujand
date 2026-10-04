@@ -1,4 +1,4 @@
-/* Карточка квартиры: flat.html?id=<корпус>-<секция>-<этаж>-<стояк> */
+/* Карточка квартиры: flat.html?id=<блок латиницей>-<этаж>-<стояк>, например a-9-3 */
 (function () {
   'use strict';
   var D = window.MK_DATA;
@@ -6,11 +6,7 @@
   var root = $('[data-flat]');
   var q = MK.params;
 
-  /* id из ссылки; старые ссылки вида ?b=1&no=158 тоже находят лот */
   var lot = D.find(q.get('id'));
-  if (!lot && /^\d+$/.test(q.get('no') || '') && /^[1-3]$/.test(q.get('b') || '')) {
-    lot = D.LOTS.filter(function (l) { return l.corp === +q.get('b') && l.no === +q.get('no'); })[0] || null;
-  }
 
   var ref = document.referrer || '';
   var back = /building\.html/.test(ref) ? { href: 'building.html', t: 'Назад к шахматке' }
@@ -28,28 +24,28 @@
   var open = D.isOpen(lot);
   var st = lot.status;
   var title = lot.type + ', ' + D.area(lot.area);
-  document.title = title + ' — квартира №\u00a0' + lot.no + ', корпус ' + lot.corp + ' · MEGA KHUJAND';
+  document.title = title + ' — квартира №\u00a0' + lot.no + ', блок ' + lot.blk + ' · MEGA KHUJAND';
   var md = document.querySelector('meta[name="description"]');
-  if (md) md.content = lot.type + ' ' + D.area(lot.area) + ' на ' + lot.floor + ' этаже, корпус ' + lot.corp + ' MEGA KHUJAND в Худжанде. ' +
-    (open ? 'Цена ' + D.money(lot.price) + '.' : D.STATUS[st] + '.') + ' Планировка, площади помещений и вид из окон.';
+  if (md) md.content = lot.type + ' ' + D.area(lot.area) + ' на ' + lot.floor + ' этаже, блок ' + lot.blk + ' MEGA KHUJAND в Худжанде. ' +
+    (open ? 'Цена ' + D.money(lot.price) + '.' : D.STATUS[st] + '.') + ' Планировка ' + lot.code + ' из проекта и площади помещений.';
 
   var cta = {
     free: 'Забронировать', sale: 'Забронировать со скидкой', book: 'Сообщить, если освободится', sold: 'Подобрать похожую'
   }[st];
-  var view = lot.terrace ? 'Терраса и панорама реки' : lot.river ? 'Вид на Сырдарью' : lot.corner ? 'Угловая, окна на две стороны' : 'Во внутренний двор';
-  var rooms = D.roomsFor(lot);
-  var inner = rooms.filter(function (r) { return !r.extra; });
-  var extra = rooms.filter(function (r) { return r.extra; });
+  var plan = D.plan(lot.plan);
+  var inner = D.roomsFor(lot);
+  /* этаж описан листом проекта или повторяет типовой — до выгрузки */
+  var typ = plan ? (lot.typical ? 'по листу проекта (этажи ' + plan.floors[0] + '–' + plan.floors[1] + ')' : 'как этажи ' + plan.floors[0] + '–' + plan.floors[1] + ', уточняется') : '—';
 
-  var gallery = [];
-  if (lot.river || lot.terrace) gallery.push(['aerial-river-2560', 'Сырдарья и набережная с высоты — вид в сторону реки']);
-  gallery.push(lot.floor >= 12 ? ['facade-night-dusk-elevation', 'Фасад корпуса вечером'] : ['facade-day-hero-plaza', 'Фасад и площадь у корпуса']);
-  gallery.push(lot.corner ? ['facade-day-corner-detail', 'Угловая часть фасада с панорамным остеклением'] : ['courtyard-playground-collage', 'Внутренний двор без машин']);
-  if (gallery.length < 3) gallery.push(['retail-arcade-entrance', 'Входная группа и торговая аркада']);
+  var gallery = [
+    lot.floor >= 12 ? ['facade-night-dusk-elevation', 'Фасад дома вечером'] : ['facade-day-hero-plaza', 'Фасад и площадь у дома'],
+    ['courtyard-playground-collage', 'Внутренний двор без машин'],
+    ['retail-arcade-entrance', 'Входная группа и торговые помещения первых этажей']
+  ];
 
   /* окна этой квартиры на рендере — первым кадром галереи */
   var win = D.windowOf(lot);
-  /* на вечернем рендере корпуса 2 — настоящие окна квартиры и свет в них */
+  /* на вечернем рендере — окно стояка квартиры и свет в нём */
   var lit = MK.facade && MK.facade.windows ? MK.facade.windows(lot) : [];
   if (lit.length) win = { view: { title: 'Вечером · бульвар', img: 'facade-night-dark' }, pts: [].concat.apply([], lit), quads: lit };
   function winFigure(w) {
@@ -85,7 +81,7 @@
   }
 
   var similar = D.LOTS.filter(function (x) { return x.id !== lot.id && D.isOpen(x); })
-    .map(function (x) { return { x: x, d: Math.abs(x.area - lot.area) + Math.abs(x.rooms - lot.rooms) * 14 + Math.abs(x.floor - lot.floor) * 0.4 + (x.river === lot.river ? 0 : 5) + (x.corp === lot.corp ? 0 : 2) }; })
+    .map(function (x) { return { x: x, d: Math.abs(x.area - lot.area) + Math.abs(x.rooms - lot.rooms) * 14 + Math.abs(x.floor - lot.floor) * 0.4 + (x.plan === lot.plan ? 0 : 3) + (x.blk === lot.blk ? 0 : 2) }; })
     .sort(function (a, b) { return a.d - b.d; }).slice(0, 4).map(function (o) { return o.x; });
 
   var statusCls = st === 'free' ? ' status--free' : st === 'sale' ? ' status--sale' : '';
@@ -94,7 +90,7 @@
     free: 'Цена предварительная и действует при 100% оплате. Об условиях рассрочки и ипотеки спросите менеджера.',
     sale: 'Скидка действует на этот лот, пока он свободен. Цена предварительная — точный расчёт подготовит менеджер.',
     book: 'Лот забронирован другим покупателем. Оставьте заявку — сообщим, если бронь снимут, и подберём похожую квартиру в этом же стояке.',
-    sold: 'Эта квартира продана. Покажем свободные квартиры с такой же планировкой и видом — ниже похожие варианты.'
+    sold: 'Эта квартира продана. Покажем свободные квартиры с такой же планировкой — ниже похожие варианты.'
   }[st];
 
   root.innerHTML =
@@ -109,7 +105,7 @@
         '<p class="flat-hero__sub">' + D.lotPlace(lot) + ' · квартира №\u00a0' + lot.no + '</p>' +
         '<dl class="kspecs">' +
           '<div><dt>Площадь</dt><dd>' + D.area(lot.area) + '</dd></div>' +
-          '<div><dt>Комнаты</dt><dd>' + (lot.rooms === 0 ? 'Студия' : lot.rooms === 4 ? 'Пентхаус' : lot.rooms) + '</dd></div>' +
+          '<div><dt>Комнаты</dt><dd>' + lot.rooms + '</dd></div>' +
           '<div><dt>Этаж</dt><dd>' + lot.floor + ' из ' + lot.floors + '</dd></div>' +
           '<div><dt>Отделка</dt><dd>' + lot.fin + '</dd></div>' +
         '</dl>' +
@@ -127,12 +123,11 @@
         '</div>' +
       '</div>' +
       '<figure class="planbox">' +
-        '<div class="planbox__head"><span class="label">Планировка</span><span>Вариант ' + ({ a: 'А', b: 'Б', c: 'В', d: 'Г' }[lot.plan.split('-')[1]] || '') + '</span></div>' +
-        '<div class="planbox__img"><img src="' + D.planSrc(lot.plan, true) + '" alt="Планировка квартиры: ' + lot.type.toLowerCase() + ', ' + D.area(lot.area) + '. ' +
-          inner.map(function (r) { return r.n.toLowerCase() + ' ' + D.area(r.a); }).join(', ') + '" width="526" height="504" decoding="async"></div>' +
+        '<div class="planbox__head"><span class="label">Планировка</span><span>' + lot.code + '</span></div>' +
+        '<div class="planbox__img"><img src="' + D.planSrc(lot.plan, 960) + '" alt="Планировка ' + lot.code + ', ' + lot.type.toLowerCase() + ', ' + D.area(lot.area) + ': 3D-вид сверху из листа проекта. ' +
+          inner.map(function (r) { return r.n.toLowerCase() + ' ' + D.area(r.a); }).join(', ') + '"' + (plan ? ' width="' + plan.img.w + '" height="' + plan.img.h + '"' : '') + ' decoding="async"></div>' +
         '<ul class="planbox__tags">' + MK.tags(lot).filter(function (t) { return t[1] !== 'tag--sale'; }).map(function (t) { return '<li>' + t[0] + '</li>'; }).join('') + '</ul>' +
-        (MK.plans && MK.plans.list.some(function (p) { return p.rooms === lot.rooms; })
-          ? '<a class="planbox__real" href="plans.html?rooms=' + lot.rooms + '">Планировки ' + MK.plans.kinds(lot.rooms).toLowerCase() + ' из проекта ' + MK.icon('arrow') + '</a>' : '') +
+        '<a class="planbox__real" href="plans.html?plan=' + lot.plan + '">Планировка ' + lot.code + ': номера помещений, место на этаже, лист в PDF ' + MK.icon('arrow') + '</a>' +
       '</figure>' +
     '</section>' +
     '<section class="gallery" aria-label="Дом и окружение">' + (win ? winFigure(win) : '') + gallery.slice(0, win ? 2 : 3).map(function (g) {
@@ -140,20 +135,20 @@
     }).join('') + '</section>' +
     '<section class="flat-info">' +
       '<div><h2 class="eyebrow">Характеристики</h2><dl class="dl">' + [
-        ['Корпус', '№\u00a0' + lot.corp], ['Секция', '№\u00a0' + lot.sect], ['Этаж', lot.floor + ' из ' + lot.floors],
+        ['Блок', lot.blk], ['Этаж', lot.floor + ' из ' + lot.floors],
         ['Номер квартиры', '№\u00a0' + lot.no], ['Общая площадь', D.area(lot.area)], ['Тип', lot.type],
-        ['Отделка', lot.fin], ['Вид из окон', view], ['Высота потолков', D.SITE.ceiling], ['Срок сдачи', D.SITE.handover]
+        ['Планировка', lot.code], ['Этаж устроен', typ],
+        ['Отделка', lot.fin], ['Высота потолков', D.SITE.ceiling], ['Срок сдачи', D.SITE.handover]
       ].map(function (r) { return '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl></div>' +
       '<div><h2 class="eyebrow">Площади помещений</h2><dl class="dl dl--rooms">' +
         inner.map(function (r) { return '<div><dt>' + r.n + '</dt><dd>' + D.area(r.a) + '</dd></div>'; }).join('') +
-        extra.map(function (r) { return '<div><dt>' + r.n + ' <span class="small">(не входит в площадь)</span></dt><dd>' + D.area(r.a) + '</dd></div>'; }).join('') +
         '</dl><div class="dl__total"><span class="label">Итого</span><b>' + D.area(lot.area) + '</b></div>' +
-        '<p class="small" style="margin-top:18px">Площади указаны по проекту и могут отличаться от обмеров БТИ в пределах допуска. Планировка показана схематично.</p>' +
+        '<p class="small" style="margin-top:18px">Площади — по экспликации листа планировки ' + lot.code + ', с балконами; могут отличаться от обмеров БТИ в пределах допуска.</p>' +
       '</div>' +
     '</section>' +
     (similar.length ? '<section class="similar" id="similar" aria-labelledby="sim-h">' +
-      '<div class="similar__head"><div><h2 class="h4" id="sim-h">Похожие квартиры</h2><p class="small" style="margin-top:8px">Близкие по площади, этажу и виду</p></div>' +
-      '<a class="link-arrow" href="flats.html?rooms=' + lot.rooms + '">Все ' + (lot.rooms === 0 ? 'студии' : lot.rooms === 4 ? 'пентхаусы' : 'квартиры «' + lot.type + '»') + ' ' + arrow + '</a></div>' +
+      '<div class="similar__head"><div><h2 class="h4" id="sim-h">Похожие квартиры</h2><p class="small" style="margin-top:8px">Близкие по площади, планировке и этажу</p></div>' +
+      '<a class="link-arrow" href="flats.html?rooms=' + lot.rooms + '">Все квартиры «' + lot.type + '» ' + arrow + '</a></div>' +
       '<div class="lots">' + similar.map(function (x) { return MK.lotCard(x, { sm: true }); }).join('') + '</div></section>' : '');
 
   /* заявка с этой квартирой */
@@ -161,7 +156,7 @@
   MK.lead(slot, { lot: lot, title: leadTitle, sub: open ? 'Менеджер зафиксирует цену, ответит на вопросы и пригласит на показ.' : 'Менеджер сообщит об изменениях и предложит похожие варианты.' });
   if (!open) {
     $('[data-lead-h]').textContent = st === 'sold' ? 'Подберём похожую квартиру' : 'Сообщим, если бронь снимут';
-    $('[data-lead-note]').textContent = 'Покажем свободные квартиры с такой же планировкой и видом — в этом же корпусе или по соседству.';
+    $('[data-lead-note]').textContent = 'Покажем свободные квартиры с такой же планировкой — в этом же блоке или по соседству.';
   }
   var gl = $('[data-grid-link]');
   if (gl) gl.href = 'building.html?id=' + encodeURIComponent(lot.id);

@@ -552,7 +552,9 @@
     return { set: setPinned, plate: setPlate };
   };
 
-  /* ═════════ «Где квартира на этаже»: свет выбранной квартиры ═══════ */
+  /* ═════════ «Где квартира на этаже»: свет выбранной квартиры ═══════
+     opts.level(id, sel, hot) — своя яркость каждой квартиры (шахматка: горят
+     свободные квартиры этажа), opts.off(id) — табличка кода гаснет */
   MK.model3d.floor = function (root, opts) {
     opts = opts || {};
     root.innerHTML =
@@ -584,13 +586,18 @@
       }
     }
     function paint(instant) {
-      tw.to(function (id) { return id === sel ? 1.2 : id === hot ? 0.8 : 0.26; }, instant);
+      tw.to(opts.level ? function (id) { return opts.level(id, sel, hot); } : function (id) { return id === sel ? 1.2 : id === hot ? 0.8 : 0.26; }, instant);
       $$('.m3d__flat', svg).forEach(function (a) {
         var id = a.getAttribute('data-flat');
         a.classList.toggle('is-sel', id === sel);
         a.setAttribute('aria-current', id === sel ? 'true' : 'false');
       });
-      $$('[data-c]', layer).forEach(function (c) { var id = c.getAttribute('data-c'); c.classList.toggle('is-sel', id === sel); c.classList.toggle('is-hot', id === hot && id !== sel); });
+      $$('[data-c]', layer).forEach(function (c) {
+        var id = c.getAttribute('data-c');
+        c.classList.toggle('is-sel', id === sel);
+        c.classList.toggle('is-hot', id === hot && id !== sel);
+        c.classList.toggle('is-off', !!(opts.off && opts.off(id)) && id !== sel);
+      });
     }
     function layout() {
       Pt.mode = fitMode(root);
@@ -601,10 +608,11 @@
       layer.style.height = R.h + 'px';
       Pt.render();
     }
-    svg.addEventListener('pointerover', function (e) { var a = e.target.closest('.m3d__flat'); if (a) { hot = a.getAttribute('data-flat'); paint(); } });
-    svg.addEventListener('pointerout', function (e) { if (e.target.closest('.m3d__flat')) { hot = null; paint(); } });
-    svg.addEventListener('focusin', function (e) { var a = e.target.closest('.m3d__flat'); if (a) { hot = a.getAttribute('data-flat'); paint(); } });
-    svg.addEventListener('focusout', function () { hot = null; paint(); });
+    function setHot(id) { hot = id; paint(); if (opts.onHot) opts.onHot(id); }
+    svg.addEventListener('pointerover', function (e) { var a = e.target.closest('.m3d__flat'); if (a) setHot(a.getAttribute('data-flat')); });
+    svg.addEventListener('pointerout', function (e) { if (e.target.closest('.m3d__flat')) setHot(null); });
+    svg.addEventListener('focusin', function (e) { var a = e.target.closest('.m3d__flat'); if (a) setHot(a.getAttribute('data-flat')); });
+    svg.addEventListener('focusout', function () { setHot(null); });
     svg.addEventListener('click', function (e) {
       var a = e.target.closest('.m3d__flat');
       if (!a || !opts.onSelect || e.metaKey || e.ctrlKey) return;
@@ -626,11 +634,14 @@
       relayout: function () { if (shown) layout(); },
       /* квартира с другой плиты — плита меняется вместе с ней */
       select: function (id) {
-        var k = plateOf(id);
+        var k = id && plateOf(id);
         if (k && k !== key) setPlate(k);
-        sel = id;
+        sel = id || null;
         paint(!shown);
-      }
+      },
+      plate: function (k) { if (k && M.plates[k] && k !== key) setPlate(k); },
+      /* яркости пересчитаны снаружи (другой этаж, фильтр) */
+      refresh: function (instant) { paint(instant || !shown); }
     };
   };
 

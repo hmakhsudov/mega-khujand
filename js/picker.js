@@ -7,26 +7,24 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var NS = 'http://www.w3.org/2000/svg';
-  var BANDS = { all: null, low: [2, 7], mid: [8, 13], high: [14, 99] };
+  var BANDS = { all: null, low: [3, 7], mid: [8, 13], high: [14, 99] };
   var S = { v: 0, rooms: 'all', band: 'all', free: false, ov: true, sel: null, hover: null, limit: 14 };
   var narrow = matchMedia('(max-width: 900px)');
 
-  /* собираем окна для каждого ракурса из секций data.js */
+  /* окна каждого ракурса: квартиры блока, привязанного к плоскости рендера */
   var VIEWS = D.FACADE.map(function (view) {
     var items = [];
     view.planes.forEach(function (pl, pi) {
-      var sc = D.secOf(view.corp, pl.sect);
       var H = D.homography(pl.q);
-      sc.floors.forEach(function (r) {
-        r.row.forEach(function (l) {
-          if (!l) return;
-          var p = D.windowQuad(pl, sc, l, H);
-          items.push({ lot: l, plane: pi, quad: p,
-            cx: (p[0][0] + p[1][0]) / 2, cy: (p[0][1] + p[1][1] + p[2][1] + p[3][1]) / 4, top: Math.min(p[0][1], p[1][1]) });
-        });
+      D.LOTS.forEach(function (l) {
+        if (D.planeOf(view, l) !== pl) return;
+        var p = D.windowQuad(pl, l, H);
+        items.push({ lot: l, plane: pi, quad: p,
+          cx: (p[0][0] + p[1][0]) / 2, cy: (p[0][1] + p[1][1] + p[2][1] + p[3][1]) / 4, top: Math.min(p[0][1], p[1][1]) });
       });
     });
-    return { k: view.k, title: view.title, img: view.k === 'dusk' && window.MK_LIGHT ? 'facade-night-dark' : view.img, corp: view.corp, sects: view.planes.map(function (p) { return p.sect; }), items: items };
+    var blks = view.planes.map(function (p) { return p.blk; }).filter(function (b, i, a) { return a.indexOf(b) === i; });
+    return { k: view.k, title: view.title, img: view.k === 'dusk' && window.MK_LIGHT ? 'facade-night-dark' : view.img, blks: blks, planes: view.planes, items: items };
   });
   var byId = {};
   VIEWS.forEach(function (v, vi) { v.items.forEach(function (it) { byId[it.lot.id] = { vi: vi, it: it }; }); });
@@ -53,7 +51,7 @@
   function night() { return view().k === 'dusk' && !!MK.facade; }
   function renderFacade() {
     var v = view();
-    $('[data-shot]').innerHTML = MK.pic(v.img, 'MEGA KHUJAND, ' + v.title.toLowerCase() + ': корпус ' + v.corp, { eager: true, sizes: '(min-width: 900px) 70vw, 100vw' });
+    $('[data-shot]').innerHTML = MK.pic(v.img, 'MEGA KHUJAND, ' + v.title.toLowerCase(), { eager: true, sizes: '(min-width: 900px) 70vw, 100vw' });
     svg.textContent = '';
     svg.removeAttribute('class');
     svg.classList.add('pk__svg');
@@ -64,7 +62,7 @@
       /* в списке и стрелками — только квартиры, у которых окна видны на рендере */
       v.items = F.lots.map(function (it) {
         var top = Math.min.apply(null, it.win.map(function (q) { return Math.min(q[0][1], q[1][1]); }));
-        return { lot: it.lot, plane: v.sects.indexOf(it.lot.sect), cx: it.cx, cy: it.cy, top: top, f: it };
+        return { lot: it.lot, plane: v.planes.indexOf(D.planeOf(v, it.lot)), cx: it.cx, cy: it.cy, top: top, f: it };
       });
       v.items.forEach(function (it) { byId[it.lot.id] = { vi: S.v, it: it }; });
       requestAnimationFrame(function () { F.lightUp(); });
@@ -82,14 +80,14 @@
       svg.setAttribute('viewBox', '0 0 2400 1339');
     }
     svg.classList.toggle('is-night', night());
-    svg.setAttribute('aria-label', 'Фасад, ' + v.title.toLowerCase() + ': корпус ' + v.corp + ', секции ' + v.sects.join(', ') + '. ' + $('#pk-help').textContent);
+    svg.setAttribute('aria-label', 'Фасад, ' + v.title.toLowerCase() + ': квартиры блоков ' + v.blks.join(', ') + '. ' + $('#pk-help').textContent);
     $('[data-views]').innerHTML = VIEWS.map(function (x, i) {
       return '<button class="seg__btn" type="button" data-view="' + i + '" aria-pressed="' + (i === S.v) + '">' + x.title + '</button>';
     }).join('');
     $('[data-legend]').innerHTML = night()
       ? '<span><i class="pk-lit"></i>горит свет — свободна</span><span><i class="pk-dark"></i>темно — бронь или продана</span>'
       : '<span><i class="pk-free"></i>свободна</span><span><i class="pk-book"></i>бронь</span><span><i class="pk-sold"></i>продана</span>';
-    $('[data-note]').textContent = 'На этом ракурсе — корпус ' + v.corp + ', секции ' + v.sects.join(', ') + '. Остальные секции — на шахматке. ' +
+    $('[data-note]').textContent = 'Квартиры блоков ' + v.blks.join(', ') + ' привязаны к окнам этого ракурса условно, до сверки с проектом; все квартиры — на шахматке. ' +
       (night() ? 'Свет нанесён на рендер комплекса по окнам квартир' : 'Метки нанесены на рендер комплекса') + '; площади и цены предварительные.';
   }
   function paintPolys() {
@@ -145,13 +143,13 @@
       var touch = matchMedia('(pointer: coarse)').matches;
       box.innerHTML = '<div class="pk__sel-row" style="margin-top:0"><div><p class="pk__sel-title">' + (touch ? 'Выберите квартиру в списке' : 'Нажмите на окно на фасаде') + '</p>' +
         '<p class="pk__sel-meta">' + (touch ? 'Подсветим её окно на рендере. Окна тоже можно нажимать — увеличьте фасад двумя пальцами.' : 'Или выберите строку в списке — подсветим квартиру на рендере.') + '</p></div>' +
-        '<span class="pk__sel-plan is-empty"><img src="' + D.planSrc('two-a') + '" alt=""></span></div>';
+        '</div>';
       return;
     }
     var open = D.isOpen(l);
     box.innerHTML = '<p class="label">Квартира № ' + l.no + (l.status === 'sale' ? ' · скидка ' + l.disc + '%' : l.status !== 'free' ? ' · ' + D.STATUS[l.status].toLowerCase() : '') + '</p>' +
       '<div class="pk__sel-row"><div><p class="pk__sel-title">' + l.type + ', ' + D.area(l.area) + '</p>' +
-      '<p class="pk__sel-meta">' + D.lotPlace(l) + (l.terrace ? ' · терраса' : l.river ? ' · вид на реку' : '') + '</p></div>' +
+      '<p class="pk__sel-meta">' + D.lotPlace(l) + ' · планировка ' + l.code + '</p></div>' +
       '<span class="pk__sel-plan"><img src="' + D.planSrc(l.plan) + '" alt=""></span></div>' +
       '<div class="pk__sel-foot"><span class="pk__sel-price">' + (open ? D.money(l.price) : D.STATUS[l.status]) + '</span>' +
       '<span class="pk__sel-act"><a class="btn btn--soft btn--sm" href="' + D.lotHref(l) + '">Подробнее</a>' +
@@ -172,7 +170,7 @@
       var l = it.lot, open = D.isOpen(l);
       return '<button class="pk__item' + (l.id === S.hover ? ' is-hot' : '') + '" type="button" data-pick="' + l.id + '" aria-pressed="' + (l.id === S.sel) + '">' +
         '<span class="pk__item-plan"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy"></span>' +
-        '<span class="pk__item-txt"><b>' + l.type + ' · ' + D.area(l.area) + '</b><span>Секция ' + l.sect + ' · этаж ' + l.floor + ' · № ' + l.no + '</span></span>' +
+        '<span class="pk__item-txt"><b>' + l.type + ' · ' + D.area(l.area) + '</b><span>Блок ' + l.blk + ' · этаж ' + l.floor + ' · № ' + l.no + '</span></span>' +
         '<span class="pk__item-end"><b>' + (open ? D.money(l.price) : '—') + '</b><span class="' + (open ? 'is-free' : '') + '">' + (l.status === 'sale' ? '−' + l.disc + '%' : D.STATUS[l.status].toLowerCase()) + '</span></span></button>';
     }).join('') + (n > S.limit ? '<button class="btn btn--soft btn--sm btn--block" type="button" data-more style="margin-top:12px">Показать ещё ' + Math.min(14, n - S.limit) + '</button>' : '');
   }
@@ -278,11 +276,11 @@
   });
   $('[data-list]').addEventListener('mouseleave', function () { S.hover = null; paintPolys(); if (S.sel) showTip(S.sel); else tip.classList.remove('is-on'); });
 
-  /* ?v=day|dusk, ?rooms=0…4 — ракурс и подсветка из ссылки; по умолчанию вечер */
+  /* ?v=day|dusk, ?rooms=1…3 — ракурс и подсветка из ссылки; по умолчанию вечер */
   var qv = MK.params.get('v') || 'dusk';
   VIEWS.forEach(function (v, i) { if (v.k === qv) S.v = i; });
   var qr = MK.params.get('rooms');
-  if (qr && /^[0-4]$/.test(qr)) S.rooms = qr;
+  if (qr && /^[1-3]$/.test(qr)) S.rooms = qr;
   /* ?id= — открыть сразу нужный ракурс и квартиру */
   var want = MK.params.get('id');
   if (want && byId[want]) { S.v = byId[want].vi; S.sel = want; }

@@ -140,7 +140,7 @@
   var total = F.lots.length;
   var NF = F.floors.length;
 
-  var ROOMS = [['all', 'Все'], [0, 'Студии'], [1, '1-комнатные'], [2, '2-комнатные'], [3, '3-комнатные'], [4, 'Пентхаусы']];
+  var ROOMS = [['all', 'Все']].concat(D.ROOM_TYPES.map(function (r) { return [r, r + '-комнатные']; }));
   var keys = $('[data-keys]');
   var isFree = function (l) { return D.isOpen(l); };
   var cnt = function (r) { return F.lots.filter(function (it) { return isFree(it.lot) && (r === 'all' || it.lot.rooms === r); }).length; };
@@ -156,7 +156,7 @@
     F.paint(match);
     var n = cnt(sel);
     var word = sel === 'all' ? '' : ' — ' + ROOMS.filter(function (k) { return k[0] === sel; })[0][1].toLowerCase();
-    countEl.innerHTML = 'Корпус 2, вид с бульвара: горит свет в <b>' + n + '</b> ' + D.plural(n, ['квартире', 'квартирах', 'квартирах']) + word +
+    countEl.innerHTML = 'Вид с бульвара: горит свет в <b>' + n + '</b> ' + D.plural(n, ['квартире', 'квартирах', 'квартирах']) + word +
       ' из ' + total + ' на этом фасаде. ' + (matchMedia('(hover: hover)').matches ? 'Наведите' : 'Нажмите') + ' на дом — покажем этаж.';
     go.href = 'picker.html?v=dusk' + (sel === 'all' ? '' : '&rooms=' + sel);
     if (sel !== 'all') wish(sel);

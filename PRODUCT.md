@@ -40,11 +40,11 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 ## Capabilities and Constraints
 
-**Surfaces in the approved designs** (see `README.md` for the handoff notes):
+**Surfaces** (see `README.md` for the handoff notes):
 
 1. Home: the lit model (available flats lit on the dusk facade), plans, materials, the site and courtyard legends, service, and contacts.
 2. Flats catalog: filters for rooms, floor, area, price, building and finish; tile and row views; sorting.
-3. Building grid (шахматка): корпус → секция → стояк → этаж, with lot statuses and penthouses on the top floor.
+3. Building grid (шахматка): the whole house at night, four blocks side by side with windows lit for free flats; a block opens to its floor as the lit plaster model and the flat's real plan.
 4. Flat page: plan, specifications, room areas, price, lead actions, similar flats.
 5. Facade picker: flats highlighted as polygons over the real render, calibrated to the window grid in `calibration/cal-FINAL.json`, with day and dusk views.
 
@@ -57,7 +57,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 **Placeholders.** Every project fact in the designs is unconfirmed and stays as it is for now. Future work must not present any of these as real or add new figures:
 
 - handover date ("IV квартал 2026")
-- building structure: 3 buildings, 9 sections and the lots generated from them in `js/data.js` (currently 832, of which 365 on sale), with their statuses and areas. This demo structure now contradicts the client (four blocks, flats from the 3rd floor, see Evidence) and drives the catalog, grid and facade picker; the home copy already uses the confirmed blocks
+- lot statuses, numbers, finishes and prices generated in `js/data.js` (currently 352 flats in blocks А, Б and В, of which 157 on sale). The structure itself follows the client (blocks А–Г, flats on floors 3–18) and the plan sheets (А-1…А-8 per floor in А, Б-1…Б-7 in Б and В); floors above the sheets' typical range repeat the typical floor, and block Г has no flats until its sheets arrive. Which blocks the facade renders show is an assumption
 - base price of ~9,400 TJS/m² and every price derived from it
 - the six named services (24/7 concierge, rental management, cleaning, valet parking, storage, guest apartments)
 - ceiling height ("от 3,1 м"), the walking distance to the river, flat counts
