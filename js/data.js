@@ -8,16 +8,21 @@
 
   var SITE = {
     name: 'MEGA KHUJAND',
-    phone: '+992 44 600 00 00',
-    phoneHref: 'tel:+992446000000',
-    whatsapp: 'https://wa.me/992446000000',
-    telegram: 'https://t.me/+992446000000',
+    phone: '+992 70 001 00 01',
+    phoneHref: 'tel:+992700010001',
+    whatsapp: 'https://wa.me/992700010001',
+    /* Telegram пока не показывается (пусто): вписать ссылку — вернётся в контактах главной и в форме */
+    telegram: '',
     address: 'Худжанд, ул. Сырдарьинская, 14',
     geo: [40.2931909, 69.622398],      /* точка дома по Google Картам; карта места — tools/map-build.py */
     showroomHours: 'ежедневно, 9:00–19:00',
     handover: 'IV квартал 2026',
     ceiling: '3,1 м',
     priceBase: 9400,
+    /* Цены на сайте. false — покупатель видит «Цена по запросу», скидки не
+       показываются (лот со скидкой — просто свободный), фильтр и сортировка
+       по цене скрыты. Цены в данных и вся их логика на месте: true — вернуть. */
+    showPrices: false,
     /* Адрес приёма заявок (POST, JSON). Пока пусто — заявка собирается
        в сообщение и посетитель отправляет её в WhatsApp отдела продаж. */
     leadEndpoint: ''
@@ -103,6 +108,9 @@
           was: disc ? full : 0,
           rec: rnd()
         };
+        /* без цен скидки нет: лот со скидкой — свободный по полной цене
+           (генератор не меняется, при showPrices: true всё как было) */
+        if (!SITE.showPrices && lot.status === 'sale') { lot.status = 'free'; lot.price = lot.was; lot.disc = 0; lot.was = 0; }
         row.push(lot);
         LOTS.push(lot);
         BY_ID[lot.id] = lot;
@@ -119,6 +127,8 @@
   /* площади — как в экспликации листа, до сотых */
   var af = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });  /* как в экспликации листов: 21,80 м² */
   function money(v) { return nf.format(Math.round(v)) + ' смн'; }
+  /* цена лота для покупателя: сумма или «Цена по запросу» (SITE.showPrices) */
+  function priceText(l) { return SITE.showPrices ? money(l.price) : 'Цена по запросу'; }
   function num(v) { return nf.format(Math.round(v)); }
   function area(v) { return af.format(v) + ' м²'; }
   function plural(n, forms) {
@@ -203,7 +213,7 @@
     find: find, block: block, plan: function (id) { return PLAN[id] || null; },
     stats: stats, isOpen: isOpen, perM: perM, roomsFor: roomsFor,
     homography: homography, planeOf: planeOf, windowQuad: windowQuad, windowOf: windowOf, lightKey: lightKey,
-    money: money, num: num, area: area, plural: plural,
+    money: money, num: num, area: area, plural: plural, priced: SITE.showPrices, priceText: priceText,
     planSrc: planSrc, lotHref: lotHref, lotTitle: lotTitle, lotPlace: lotPlace, lotLabel: lotLabel
   };
 })(typeof window !== 'undefined' ? window : globalThis);

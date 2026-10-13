@@ -226,6 +226,7 @@
   };
   MK.priceHtml = function (l) {
     if (!D.isOpen(l)) return '<span class="lot__lock">' + MK.icon('lock') + D.STATUS[l.status] + '</span>';
+    if (!D.priced) return 'Цена по запросу<small>Узнайте у менеджера</small>';
     return (l.was ? '<s>' + D.money(l.was) + '</s>' : '') + D.money(l.price) +
       '<small>' + D.num(D.perM(l)) + ' смн за м²</small>';
   };
@@ -333,7 +334,7 @@
     ['whatsapp', 'WhatsApp'],
     ['telegram', 'Telegram'],
     ['visit', 'Визит в шоурум']
-  ];
+  ].filter(function (m) { return m[0] !== 'telegram' || D.SITE.telegram; });
   var METHOD_NAME = { call: 'звонок', whatsapp: 'WhatsApp', telegram: 'Telegram', visit: 'визит в шоурум' };
   var METHOD_DONE = {
     call: 'позвонит вам',
@@ -388,7 +389,7 @@
   function lotSummary(l) {
     return '<span class="form__lot-plan"><img src="' + D.planSrc(l.plan) + '" alt=""></span>' +
       '<span class="form__lot-txt"><b>' + l.type + ' №\u00a0' + l.no + ', ' + D.area(l.area) + '</b>' +
-      'Блок ' + l.blk + ' · этаж ' + l.floor + (D.isOpen(l) ? ' · ' + D.money(l.price) : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
+      'Блок ' + l.blk + ' · этаж ' + l.floor + (D.isOpen(l) ? ' · ' + (D.priced ? D.money(l.price) : 'свободна') : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
       '<button class="form__lot-x" type="button" data-lot-x aria-label="Убрать квартиру из заявки">' + MK.icon('close') + '</button>';
   }
   function planSummary(p) {
@@ -457,7 +458,7 @@
       else setErr(name, '');
       var d = phoneDigits(phone.value);
       if (!d.length) { setErr(phone, 'Укажите телефон, чтобы мы могли связаться.'); ok = false; first = first || phone; }
-      else if (d.length < 9) { setErr(phone, 'Номер неполный: после +992 нужно 9 цифр, например +992 44 600 00 00.'); ok = false; first = first || phone; }
+      else if (d.length < 9) { setErr(phone, 'Номер неполный: после +992 нужно 9 цифр.'); ok = false; first = first || phone; }
       else setErr(phone, '');
       if (first) first.focus();
       return ok;
@@ -555,6 +556,9 @@
       var k = n.getAttribute('data-stat-word');
       var f = (n.getAttribute('data-forms') || '').split('|');
       if (k in raw && f.length === 3) n.textContent = D.plural(raw[k], f);
+    });
+    document.querySelectorAll('[data-telegram]').forEach(function (a) {
+      if (D.SITE.telegram) { a.href = D.SITE.telegram; a.hidden = false; }
     });
     document.querySelectorAll('[data-site]').forEach(function (n) {
       var k = n.getAttribute('data-site');

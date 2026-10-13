@@ -13,6 +13,11 @@
   }
   var B = { price: bounds('price', 10000), area: bounds('area', 1), floor: bounds('floor', 1) };
   var SORTS = ['rec', 'price-asc', 'price-desc', 'area-asc', 'area-desc', 'floor-asc', 'floor-desc'];
+  /* цены скрыты (SITE.showPrices): без фильтра и сортировки по цене — они остаются в разметке и коде */
+  if (!D.priced) {
+    SORTS = SORTS.filter(function (k) { return k.indexOf('price') < 0; });
+    $$('[data-sort] option').forEach(function (o) { if (o.value.indexOf('price') === 0) o.remove(); });
+  } else $('[data-range="price"]').hidden = false;
   function defaults() {
     return { rooms: [], price: B.price.slice(), area: B.area.slice(), floor: B.floor.slice(), blk: '', fin: '',
       veranda: false, open: true, fav: false, sort: 'rec', view: 'grid' };
@@ -31,7 +36,7 @@
     S.rooms = rooms.filter(function (r, i, a) { return a.indexOf(r) === i; });
     ['price', 'area', 'floor'].forEach(function (k) {
       var m = /^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/.exec(q.get(k) || '');
-      if (!m) return;
+      if (!m || (k === 'price' && !D.priced)) return;
       var a = MK.clamp(+m[1], B[k][0], B[k][1]), b = MK.clamp(+m[2], B[k][0], B[k][1]);
       S[k] = a <= b ? [a, b] : [b, a];
     });
@@ -92,7 +97,7 @@
   }
 
   /* ── разметка выдачи ────────────────────────────────────────────── */
-  var COLS = [['Тип'], ['Блок'], ['План'], ['Площадь', 'area'], ['Этаж', 'floor'], ['№'], ['Отделка'], ['Особенности'], ['Стоимость', 'price'], ['']];
+  var COLS = [['Тип'], ['Блок'], ['План'], ['Площадь', 'area'], ['Этаж', 'floor'], ['№'], ['Отделка'], ['Особенности'], D.priced ? ['Стоимость', 'price'] : ['Стоимость'], ['']];
   function headHtml() {
     var cur = S.sort.split('-');
     return '<div class="rows__head">' + COLS.map(function (c) {
@@ -109,7 +114,7 @@
     var feats = l.veranda ? 'веранда' : '—';
     return '<li class="row' + (l.status === 'book' ? ' row--book' : '') + '">' +
       '<span class="row__type"><a class="lot__link" href="' + D.lotHref(l) + '">' + l.type +
-      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + ', ' + (open ? D.money(l.price) : 'забронирована') + '</span></a></span>' +
+      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + ', ' + (open ? D.priceText(l).toLowerCase() : D.STATUS[l.status].toLowerCase()) + '</span></a></span>' +
       '<span aria-hidden="true">' + l.blk + ' · ' + l.code + '</span>' +
       '<span class="row__plan" aria-hidden="true"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy" decoding="async"></span>' +
       '<span aria-hidden="true">' + D.area(l.area) + '</span>' +
@@ -117,7 +122,7 @@
       '<span aria-hidden="true">' + l.no + '</span>' +
       '<span aria-hidden="true">' + l.fin + '</span>' +
       '<span aria-hidden="true">' + feats + '</span>' +
-      '<span class="row__price" aria-hidden="true">' + (open ? D.money(l.price) + '<small>' + (l.disc ? 'скидка ' + l.disc + '%' : D.num(D.perM(l)) + ' смн/м²') + '</small>' : 'Забронирована') + '</span>' +
+      '<span class="row__price" aria-hidden="true">' + (open ? (D.priced ? D.money(l.price) + '<small>' + (l.disc ? 'скидка ' + l.disc + '%' : D.num(D.perM(l)) + ' смн/м²') + '</small>' : 'По запросу<small>свободна</small>') : D.STATUS[l.status]) + '</span>' +
       '<span class="row__fav"><button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + MK.fav.has(l.id) + '" aria-label="В избранное: ' + l.type + ' №\u00a0' + l.no + '">' + MK.icon('heart', '') + '</button></span></li>';
   }
   function emptyHtml() {

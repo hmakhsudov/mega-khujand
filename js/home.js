@@ -201,7 +201,7 @@
   function showLift(f, ride) {
     var inf = floorInfo(f);
     lift.innerHTML = '<b class="lift__n tnum">' + f + '</b><span class="lift__t">этаж</span>' +
-      (ride ? '' : '<span class="lift__c">' + (inf.n ? inf.n + ' ' + D.plural(inf.n, ['свободная', 'свободные', 'свободных']) + (sel === 'all' ? '' : '') + '<br>от ' + D.money(inf.min) : 'свободных нет') + '</span>');
+      (ride ? '' : '<span class="lift__c">' + (inf.n ? inf.n + ' ' + D.plural(inf.n, ['свободная', 'свободные', 'свободных']) + (sel === 'all' ? '' : '') + (D.priced ? '<br>от ' + D.money(inf.min) : '') : 'свободных нет') + '</span>');
     lift.classList.toggle('is-ride', !!ride);
     lift.hidden = false;
     if (!placeLift(f)) lift.hidden = true;
@@ -233,7 +233,7 @@
     F.focusLot(it);
     var l = it.lot;
     tag.innerHTML = '<b>' + l.type + ' · ' + D.area(l.area) + '</b>' +
-      '<span>Этаж ' + l.floor + ' · № ' + l.no + ' · ' + D.money(l.price) + '</span>' +
+      '<span>Этаж ' + l.floor + ' · № ' + l.no + (D.priced ? ' · ' + D.money(l.price) : '') + '</span>' +
       '<a href="' + D.lotHref(l) + '">Открыть квартиру ' + MK.icon('arrow') + '</a>';
     tag.hidden = false;
     var c = F.client(it.cx, Math.min.apply(null, it.win.map(function (q) { return Math.min(q[0][1], q[1][1]); })));

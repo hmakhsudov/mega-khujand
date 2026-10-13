@@ -58,10 +58,10 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 - handover date ("IV квартал 2026")
 - lot statuses, numbers, finishes and prices generated in `js/data.js` (currently 352 flats in blocks А, Б and В, of which 157 on sale). The structure itself follows the client (blocks А–Г, flats on floors 3–18) and the plan sheets (А-1…А-8 per floor in А, Б-1…Б-7 in Б and В); floors above the sheets' typical range repeat the typical floor, and block Г has no flats until its sheets arrive. Which blocks the facade renders show is an assumption
-- base price of ~9,400 TJS/m² and every price derived from it
+- base price of ~9,400 TJS/m² and every price derived from it. Prices are hidden on the site at the client's request (2026-10-13, `SITE.showPrices: false`): buyers see «Цена по запросу» and «Узнать цену», no discounts, no price filter or sort; the price logic stays in the code behind the flag
 - the six named services (24/7 concierge, rental management, cleaning, valet parking, storage, guest apartments)
 - ceiling height ("от 3,1 м"), flat counts
-- phone number `+992 44 600 00 00` and the messenger links built from it
+- Telegram: hidden until the client says otherwise (`SITE.telegram` empty). The phone, +992 70 001 00 01, is from the client (2026-10-13); WhatsApp is assumed on the same number
 - showroom hours ("ежедневно, 9:00–19:00"); where the showroom is, is unknown, so the site names only the house address and never places the showroom
 
 **Not built yet:** a real lot-data feed, a connected lead endpoint, and real messenger handles.
@@ -86,7 +86,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 - **The complex, per the client (relayed by the user, 2026-10-04):** four residential blocks А, Б, В and Г, 18 floors each; floors 1–2 are commercial (trade premises), flats start on the 3rd floor; block Д has two floors: a kindergarten on the 1st, fitness on the 2nd and a sports ground on its roof (no drawings of Д yet). The site states the four blocks and the commercial floors, but no floor counts, because the sheets disagree: their schematic shows Блок А with 11 floors, Б, В and Г with 18, Блок Д with 9, and a two-storey car park in the middle (Б and В side by side, А and Г at the ends, Д opposite Б and В), and the title block describes 18-, 12-, 11- and 9-storey residential buildings with a kindergarten inside a residential building.
 - **Commercial floor sheets**, in `media/plans/commerce/src/*.pdf` (ArchiCAD, vector only): 1st and 2nd floors of blocks А, В and Г, 2nd floor of Б (no 1st-floor sheet for Б). Each floor holds one open-plan trade hall with columns ("Торговый центр": А 544,53 м², Б and В 486,50 м², Г 694,84 м² per the room schedule; the Г plan label says 685,62 м²), a lift hall, stairs and staff rooms. Their labels are drawn as strokes, not text. `tools/commerce-extract.py` redraws them as simplified schemes for a quiet section at the end of `plans.html`; they are not modelled, because commercial buyers are not the target audience. The title block names the client «Элит Сохтмон» and the designer ЧДММ «Арк Синон»; neither is on the site until confirmed.
 - **The address and the map** (2026-10-13): Худжанд, ул. Сырдарьинская, 14, from the client. The map point is Google Maps' geocode (40.2931909, 69.622398; Google flags it as approximate). `tools/map-build.py` redraws the neighbourhood from OpenStreetMap (ODbL, credited on the map) and computes the straight-line distances shown in «Место».
-- **Missing, and not to be invented:** the developer's name and profile (only the title-block names above, unconfirmed), architects, testimonials, awards, press, construction progress, permits or legal documents, real prices, availability, handover date, phone number, showroom address and hours, and messenger handles.
+- **Missing, and not to be invented:** the developer's name and profile (only the title-block names above, unconfirmed), architects, testimonials, awards, press, construction progress, permits or legal documents, real prices, availability, handover date, showroom address and hours, and a Telegram handle.
 
 ## Product Principles
 

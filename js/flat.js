@@ -27,10 +27,10 @@
   document.title = title + ' — квартира №\u00a0' + lot.no + ', блок ' + lot.blk + ' · MEGA KHUJAND';
   var md = document.querySelector('meta[name="description"]');
   if (md) md.content = lot.type + ' ' + D.area(lot.area) + ' на ' + lot.floor + ' этаже, блок ' + lot.blk + ' MEGA KHUJAND в Худжанде. ' +
-    (open ? 'Цена ' + D.money(lot.price) + '.' : D.STATUS[st] + '.') + ' Планировка ' + lot.code + ' из проекта и площади помещений.';
+    (open ? (D.priced ? 'Цена ' + D.money(lot.price) + '.' : 'Свободна.') : D.STATUS[st] + '.') + ' Планировка ' + lot.code + ' из проекта и площади помещений.';
 
   var cta = {
-    free: 'Забронировать', sale: 'Забронировать со скидкой', book: 'Сообщить, если освободится', sold: 'Подобрать похожую'
+    free: D.priced ? 'Забронировать' : 'Узнать цену', sale: 'Забронировать со скидкой', book: 'Сообщить, если освободится', sold: 'Подобрать похожую'
   }[st];
   var plan = D.plan(lot.plan);
   var inner = D.roomsFor(lot);
@@ -87,7 +87,8 @@
   var statusCls = st === 'free' ? ' status--free' : st === 'sale' ? ' status--sale' : '';
   var statusTxt = st === 'sale' ? 'Скидка ' + lot.disc + '%' : D.STATUS[st];
   var note = {
-    free: 'Цена предварительная и действует при 100% оплате. Об условиях рассрочки и ипотеки спросите менеджера.',
+    free: D.priced ? 'Цена предварительная и действует при 100% оплате. Об условиях рассрочки и ипотеки спросите менеджера.'
+      : 'Стоимость, условия рассрочки и ипотеки расскажет менеджер: позвоните или оставьте заявку.',
     sale: 'Скидка действует на этот лот, пока он свободен. Цена предварительная — точный расчёт подготовит менеджер.',
     book: 'Лот забронирован другим покупателем. Оставьте заявку — сообщим, если бронь снимут, и подберём похожую квартиру в этом же стояке.',
     sold: 'Эта квартира продана. Покажем свободные квартиры с такой же планировкой — ниже похожие варианты.'
@@ -112,7 +113,8 @@
         '<div class="price-card" data-price-card>' +
           '<div class="price-card__row">' +
             '<div><span class="label">Стоимость</span>' +
-              (open ? '<b class="price-card__val">' + D.money(lot.price) + (lot.was ? '<s class="price-card__was">' + D.money(lot.was) + '</s>' : '') + '</b>' +
+              (open && !D.priced ? '<b class="price-card__val">По запросу</b><span class="price-card__per">Квартира свободна</span>'
+                : open ? '<b class="price-card__val">' + D.money(lot.price) + (lot.was ? '<s class="price-card__was">' + D.money(lot.was) + '</s>' : '') + '</b>' +
                 '<span class="price-card__per">' + D.num(D.perM(lot)) + ' смн за м²</span>'
                 : '<b class="price-card__val">' + D.STATUS[st] + '</b><span class="price-card__per">Цена не публикуется</span>') +
             '</div>' +
@@ -163,8 +165,8 @@
   } else showImgs();
 
   /* заявка с этой квартирой */
-  var leadTitle = { free: 'Забронировать квартиру №\u00a0' + lot.no, sale: 'Забронировать квартиру №\u00a0' + lot.no, book: 'Сообщить, если освободится', sold: 'Подобрать похожую квартиру' }[st];
-  MK.lead(slot, { lot: lot, title: leadTitle, sub: open ? 'Менеджер зафиксирует цену, ответит на вопросы и пригласит на показ.' : 'Менеджер сообщит об изменениях и предложит похожие варианты.' });
+  var leadTitle = { free: (D.priced ? 'Забронировать квартиру №\u00a0' : 'Узнать цену квартиры №\u00a0') + lot.no, sale: 'Забронировать квартиру №\u00a0' + lot.no, book: 'Сообщить, если освободится', sold: 'Подобрать похожую квартиру' }[st];
+  MK.lead(slot, { lot: lot, title: leadTitle, sub: open ? (D.priced ? 'Менеджер зафиксирует цену, ответит на вопросы и пригласит на показ.' : 'Менеджер назовёт цену, ответит на вопросы и пригласит на показ.') : 'Менеджер сообщит об изменениях и предложит похожие варианты.' });
   if (!open) {
     $('[data-lead-h]').textContent = st === 'sold' ? 'Подберём похожую квартиру' : 'Сообщим, если бронь снимут';
     $('[data-lead-note]').textContent = 'Покажем свободные квартиры с такой же планировкой — в этом же блоке или по соседству.';
@@ -175,8 +177,8 @@
   /* липкая панель после блока цены */
   var sticky = $('[data-sticky]');
   $('[data-sticky-label]').textContent = lot.type + ' · №\u00a0' + lot.no;
-  $('[data-sticky-price]').innerHTML = open ? D.money(lot.price) + '<span>' + D.area(lot.area) + '</span>' : D.STATUS[st] + '<span>' + D.area(lot.area) + '</span>';
-  $('[data-sticky-cta]').textContent = open ? 'Забронировать' : 'Оставить заявку';
+  $('[data-sticky-price]').innerHTML = open ? D.priceText(lot) + '<span>' + D.area(lot.area) + '</span>' : D.STATUS[st] + '<span>' + D.area(lot.area) + '</span>';
+  $('[data-sticky-cta]').textContent = open ? (D.priced ? 'Забронировать' : 'Узнать цену') : 'Оставить заявку';
   var pastPrice = false, atLead = false;
   function syncSticky() { var on = pastPrice && !atLead; sticky.classList.toggle('is-on', on); sticky.inert = !on; }
   if ('IntersectionObserver' in window) {

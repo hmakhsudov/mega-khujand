@@ -87,7 +87,7 @@
     $('[data-legend]').innerHTML = night()
       ? '<span><i class="pk-lit"></i>горит свет — свободна</span><span><i class="pk-dark"></i>темно — бронь или продана</span>'
       : '<span><i class="pk-free"></i>свободна</span><span><i class="pk-book"></i>бронь</span><span><i class="pk-sold"></i>продана</span>';
-    $('[data-note]').textContent = 'Положение квартир на рендере схематичное: точное место квартиры на этаже показано в её планировке, все квартиры есть на шахматке. Площади и цены предварительные.';
+    $('[data-note]').textContent = 'Положение квартир на рендере схематичное: точное место квартиры на этаже показано в её планировке, все квартиры есть на шахматке. Наличие предварительное.';
   }
   function paintPolys() {
     var on = filtersOn();
@@ -121,7 +121,7 @@
     if (!rec || rec.vi !== S.v || !S.ov) { tip.classList.remove('is-on'); return; }
     var l = rec.it.lot;
     $('b', tip).textContent = l.type + ' · ' + D.area(l.area);
-    $('span', tip).textContent = 'Этаж ' + l.floor + ' · № ' + l.no + ' · ' + (D.isOpen(l) ? D.money(l.price) + (l.disc ? ' (−' + l.disc + '%)' : '') : D.STATUS[l.status].toLowerCase());
+    $('span', tip).textContent = 'Этаж ' + l.floor + ' · № ' + l.no + ' · ' + (D.isOpen(l) ? (D.priced ? D.money(l.price) + (l.disc ? ' (−' + l.disc + '%)' : '') : 'свободна') : D.STATUS[l.status].toLowerCase());
     /* позиция по окну на экране: рендер обрезан по кадру (cover) */
     var m = svg.getScreenCTM(), fr = frame.getBoundingClientRect();
     if (!m) return;
@@ -150,9 +150,9 @@
       '<div class="pk__sel-row"><div><p class="pk__sel-title">' + l.type + ', ' + D.area(l.area) + '</p>' +
       '<p class="pk__sel-meta">' + D.lotPlace(l) + ' · планировка ' + l.code + '</p></div>' +
       '<span class="pk__sel-plan"><img src="' + D.planSrc(l.plan) + '" alt=""></span></div>' +
-      '<div class="pk__sel-foot"><span class="pk__sel-price">' + (open ? D.money(l.price) : D.STATUS[l.status]) + '</span>' +
+      '<div class="pk__sel-foot"><span class="pk__sel-price">' + (open ? D.priceText(l) : D.STATUS[l.status]) + '</span>' +
       '<span class="pk__sel-act"><a class="btn btn--soft btn--sm" href="' + D.lotHref(l) + '">Подробнее</a>' +
-      '<a class="btn btn--dark btn--sm" href="' + D.lotHref(l, '#lead') + '">' + (open ? 'Забронировать' : 'Похожие') + '</a></span></div>';
+      '<a class="btn btn--dark btn--sm" href="' + D.lotHref(l, '#lead') + '">' + (open ? (D.priced ? 'Забронировать' : 'Узнать цену') : 'Похожие') + '</a></span></div>';
     if (!open) box.querySelector('.btn--dark').href = 'flats.html?rooms=' + l.rooms;
   }
   function renderList() {
@@ -170,7 +170,7 @@
       return '<button class="pk__item' + (l.id === S.hover ? ' is-hot' : '') + '" type="button" data-pick="' + l.id + '" aria-pressed="' + (l.id === S.sel) + '">' +
         '<span class="pk__item-plan"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy"></span>' +
         '<span class="pk__item-txt"><b>' + l.type + ' · ' + D.area(l.area) + '</b><span>Блок ' + l.blk + ' · этаж ' + l.floor + ' · № ' + l.no + '</span></span>' +
-        '<span class="pk__item-end"><b>' + (open ? D.money(l.price) : '—') + '</b><span class="' + (open ? 'is-free' : '') + '">' + (l.status === 'sale' ? '−' + l.disc + '%' : D.STATUS[l.status].toLowerCase()) + '</span></span></button>';
+        '<span class="pk__item-end"><b>' + (open ? (D.priced ? D.money(l.price) : 'по запросу') : '—') + '</b><span class="' + (open ? 'is-free' : '') + '">' + (l.status === 'sale' ? '−' + l.disc + '%' : D.STATUS[l.status].toLowerCase()) + '</span></span></button>';
     }).join('') + (n > S.limit ? '<button class="btn btn--soft btn--sm btn--block" type="button" data-more style="margin-top:12px">Показать ещё ' + Math.min(14, n - S.limit) + '</button>' : '');
   }
   function render() { paintPolys(); renderSel(); renderList(); syncControls(); }
