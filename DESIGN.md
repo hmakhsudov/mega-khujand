@@ -386,8 +386,19 @@ Floors 1–2 are trade premises, and commercial buyers are not the audience, so 
 ### Service Directory
 A lobby directory on podium graphite: rows separated by strong 1px room rules top and bottom, service names in engraved Unbounded caps at 13px, descriptions in Manrope beside them.
 
+### Location Map («Место»)
+The city around the house as a dark site plan, redrawn from OpenStreetMap in the room's own palette, never a tiled web map or an embedded Google Map (heavy on slow networks, and its colours belong to someone else). It sits on graphite after the plans: map on the left (1.6fr), address and legend on the right.
+- **Base** (`media/map/khujand.svg`, no text): the river a lighter graphite (#252A2D) with fine diagonal engraved hatching and a plaster-grey bank line; greenery as a dot stipple; beach as a finer stipple; houses as faint blocks near the house only; streets as graphite channels widening by class; bridges as lighter bands. Edges fade into the room with an inset vignette in room colour.
+- **Overlay** (in the page, so it uses the site fonts): Сырдарьинская as the one plaster line, labelled in engraved caps along its angle; the river named in wide-tracked Unbounded Light; distance rings at 500 m, 1 km and 1.5 km as dotted plaster hairlines with small Manrope figures; numbered plaster pins for places.
+- **The house:** a plaster square turned 45° with a room-colour collar, a 30px plaster leader up and left, and a plaster-face plate (render tag lift): «MEGA KHUJAND» in engraved caps over the address. The diamond also marks the first legend row (the beach is at the house, so it has no pin of its own).
+- **Legend:** the numbered legend with a third column, the straight-line distance as a bold tabular figure; «Расстояния указаны по прямой от дома» under it; «Открыть в Google Картах» (outline) and «Записаться на показ».
+- **Measuring:** hovering a row or a pin draws a dashed plaster ruler from the house to the place and turns the pin to room fill with a plaster ring; the beach row pings the house mark. Taps toggle the same on touch.
+- **Arrival:** the base switches on from dark, Сырдарьинская draws itself along the river (1.6s), the house mark drops in with its leader and plate, the rings spread out from the house, then the pins pop in. Reduced motion: all present at once.
+- **Phones:** full-bleed 4:5 crop around the house and the old town; pins and labels that fall outside the crop are hidden.
+- Credit «Карта: © участники OpenStreetMap» stays on the map (ODbL).
+
 ### Numbered Legend
-Numbered pins on the render (30px plaster-face discs with a 1px ink rule at 50% and ink Unbounded numerals; ink with plaster numerals and scaled 1.18 when on), keyed to a ruled list of ink discs, Unbounded 400 names and Manrope descriptions.
+Numbered pins on the render (30px plaster-face discs with a 1px ink rule at 50% and ink Unbounded numerals; ink with plaster numerals and scaled 1.18 when on), keyed to a ruled list of numbered discs, Unbounded 400 names and Manrope descriptions. On plaster the discs are ink with plaster numerals (when on: plaster with an ink ring and ink numeral); on graphite they are plaster-face with ink numerals, matching the pins (when on: room with a plaster ring).
 
 ### Reveal motion
 Armed only under prefers-reduced-motion: no-preference and once the script marks the page; without it, everything is visible.
@@ -396,6 +407,13 @@ Armed only under prefers-reduced-motion: no-preference and once the script marks
 - List rows rise in sequence at a 70ms stagger, capped at ten; service directory rules draw left to right.
 - Numbered pins pop in after their photo (140ms apart) with a one-time ring that expands and fades.
 - Catalogue and plan cards stagger in after each render; a new plan sheet lands with its room numbers in sequence; grid cells light bottom to top; material crops zoom on hover.
+- A render switches on only once its picture has arrived (up to 6 s), so on a slow network the light never comes up over an empty frame.
+
+### Page transitions
+Moving between pages is one continuous vitrine: the header holds still (`view-transition-name: hdr`), the old page fades out in .2s and the new one rises 12px from under the glass over .5s (cross-document View Transitions, typed `page` so the grid's own block morph keeps its transition). Neighbouring pages are prefetched on hover (`speculationrules`). Reduced motion: an ordinary page load.
+
+### Network
+`MK.net` reads the connection: on Save-Data or 2G (`lite`) the floor model shows only its lit final frame; on 3G too (`slow`) heavy media load only when they reach the screen — the model's frames, the embedded facade picker (button only) and the flat page's 2400px window crop. Nothing heavy loads before the page's `load` event.
 
 ## Do's and Don'ts
 

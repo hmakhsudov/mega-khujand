@@ -171,6 +171,52 @@ def path_d(items):
     return ''.join(out)
 
 
+def tidy_d(d):
+    """Путь ключ-плана без потерь, но короче: отрезки, продолжающие друг друга,
+    идут одной линией (без повторного M), шаги — относительные, в десятых пункта."""
+    toks = re.findall(r'[MLCZhvz]|-?\d*\.?\d+', d)
+    out, i, cx, cy, sx, sy, after_z, cmd = [], 0, None, None, 0, 0, True, None
+    def f(t):
+        v = ('%d' % (t // 10) if t % 10 == 0 else ('%.1f' % (t / 10))) if t >= 0 else '-' + f(-t)
+        return v[1:] if v.startswith('0.') else v.replace('-0.', '-.')
+    def nums(vals):
+        r = ''
+        for v in vals:
+            sv = f(v)
+            r += sv if (not r or sv.startswith('-')) else ' ' + sv
+        return r
+    def num(k): return int(round(float(toks[k]) * 10))
+    while i < len(toks):
+        t = toks[i]
+        if t in 'MLCZhvz': cmd = t; i += 1
+        if cmd == 'M':
+            x, y = num(i), num(i + 1); i += 2
+            if not (x == cx and y == cy and not after_z):
+                out.append('M' + nums([x, y]))
+            cx, cy, sx, sy, after_z = x, y, x, y, False
+            cmd = 'L'
+        elif cmd == 'L':
+            x, y = num(i), num(i + 1); i += 2
+            out.append('l' + nums([x - cx, y - cy])); cx, cy = x, y
+        elif cmd == 'C':
+            v = [num(i + k) for k in range(6)]; i += 6
+            out.append('c' + nums([v[0] - cx, v[1] - cy, v[2] - cx, v[3] - cy, v[4] - cx, v[5] - cy])); cx, cy = v[4], v[5]
+        elif cmd == 'h':
+            dx = num(i); i += 1; out.append('h' + nums([dx])); cx += dx
+        elif cmd == 'v':
+            dy = num(i); i += 1; out.append('v' + nums([dy])); cy += dy
+        elif cmd in 'Zz':
+            out.append('z'); cx, cy, after_z = sx, sy, True
+    return ''.join(out)
+
+
+def tidy_svg_file(path):
+    s = open(path).read()
+    s2 = re.sub(r' d="([^"]*)"', lambda m: ' d="%s"' % tidy_d(m.group(1)), s)
+    open(path, 'w').write(s2)
+    return len(s), len(s2)
+
+
 def keyplan_svg(drawings, box):
     groups = []
     for g in drawings:
@@ -194,9 +240,9 @@ def keyplan_svg(drawings, box):
     parts = []
     for key, ds in groups:
         if key[0] == 'f':
-            parts.append('<path class="%s" d="%s"/>' % (key[1], ''.join(ds)))
+            parts.append('<path class="%s" d="%s"/>' % (key[1], tidy_d(''.join(ds))))
         else:
-            parts.append('<path class="%s" stroke-width="%s" d="%s"/>' % (key[1], key[2], ''.join(ds)))
+            parts.append('<path class="%s" stroke-width="%s" d="%s"/>' % (key[1], key[2], tidy_d(''.join(ds))))
     x0, y0, x1, y1 = box
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="%.1f %.1f %.1f %.1f" fill="none" stroke-linecap="round" stroke-linejoin="round">'
             % (x0, y0, x1 - x0, y1 - y0)) + ''.join(parts) + '</svg>'

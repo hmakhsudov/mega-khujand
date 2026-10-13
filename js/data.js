@@ -12,14 +12,14 @@
     phoneHref: 'tel:+992446000000',
     whatsapp: 'https://wa.me/992446000000',
     telegram: 'https://t.me/+992446000000',
-    showroom: 'Шоурум на набережной Сырдарьи',
+    address: 'Худжанд, ул. Сырдарьинская, 14',
+    geo: [40.2931909, 69.622398],      /* точка дома по Google Картам; карта места — tools/map-build.py */
     showroomHours: 'ежедневно, 9:00–19:00',
     handover: 'IV квартал 2026',
     ceiling: '3,1 м',
-    walkMinutes: 5,
     priceBase: 9400,
-    /* Адрес приёма заявок (POST, JSON). Пока пусто — форма работает
-       в демонстрационном режиме и никуда не отправляет данные. */
+    /* Адрес приёма заявок (POST, JSON). Пока пусто — заявка собирается
+       в сообщение и посетитель отправляет её в WhatsApp отдела продаж. */
     leadEndpoint: ''
   };
 
@@ -117,7 +117,7 @@
 
   var nf = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
   /* площади — как в экспликации листа, до сотых */
-  var af = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  var af = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });  /* как в экспликации листов: 21,80 м² */
   function money(v) { return nf.format(Math.round(v)) + ' смн'; }
   function num(v) { return nf.format(Math.round(v)); }
   function area(v) { return af.format(v) + ' м²'; }

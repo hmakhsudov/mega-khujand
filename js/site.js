@@ -19,6 +19,13 @@
   MK.wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
   MK.rm = function () { return mqReduce.matches; };
+  /* сеть: lite — экономия трафика или 2G (тяжёлое не грузим вовсе),
+     slow — ещё и 3G (тяжёлое — только когда оно рядом с экраном) */
+  var conn = navigator.connection || {};
+  MK.net = {
+    lite: !!(conn.saveData || /2g$/.test(conn.effectiveType || '')),
+    slow: !!(conn.saveData || /2g$|^3g$/.test(conn.effectiveType || ''))
+  };
   var syncRm = function () { doc.classList.toggle('rm', mqReduce.matches); };
   syncRm();
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', function () { syncRm(); MK.tick(); });
@@ -107,6 +114,7 @@
   var RV = [
     ['.sec-head .h2,.sec-head .h3,.phead__title,.lead-band__copy .h2,.lead-band__copy .h3,.yard__panel .h3,.similar__head .h3,.pinfo__h', 'head'],
     ['.mat__shot,.site__shot,.yard__shot,.srv__shot,.phead__media,.gallery__img,.planbox__img', 'photo'],
+    ['.loc__map', 'map'],
     ['.legend-list,.srv__dir,.contacts,.dl,.kspecs,.pv__rooms', 'rows'],
     ['.sec-head .lead,.phead__lead,.showroom,.mat__spec,.srv__foot,.plans__act', 'fade']
   ];
@@ -124,7 +132,8 @@
         rvIo.observe(t);
       });
     });
-    (root || document).querySelectorAll('[data-pins]').forEach(function (fig) {
+    (root || document).querySelectorAll('[data-pins],.loc__map').forEach(function (fig) {
+      if (fig.classList.contains('loc__map')) { fig.querySelectorAll('.pin').forEach(function (p, i) { p.style.setProperty('--i', i); }); return; }
       if (fig.hasAttribute('data-rv')) return;
       fig.setAttribute('data-rv', 'pins');
       fig.querySelectorAll('.pin').forEach(function (p, i) { p.style.setProperty('--i', i); });
@@ -134,10 +143,20 @@
   };
   function initMotion() {
     if (!('IntersectionObserver' in window)) return;
+    /* рендер «включается», когда он уже пришёл: на медленной сети свет не
+       загорается над пустым кадром, а ждёт картинку (не дольше 6 с) */
+    var arrive = function (x, fn) {
+      var im = (x.getAttribute('data-rv') === 'photo' || x.getAttribute('data-rv') === 'map') && x.querySelector('img');
+      if (!im || (im.complete && im.naturalWidth)) { fn(); return; }
+      var done = false, go = function () { if (!done) { done = true; fn(); } };
+      im.addEventListener('load', go, { once: true });
+      im.addEventListener('error', go, { once: true });
+      setTimeout(go, 6000);
+    };
     rvIo = new IntersectionObserver(function (en) {
       en.forEach(function (e) {
         if (!e.isIntersecting) return;
-        (e.target._rv || [e.target]).forEach(function (x) { x.classList.add('is-in'); });
+        (e.target._rv || [e.target]).forEach(function (x) { arrive(x, function () { x.classList.add('is-in'); }); });
         rvIo.unobserve(e.target);
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
@@ -298,7 +317,8 @@
         box.appendChild(f);
       }
       if (btn) btn.addEventListener('click', function () { go(true); });
-      if (min && 'IntersectionObserver' in window) {
+      /* встроенная страница тяжёлая: на медленной сети — только по кнопке */
+      if (min && !MK.net.slow && 'IntersectionObserver' in window) {
         var ob = new IntersectionObserver(function (en) {
           if (en[0].isIntersecting && innerWidth >= min) { go(false); ob.disconnect(); }
         }, { rootMargin: '400px 0px' });
@@ -314,6 +334,7 @@
     ['telegram', 'Telegram'],
     ['visit', 'Визит в шоурум']
   ];
+  var METHOD_NAME = { call: 'звонок', whatsapp: 'WhatsApp', telegram: 'Telegram', visit: 'визит в шоурум' };
   var METHOD_DONE = {
     call: 'позвонит вам',
     whatsapp: 'напишет вам в WhatsApp',
@@ -479,13 +500,26 @@
       busy(true);
       try {
         await send(payload);
-        done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
-          '<h3 class="form-card__title">Заявка принята</h3>' +
-          '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
-          (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в блоке ' + lot.blk : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
-          (D.SITE.leadEndpoint ? '' : '<p class="form__demo">Демонстрационный режим: заявка сохранена только в этом браузере и в отдел продаж не отправлена. Чтобы связаться сейчас, позвоните ' + D.SITE.phone + '.</p>') +
-          '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
-          '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
+        var about = lot ? D.lotLabel(lot) + ', этаж ' + lot.floor : payload.plan ? 'планировка ' + payload.plan : payload.interest;
+        if (D.SITE.leadEndpoint) {
+          done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
+            '<h3 class="form-card__title">Заявка принята</h3>' +
+            '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
+            (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в блоке ' + lot.blk : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
+            '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
+            '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
+        } else {
+          /* приёмник заявок не подключён: заявка уходит менеджеру сообщением
+             в WhatsApp — посетитель отправляет его сам, одним нажатием */
+          var msg = 'Здравствуйте! Заявка с сайта MEGA KHUJAND.\nИмя: ' + payload.name + '\nТелефон: ' + payload.phone +
+            '\nКак связаться: ' + METHOD_NAME[method] + (about ? '\nИнтересует: ' + about : '');
+          done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
+            '<h3 class="form-card__title">Осталось отправить менеджеру</h3>' +
+            '<p>' + MK.esc(payload.name) + ', нажмите «Отправить в WhatsApp»: откроется чат с отделом продаж, текст заявки уже будет в сообщении. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
+            '<div class="row"><a class="btn btn--dark btn--sm" href="' + D.SITE.whatsapp + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">Отправить в WhatsApp</a>' +
+            '<a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить</a>' +
+            '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
+        }
         body.hidden = true;
         done.hidden = false;
         done.focus();

@@ -26,7 +26,7 @@ The sales site for MEGA KHUJAND, a residential complex (ЖК) on the Syr Darya e
 
 Confirmed differentiators that other new buildings in Khujand cannot claim:
 
-- **On the Syr Darya embankment**, with the river, promenade and park at the doorstep. The exact walking time in the designs ("5 minutes") is not verified.
+- **On the Syr Darya, at Сырдарьинская улица, 14** (address per the client, 2026-10-13). The client considers Сырдарьинская one of the best streets in Khujand; it runs along the river's north bank. No. 14 is on the even, river side (odd numbers in OpenStreetMap are on the north side), so only the city beach and the promenade lie between the house and the water (about 100 m to the water by OSM). Across the river are the Rudaki park and the old centre with the fortress. The site gives only straight-line distances computed from OSM; the old "5 minutes" walking time is gone.
 - **Car-free private courtyards**: enclosed yards with gardens and play areas, and cars kept out.
 - **A managed building**: concierge and building management, which is rare in the local market. Which services are offered is not confirmed; see Capabilities and Constraints.
 - **Architecture and materials**: light stone facades, arched rhythm, deep balconies.
@@ -51,7 +51,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 **Constraints**
 
 - Russian only. No Tajik or English versions are planned.
-- Every «Оставить заявку» action leads to the lead form, which records the buyer's preferred channel (call, WhatsApp, Telegram, showroom visit). Until `leadEndpoint` is set, the form only simulates sending; it must be connected before launch.
+- Every «Оставить заявку» action leads to the lead form, which records the buyer's preferred channel (call, WhatsApp, Telegram, showroom visit). Until `leadEndpoint` is set, the form turns the request into a prepared WhatsApp message to `SITE.whatsapp` that the buyer sends with one tap (so it needs the real WhatsApp number before launch); a connected endpoint is still preferred.
 - Legal notes in the designs must stay: «Изображения носят информационный характер» (images are for information only), areas are per the project and may differ from BTI measurements, and prices are preliminary and must be confirmed with sales.
 
 **Placeholders.** Every project fact in the designs is unconfirmed and stays as it is for now. Future work must not present any of these as real or add new figures:
@@ -60,9 +60,9 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 - lot statuses, numbers, finishes and prices generated in `js/data.js` (currently 352 flats in blocks А, Б and В, of which 157 on sale). The structure itself follows the client (blocks А–Г, flats on floors 3–18) and the plan sheets (А-1…А-8 per floor in А, Б-1…Б-7 in Б and В); floors above the sheets' typical range repeat the typical floor, and block Г has no flats until its sheets arrive. Which blocks the facade renders show is an assumption
 - base price of ~9,400 TJS/m² and every price derived from it
 - the six named services (24/7 concierge, rental management, cleaning, valet parking, storage, guest apartments)
-- ceiling height ("от 3,1 м"), the walking distance to the river, flat counts
-- phone number `+992 44 600 00 00`
-- showroom location ("на набережной", on the embankment)
+- ceiling height ("от 3,1 м"), flat counts
+- phone number `+992 44 600 00 00` and the messenger links built from it
+- showroom hours ("ежедневно, 9:00–19:00"); where the showroom is, is unknown, so the site names only the house address and never places the showroom
 
 **Not built yet:** a real lot-data feed, a connected lead endpoint, and real messenger handles.
 
@@ -85,7 +85,8 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 - **Plaster model of the typical floors**, from `tools/model-floor.py` → `tools/model-render.py` → `tools/model-pack.py`: one plate per typical floor (А, floors 3–7; Б, floors 3–6), with walls, windows, doors, balconies, stairs and lifts read from the vector key plans in the plan sheets, rendered in Blender (Cycles) as a white plaster model. Furniture follows the furnished 3D views in the same sheets and is placed by hand, so it is illustrative. All 15 flats are furnished and lit. Where the blocks stand relative to each other is not known, so the plates are shown as separate models ("Блок А · этажи 3–7", "Блоки Б и В · этажи 3–6"), never side by side and never labelled with a корпус.
 - **The complex, per the client (relayed by the user, 2026-10-04):** four residential blocks А, Б, В and Г, 18 floors each; floors 1–2 are commercial (trade premises), flats start on the 3rd floor; block Д has two floors: a kindergarten on the 1st, fitness on the 2nd and a sports ground on its roof (no drawings of Д yet). The site states the four blocks and the commercial floors, but no floor counts, because the sheets disagree: their schematic shows Блок А with 11 floors, Б, В and Г with 18, Блок Д with 9, and a two-storey car park in the middle (Б and В side by side, А and Г at the ends, Д opposite Б and В), and the title block describes 18-, 12-, 11- and 9-storey residential buildings with a kindergarten inside a residential building.
 - **Commercial floor sheets**, in `media/plans/commerce/src/*.pdf` (ArchiCAD, vector only): 1st and 2nd floors of blocks А, В and Г, 2nd floor of Б (no 1st-floor sheet for Б). Each floor holds one open-plan trade hall with columns ("Торговый центр": А 544,53 м², Б and В 486,50 м², Г 694,84 м² per the room schedule; the Г plan label says 685,62 м²), a lift hall, stairs and staff rooms. Their labels are drawn as strokes, not text. `tools/commerce-extract.py` redraws them as simplified schemes for a quiet section at the end of `plans.html`; they are not modelled, because commercial buyers are not the target audience. The title block names the client «Элит Сохтмон» and the designer ЧДММ «Арк Синон»; neither is on the site until confirmed.
-- **Missing, and not to be invented:** the developer's name and profile (only the title-block names above, unconfirmed), architects, testimonials, awards, press, construction progress, permits or legal documents, real prices, availability, handover date, phone number, showroom address, and messenger handles.
+- **The address and the map** (2026-10-13): Худжанд, ул. Сырдарьинская, 14, from the client. The map point is Google Maps' geocode (40.2931909, 69.622398; Google flags it as approximate). `tools/map-build.py` redraws the neighbourhood from OpenStreetMap (ODbL, credited on the map) and computes the straight-line distances shown in «Место».
+- **Missing, and not to be invented:** the developer's name and profile (only the title-block names above, unconfirmed), architects, testimonials, awards, press, construction progress, permits or legal documents, real prices, availability, handover date, phone number, showroom address and hours, and messenger handles.
 
 ## Product Principles
 

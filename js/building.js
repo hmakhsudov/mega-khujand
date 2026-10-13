@@ -61,7 +61,7 @@
     if (b.pending) {
       return '<div class="tw tw--ghost" data-blk="' + b.k + '" style="--cols:7;view-transition-name:tw-' + lat + '">' +
         '<div class="tw__plate"><b>' + b.k + '</b><span>готовится</span></div>' +
-        '<div class="tw__body tw__ghost"><p>Листов блока&nbsp;' + b.k + ' пока нет — квартиры появятся здесь вместе с ними.</p>' +
+        '<div class="tw__body tw__ghost"><p>Продажи в&nbsp;блоке&nbsp;' + b.k + ' ещё не открыты.</p>' +
         '<a class="tw__ask" href="#lead" data-ask-g>Узнать первым</a></div>' +
         '<div class="tw__pod" aria-hidden="true"></div></div>';
     }
@@ -197,7 +197,7 @@
     var typ = f >= p0.floors[0] && f <= p0.floors[1];
     $('[data-flr-note]', stage).textContent = (typ
       ? 'Типовой этаж по листам проекта (этажи ' + p0.floors[0] + '–' + p0.floors[1] + ')'
-      : 'Показан типовой этаж ' + p0.floors[0] + '–' + p0.floors[1] + ' — планировки ' + f + '-го этажа уточняются') +
+      : 'Макет — типовой этаж ' + p0.floors[0] + '–' + p0.floors[1] + ' по листам проекта') +
       (b.k === 'В' ? '; блок В спроектирован как блок Б.' : '.') + ' Мебель на макете иллюстративная.';
     if (m3d) {
       m3d.plate(b.plate);

@@ -143,6 +143,8 @@ a:hover .ico-ring{border-color:var(--ink);background:var(--ink);color:var(--plas
 .btn--soft:hover{border-color:var(--ink);color:var(--ink)}
 .on-dark .btn--soft{border-color:var(--room-line-2);background-color:rgba(238,240,238,.05);color:var(--on-dark)}
 .on-dark .btn--soft:hover{border-color:var(--on-dark-2);color:var(--on-dark)}
+.on-dark .form-card .btn--soft{border-color:var(--line);background-color:var(--plaster-3);color:var(--ink)}
+.on-dark .form-card .btn--soft:hover{border-color:var(--ink-3);color:var(--ink)}
 .btn--glass{border-color:var(--room-line-2);color:var(--on-dark)}
 .btn--glass:hover{border-color:var(--on-dark-2);background-color:rgba(238,240,238,.07);color:var(--on-dark)}
 .btn[disabled],.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
@@ -169,6 +171,7 @@ a:hover .ico-ring{border-color:var(--ink);background:var(--ink);color:var(--plas
 .on-dark .btn--line:hover{background-color:transparent}
 .btn--soft{--fill:rgba(18,20,22,.06)}
 .on-dark .btn--soft,.btn--glass{--fill:rgba(238,240,238,.1)}
+.on-dark .form-card .btn--soft{--fill:var(--ink-tint)}
 .btn--glass:hover{background-color:transparent}
 .link-arrow .ico,.model__tag a .ico,.planbox__real .ico{transition:transform .35s var(--ease-out)}
 .link-arrow:hover .ico,.model__tag a:hover .ico,.planbox__real:hover .ico{transform:translateX(4px)}
@@ -356,6 +359,8 @@ a:hover .ico-ring{border-color:var(--ink);background:var(--ink);color:var(--plas
 .showroom{display:grid;gap:6px;margin-top:clamp(24px,4vh,40px);max-width:440px;padding:18px 20px;border:1px solid var(--room-line-2);border-radius:2px}
 .showroom__where{font:300 clamp(1.1rem,1.6vw,1.35rem)/1.25 var(--f-disp);letter-spacing:-.015em;color:var(--on-dark)}
 .showroom__where small{display:block;margin-top:6px;font:500 13px/1.4 var(--f-sans);letter-spacing:0;color:var(--on-dark-3)}
+.showroom__where a{color:var(--on-dark-2);text-decoration:underline;text-decoration-color:var(--room-line-2);text-underline-offset:3px}
+.showroom__where a:hover{color:var(--on-dark);text-decoration-color:currentColor}
 .showroom__hours{font-size:14.5px;color:var(--on-dark-2)}
 .showroom__hours b{color:var(--on-dark);font-weight:800}
 .contacts{display:grid;margin-top:clamp(16px,2.4vh,24px);max-width:440px;border-top:1px solid var(--room-line)}
@@ -398,7 +403,6 @@ fieldset.field > legend + *{clear:both}
 .form__alert{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border-radius:var(--r);border:1px solid rgba(168,57,31,.4);background:rgba(168,57,31,.07);font-size:13.5px;line-height:1.5;color:#6F2716}
 .form__alert a{font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .form__alert .ico{width:18px;height:18px;margin-top:1px;color:var(--danger)}
-.form__demo{padding:10px 12px;border-radius:var(--r);background:var(--plaster-2);font-size:13px!important;line-height:1.5;color:var(--ink-2)!important}
 .hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
 .form-done{display:grid;gap:14px;justify-items:start;padding:6px 0}
 .form-done:focus{outline:none}
@@ -655,7 +659,7 @@ fieldset.field > legend + *{clear:both}
 .site__shot img{width:100%;height:auto;aspect-ratio:2560/1441;object-fit:cover}
 .legend-list{display:grid;border-top:1px solid var(--line)}
 .legend-list li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;padding:16px 0;border-bottom:1px solid var(--line);transition:background .25s ease}
-.legend-list li.is-on .num{background:var(--plaster);box-shadow:inset 0 0 0 1px var(--ink)}
+.legend-list li.is-on .num{background:var(--plaster);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .legend-list h3{font:400 clamp(1rem,1.3vw,1.15rem)/1.25 var(--f-disp);letter-spacing:-.01em}
 .legend-list p{margin-top:5px;font-size:14px;line-height:1.55;color:var(--ink-2)}
 .legend-list p a{font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
@@ -663,8 +667,60 @@ fieldset.field > legend + *{clear:both}
 .on-dark .legend-list{border-color:var(--room-line)}
 .on-dark .legend-list li{border-color:var(--room-line)}
 .on-dark .legend-list p{color:var(--on-dark-2)}
+.on-dark .legend-list .num{background:var(--plaster-3);color:var(--ink)}
+.on-dark .legend-list li.is-on .num{background:var(--room);color:var(--plaster);box-shadow:inset 0 0 0 1px var(--plaster)}
 .site__note{margin-top:14px}
 @media (max-width:900px){.site__grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Место: Худжанд вокруг дома, перерисованный по OpenStreetMap (tools/map-build.py).
+   Подложка — SVG без подписей; подписи, номера, кольца и Сырдарьинская — поверх,
+   в долях кадра карты (--u, --v). Кадр карты кроется в окно как cover:
+   точка (--px, --py) карты остаётся на месте при любой пропорции окна. */
+.loc{background:var(--room)}
+.loc__grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(20px,3.4vw,56px);margin-top:clamp(28px,5vh,56px);align-items:start}
+.loc__map{position:relative;margin:0;overflow:hidden;border-radius:var(--r);aspect-ratio:1.22;background:var(--room);container-type:size;--px:.42;--py:.36}
+.loc__map::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;box-shadow:inset 0 0 clamp(36px,6cqw,80px) clamp(14px,2cqw,28px) var(--room)}
+.loc__cv{--ar:1.4815;position:absolute;left:calc(var(--px) * 100%);top:calc(var(--py) * 100%);width:max(100cqw,calc(100cqh * var(--ar)));height:max(100cqh,calc(100cqw / var(--ar)));translate:calc(var(--px) * -100%) calc(var(--py) * -100%)}
+.loc__cv > img,.loc__ov{position:absolute;inset:0;width:100%;height:100%}
+.loc__ov{overflow:visible;pointer-events:none}
+.loc__rings circle{fill:none;stroke:rgba(238,240,238,.34);stroke-width:1;stroke-dasharray:2 5;vector-effect:non-scaling-stroke;transform-box:view-box;transform-origin:1750px 850px}
+.loc__street{fill:none;stroke:var(--plaster);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.loc__ruler{stroke:var(--plaster);stroke-width:1.5;stroke-dasharray:5 5;vector-effect:non-scaling-stroke;opacity:0;transition:opacity .25s ease}
+.loc__ruler.is-on{opacity:.9}
+.loc__cv .pin{--x:calc(var(--u) * 100%);--y:calc(var(--v) * 100%);border-color:rgba(238,240,238,.6)}
+.loc__cv .pin.is-on{background:var(--room);color:var(--plaster);box-shadow:0 0 0 1px var(--plaster)}
+.loc__lbl{position:absolute;left:calc(var(--u) * 100%);top:calc(var(--v) * 100%);z-index:2;translate:-50% -50%;rotate:var(--a,0deg);white-space:nowrap;pointer-events:none;
+  font:500 10.5px/1 var(--f-disp);letter-spacing:.16em;text-transform:uppercase;color:var(--on-dark-3)}
+.loc__lbl--river{font-weight:300;font-size:13.5px;letter-spacing:.62em;color:var(--on-dark-2)}
+.loc__lbl--street{font-weight:600;color:var(--on-dark);translate:-50% calc(-50% - 13px)}
+.loc__lbl--ring{font:600 11px/1 var(--f-sans);letter-spacing:.02em;text-transform:none;color:var(--on-dark-3)}
+/* дом: гипсовая метка-ромб и табличка на выноске */
+.loc__home{position:absolute;left:calc(var(--u) * 100%);top:calc(var(--v) * 100%);z-index:3;width:0;height:0}
+.loc__home::before{content:'';position:absolute;left:-7px;top:-7px;width:14px;height:14px;rotate:45deg;border-radius:2px;background:var(--plaster);box-shadow:0 0 0 3px var(--room)}
+.loc__home::after{content:'';position:absolute;right:4px;bottom:4px;width:30px;height:1px;rotate:45deg;transform-origin:100% 50%;background:var(--plaster)}
+.loc__plate{position:absolute;right:26px;bottom:24px;display:grid;gap:3px;padding:9px 12px 10px;border-radius:2px;background:var(--plaster-3);color:var(--ink-2);white-space:nowrap;
+  font:600 12.5px/1.25 var(--f-sans);box-shadow:0 14px 36px rgba(0,0,0,.4)}
+.loc__plate b{font:600 11px/1.2 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.loc__home.is-on::before{animation:mkLocPing 1.2s var(--ease-out)}
+.loc__osm{position:absolute;right:8px;bottom:6px;z-index:2;font-size:11px;line-height:1.3;color:var(--on-dark-3)}
+.loc__osm a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.loc__side{display:grid;gap:22px;align-content:start}
+.loc__addr{display:grid;gap:8px;font:300 clamp(1.25rem,1.9vw,1.7rem)/1.2 var(--f-disp);letter-spacing:-.015em;text-wrap:balance}
+.loc__list li{grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;padding:14px 0}
+.loc__list .num{translate:0 -2px}
+.loc__list li{cursor:default}
+.num--home{position:relative;background:none!important;box-shadow:none!important}
+.num--home::before{content:'';width:12px;height:12px;rotate:45deg;border-radius:2px;background:var(--plaster)}
+.loc__d{font:700 15px/1.2 var(--f-sans);font-variant-numeric:lining-nums tabular-nums;color:var(--on-dark);white-space:nowrap}
+.loc__list p{margin-top:4px}
+.loc__note{margin-top:-8px}
+.loc__act{display:flex;flex-wrap:wrap;gap:10px}
+@media (max-width:560px){.loc__act .btn{flex:1 1 100%}}
+@media (max-width:900px){
+  .loc__grid{grid-template-columns:minmax(0,1fr)}
+  .loc__map{margin-inline:calc(var(--gx) * -1);border-radius:0;aspect-ratio:4/5;--px:.36;--py:.4}
+}
+@media (max-width:420px){.loc__plate{font-size:12px;padding:8px 10px 9px}}
 
 .yard{position:relative;background:var(--room);color:var(--on-dark)}
 .yard__shot{position:relative;height:clamp(460px,92vh,900px);overflow:hidden}
@@ -717,6 +773,26 @@ fieldset.field > legend + *{clear:both}
   .mo [data-rv="pins"].is-in .pin{opacity:1;scale:1}
   .mo [data-rv="pins"].is-in .pin::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:1px solid var(--plaster-3);animation:mkPing 1.4s var(--ease-out) calc(var(--i,0) * 140ms + .9s) both;pointer-events:none}
   @keyframes mkPing{from{opacity:.9;scale:1}to{opacity:0;scale:2.4}}
+
+  /* карта: подложка включается, Сырдарьинская прочерчивается вдоль реки,
+     ставится метка дома, расходятся кольца расстояний, встают номера */
+  .mo [data-rv="map"] .loc__cv > img{filter:brightness(.22) saturate(.5);scale:1.05;transition:filter 1.4s cubic-bezier(.3,.6,.2,1),scale 1.8s var(--ease-out)}
+  .mo [data-rv="map"] .loc__street{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset 1.6s cubic-bezier(.45,.05,.2,1) .5s}
+  .mo [data-rv="map"] .loc__rings circle{opacity:0;scale:.6;transition:opacity .8s ease,scale 1.4s var(--ease-out)}
+  .mo [data-rv="map"] .loc__rings circle:nth-child(1){transition-delay:1.7s}.mo [data-rv="map"] .loc__rings circle:nth-child(2){transition-delay:1.85s}.mo [data-rv="map"] .loc__rings circle:nth-child(3){transition-delay:2s}
+  .mo [data-rv="map"] .loc__lbl{opacity:0;transition:opacity .9s ease 1.1s}
+  .mo [data-rv="map"] .loc__lbl--ring{transition-delay:2.3s}
+  .mo [data-rv="map"] .loc__home::before{opacity:0;scale:.2;transition:opacity .3s ease 1.8s,scale .6s var(--ease-out) 1.8s}
+  .mo [data-rv="map"] .loc__home::after{scale:0 1;transition:scale .45s var(--ease-out) 2.05s}
+  .mo [data-rv="map"] .loc__plate{clip-path:inset(0 0 100% 0);translate:0 6px;transition:clip-path .7s var(--ease-out) 2.25s,translate .7s var(--ease-out) 2.25s}
+  .mo [data-rv="map"] .pin{opacity:0;scale:.4;transition:opacity .4s ease calc(var(--i,0) * 120ms + 2.4s),scale .6s var(--ease-out) calc(var(--i,0) * 120ms + 2.4s),background .25s ease,color .25s ease,transform .35s var(--ease)}
+  .mo [data-rv="map"].is-in .loc__cv > img{filter:none;scale:1}
+  .mo [data-rv="map"].is-in .loc__street{stroke-dashoffset:0}
+  .mo [data-rv="map"].is-in .loc__rings circle,.mo [data-rv="map"].is-in .loc__lbl,.mo [data-rv="map"].is-in .pin{opacity:1;scale:1}
+  .mo [data-rv="map"].is-in .loc__home::before{opacity:1;scale:1}
+  .mo [data-rv="map"].is-in .loc__home::after{scale:1 1}
+  .mo [data-rv="map"].is-in .loc__plate{clip-path:inset(-20% -10% -40% -10%);translate:0 0}
+  @keyframes mkLocPing{0%{box-shadow:0 0 0 3px var(--room),0 0 0 3px rgba(238,240,238,.7)}100%{box-shadow:0 0 0 3px var(--room),0 0 0 22px rgba(238,240,238,0)}}
 
   /* служебный указатель: линии прочерчиваются слева направо */
   .mo .srv__dir[data-rv="rows"] > *{border-top-color:transparent;background:linear-gradient(var(--room-line-2),var(--room-line-2)) no-repeat 0 0/0 1px;
@@ -1314,6 +1390,21 @@ button.tw__plate:hover > span{color:var(--on-dark-2)}
 .notfound__lens{width:clamp(180px,26vw,300px);aspect-ratio:4/3;margin:0 auto clamp(18px,3vh,30px);overflow:hidden;border-radius:var(--r);background:var(--room)}
 .notfound__lens picture{height:100%}
 .notfound__lens img{width:100%;height:100%;object-fit:cover}
+
+/* ── Переходы между страницами ─────────────────────────────────────
+   Шапка стоит на месте, старая страница быстро гаснет, новая поднимается
+   из-под стекла (Chrome, Edge, Safari 18.2+; остальные — обычный переход).
+   Соседние страницы заранее подгружаются при наведении (speculationrules). */
+@media (prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto;types:page}
+  .hdr{view-transition-name:hdr}
+  /* только при переходе между страницами: раскрытие блока в шахматке — свой переход */
+  html:active-view-transition-type(page)::view-transition-old(root){animation:mkVtOut .2s ease both}
+  html:active-view-transition-type(page)::view-transition-new(root){animation:mkVtIn .5s var(--ease-out) both}
+  ::view-transition-group(hdr){animation-duration:0s}
+  @keyframes mkVtOut{to{opacity:0}}
+  @keyframes mkVtIn{from{opacity:0;translate:0 12px}}
+}
 
 /* ── Уменьшенное движение ──────────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){

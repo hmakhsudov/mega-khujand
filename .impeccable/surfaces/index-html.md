@@ -15,7 +15,7 @@ Five static pages, plain HTML + css/site.css + vanilla JS, no build step. Replac
 Local Khujand families first; returnees and local professionals on the same paths. Job: understand the project, find a specific flat, talk to a person. Action: lead form (name, +992 phone, call / WhatsApp / Telegram / showroom visit, optional lot), phone, messengers.
 
 ## Home order
-Mask hero → lit model (available windows over the dusk render, bedroom keys, tag) → floor model (2026-10-01, user: «раскладушка»: the typical floor in plaster, exploded by scroll, flats lit one by one, keys per flat) → plans (ascending types, counts, price-from) → materials board keyed to the corner render → site legend (courtyard, playgrounds, arcade, embankment) → service directory → showroom close with the form.
+Mask hero → lit model (available windows over the dusk render, bedroom keys, tag) → floor model (2026-10-01, user: «раскладушка»: the typical floor in plaster, exploded by scroll, flats lit one by one, keys per flat) → plans (ascending types, counts, price-from) → «Место» (2026-10-13: the city around ул. Сырдарьинская, 14 redrawn from OpenStreetMap, the street drawn along the river, distances by straight line) → site legend (courtyard, playgrounds, arcade, embankment) → materials board keyed to the corner render → service directory → showroom close with the form.
 
 ## Direction contract
 THESIS: The sales-office model under glass — a family leans over the vitrine while the manager lights up the free windows; the site does exactly that on the real night facade. Refuses full-bleed render + serif headline + pinned mood chapters, and the cream-serif-bronze "warm premium" default.

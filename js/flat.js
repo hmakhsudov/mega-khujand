@@ -35,7 +35,7 @@
   var plan = D.plan(lot.plan);
   var inner = D.roomsFor(lot);
   /* этаж описан листом проекта или повторяет типовой — до выгрузки */
-  var typ = plan ? (lot.typical ? 'по листу проекта (этажи ' + plan.floors[0] + '–' + plan.floors[1] + ')' : 'как этажи ' + plan.floors[0] + '–' + plan.floors[1] + ', уточняется') : '—';
+  var typ = plan ? (lot.typical ? 'по листу проекта (этажи ' + plan.floors[0] + '–' + plan.floors[1] + ')' : 'по типовому этажу ' + plan.floors[0] + '–' + plan.floors[1]) : '—';
 
   var gallery = [
     lot.floor >= 12 ? ['facade-night-dusk-elevation', 'Фасад дома вечером'] : ['facade-day-hero-plaza', 'Фасад и площадь у дома'],
@@ -64,8 +64,8 @@
       return '<figure class="gallery__win"><a class="gallery__img" href="' + href + '" aria-label="Открыть подбор на фасаде с этой квартирой">' +
         '<svg viewBox="' + x0 + ' ' + y0 + ' ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Окна квартиры на вечернем рендере фасада: в них горит свет">' +
         '<defs><clipPath id="win-clip">' + grown.map(function (g) { return '<polygon points="' + q(g) + '"/>'; }).join('') + '</clipPath></defs>' +
-        '<image href="media/opt/facade-night-dark-1920.webp" width="2400" height="1339"/>' +
-        '<image href="' + MK_LIGHT.dusk.plate + '-2400.webp" width="2400" height="1339" clip-path="url(#win-clip)"/>' +
+        '<image data-href="media/opt/facade-night-dark-1920.webp" width="2400" height="1339"/>' +
+        '<image data-href="' + MK_LIGHT.dusk.plate + '-2400.webp" width="2400" height="1339" clip-path="url(#win-clip)"/>' +
         grown.map(function (g) { return '<polygon points="' + q(g) + '" fill="none" stroke="#F7F8F7" stroke-width="1.5" vector-effect="non-scaling-stroke"/>'; }).join('') +
         '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="48" fill="none" stroke="rgba(247,248,247,.7)" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
         '</svg></a><figcaption>Окна этой квартиры на фасаде вечером — нажмите, чтобы открыть подбор</figcaption></figure>';
@@ -73,7 +73,7 @@
     return '<figure class="gallery__win"><a class="gallery__img" href="' + href + '" aria-label="Открыть подбор на фасаде с этой квартирой">' +
       '<svg viewBox="' + x0 + ' ' + y0 + ' ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Окна квартиры на рендере фасада, ' + w.view.title.toLowerCase() + '">' +
       '<defs><mask id="win-hole"><rect width="2400" height="1339" fill="#fff"/><polygon points="' + pts + '" fill="#000"/></mask></defs>' +
-      '<image href="media/opt/' + w.view.img + '-1920.webp" width="2400" height="1339"/>' +
+      '<image data-href="media/opt/' + w.view.img + '-1920.webp" width="2400" height="1339"/>' +
       '<rect width="2400" height="1339" fill="rgba(16,15,12,.16)" mask="url(#win-hole)"/>' +
       '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="44" fill="none" stroke="#FFF4DC" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
       '<polygon points="' + pts + '" fill="rgba(247,248,247,.22)" stroke="#F7F8F7" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
@@ -150,6 +150,17 @@
       '<div class="similar__head"><div><h2 class="h4" id="sim-h">Похожие квартиры</h2><p class="small" style="margin-top:8px">Близкие по площади, планировке и этажу</p></div>' +
       '<a class="link-arrow" href="flats.html?rooms=' + lot.rooms + '">Все квартиры «' + lot.type + '» ' + arrow + '</a></div>' +
       '<div class="lots">' + similar.map(function (x) { return MK.lotCard(x, { sm: true }); }).join('') + '</div></section>' : '');
+
+  /* окна на рендере: кадр 2400 px нужен для чёткого крупного плана, поэтому
+     рендер и свет грузятся, только когда галерея подходит к экрану */
+  var lazyImgs = Array.prototype.slice.call(document.querySelectorAll('image[data-href]'));
+  var showImgs = function () { lazyImgs.forEach(function (im) { im.setAttribute('href', im.getAttribute('data-href')); }); };
+  if (lazyImgs.length && 'IntersectionObserver' in window) {
+    var gio = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { showImgs(); gio.disconnect(); } }, { rootMargin: '200px 0px' });
+    gio.observe(lazyImgs[0].closest('figure'));
+    /* на быстрой сети — заранее, но после загрузки страницы */
+    if (!MK.net.slow) addEventListener('load', function () { setTimeout(function () { showImgs(); gio.disconnect(); }, 1200); });
+  } else showImgs();
 
   /* заявка с этой квартирой */
   var leadTitle = { free: 'Забронировать квартиру №\u00a0' + lot.no, sale: 'Забронировать квартиру №\u00a0' + lot.no, book: 'Сообщить, если освободится', sold: 'Подобрать похожую квартиру' }[st];

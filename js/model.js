@@ -16,7 +16,7 @@
   var KEYS = Object.keys(M.plates).filter(function (k) { return M.plates[k].final; }).sort();
   if (!KEYS.length) return;
   var VB = 1000;                             /* SVG-слой: 1000 × 562,5 (кадры 16:9) */
-  var lite = !!(navigator.connection && navigator.connection.saveData);
+  var lite = MK.net.lite;                     /* экономия трафика, 2G: только готовый кадр */
   var dpr = function () { return Math.min(window.devicePixelRatio || 1, 2); };
   var hover = matchMedia('(hover: hover)');
   var plan = function (id) { return MK.plans && MK.plans.find(id); };
@@ -526,8 +526,11 @@
 
     /* закреплённая сцена: прогресс прокрутки → раскладка */
     var TL = { seq: 0.62, fin: [0.62, 0.7], lit: [0.68, 0.86] };
+    /* кадры не спорят с первым экраном: до загрузки страницы раскладку
+       не качаем; на медленной сети — только когда макет у самого экрана */
+    var ready = document.readyState === 'complete';
     MK.pin(root, function (p, r, vh) {
-      if (r.top < vh * 2.2 && r.bottom > -vh) { if (!near) { near = true; ensure(); } }
+      if (ready && r.top < vh * (MK.net.slow ? 1.3 : 2.2) && r.bottom > -vh) { if (!near) { near = true; ensure(); } }
       if (mode === 'scene' && p != null) {
         go(MK.clamp01(p / TL.seq), MK.clamp01((p - TL.fin[0]) / (TL.fin[1] - TL.fin[0])), MK.clamp01((p - TL.lit[0]) / (TL.lit[1] - TL.lit[0])));
       }
@@ -535,7 +538,9 @@
     /* широкий экран: кадры подгружаются, пока читают героя; телефон —
        только когда макет рядом */
     addEventListener('load', function () {
-      setTimeout(function () { if (mode === 'scene' && !near) { near = true; ensure(); } }, 1500);
+      ready = true;
+      MK.tick();
+      if (!MK.net.slow) setTimeout(function () { if (mode === 'scene' && !near) { near = true; ensure(); } }, 1500);
     });
     /* мобильный: раскладка играет один раз, когда макет на экране */
     if ('IntersectionObserver' in window) {

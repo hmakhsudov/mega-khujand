@@ -344,11 +344,52 @@
   $$('[data-legend] [data-k]').forEach(function (li) {
     var k = li.getAttribute('data-k');
     var pin = $('.pin[data-k="' + k + '"]');
-    if (!pin) return;
+    if (!pin || li.closest('.loc__list')) return;
     var on = function (v) { li.classList.toggle('is-on', v); pin.classList.toggle('is-on', v); };
     li.addEventListener('pointerenter', function () { on(true); });
     li.addEventListener('pointerleave', function () { on(false); });
   });
+
+  /* ── место: строка легенды ↔ номер на карте, «линейка» от дома ──── */
+  var loc = $('[data-loc]');
+  if (loc) {
+    var locRuler = $('[data-ruler]', loc), locHome = $('.loc__home', loc);
+    var locFit = function () {
+      /* номера и подписи, ушедшие за край кадра (телефон), прячем целиком */
+      var f = loc.parentNode.getBoundingClientRect();
+      $$('.pin,.loc__lbl', loc).forEach(function (el) {
+        el.style.visibility = '';
+        var r = el.getBoundingClientRect();
+        el.style.visibility = (r.left < f.left + 6 || r.right > f.right - 6 || r.top < f.top + 6 || r.bottom > f.bottom - 6) ? 'hidden' : '';
+      });
+    };
+    var locCur = null;
+    var locMark = function (k, on) {
+      var li = $('.loc__list [data-k="' + k + '"]'), pin = $('.pin[data-k="' + k + '"]', loc);
+      if (li) li.classList.toggle('is-on', on);
+      if (pin) pin.classList.toggle('is-on', on);
+      if (k === 'l1') locHome.classList.toggle('is-on', on);
+      if (on && pin) {
+        var xy = pin.getAttribute('data-xy').split(' ');
+        locRuler.setAttribute('x2', xy[0]); locRuler.setAttribute('y2', xy[1]);
+      }
+      locRuler.classList.toggle('is-on', on && !!pin);
+    };
+    var locSet = function (k) { if (locCur && locCur !== k) locMark(locCur, false); locCur = k; if (k) locMark(k, true); };
+    $$('.loc__list [data-k]').forEach(function (li) {
+      var k = li.getAttribute('data-k');
+      li.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') locSet(k); });
+      li.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') locSet(null); });
+      li.addEventListener('click', function () { locSet(locCur === k ? null : k); });
+    });
+    $$('.pin', loc).forEach(function (p) {
+      var k = p.getAttribute('data-k');
+      p.addEventListener('pointerenter', function () { locSet(k); });
+      p.addEventListener('pointerleave', function () { locSet(null); });
+    });
+    locFit();
+    addEventListener('resize', locFit);
+  }
 
   /* ── планировки из проекта (js/plans-data.js) ────────────────────── */
   var PLN = MK.plans;
