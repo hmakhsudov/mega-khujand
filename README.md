@@ -105,6 +105,22 @@ python3 tools/model-render.py scene /путь/к/сырым  # сцены model-
 - Хостинг: включите gzip или brotli для HTML, CSS, JS и SVG (стили — 115 КБ → 25 КБ, ключ-план этажа — 285 КБ → 59 КБ) и долгий кэш для `media/` и `fonts/`.
 - SEO: `title`, `description`, Open Graph, favicon, JSON-LD на главной (с адресом и координатами), `robots.txt`.
 
+## Публикация
+
+Сайт опубликован на Cloudflare Pages (проект `mega-khujand`): **https://mega-khujand.pages.dev**
+
+`bash tools/build-dist.sh` собирает папку `dist/` (в git её нет) — только то, что нужно сайту: страницы, `css/`, `js/`, `fonts/`, `media/{opt,light,plans,model,map}`, `media/og.jpg`, `robots.txt`, `sitemap.xml`, `_headers`. Заметки (`*.md`), `tools/`, `design-reference/`, `calibration/`, рендеры, сырые кадры макета и стоковые фото в неё не попадают. `_headers` задаёт кэш (шрифты — год, `media/` — неделя, HTML/CSS/JS — без долгого кэша) и заголовки безопасности.
+
+Обновить сайт после правок:
+
+```bash
+bash tools/build-dist.sh && npx wrangler@latest pages deploy dist --project-name mega-khujand --branch main
+```
+
+Первый раз нужен вход в Cloudflare: `npx wrangler@latest login` (откроется браузер, «Allow»).
+
+**Свой домен.** Cloudflare → Workers & Pages → проект → Custom domains. После подключения замените адрес `https://mega-khujand.pages.dev` на новый в `og:image`, `og:url` и `canonical` всех страниц (`flat.html` и `404.html` — только `og:image`), в `sitemap.xml` и в строке `Sitemap:` файла `robots.txt`, затем опубликуйте заново.
+
 ## Дизайн-референсы
 
 `design-reference/` — утверждённые high-fidelity макеты из Claude Design (`*.dc.html` + `support.js`, React/Babel из CDN). Это эталон визуального языка, а не код сайта. Открываются с локального сервера из корня репозитория: `http://localhost:8080/design-reference/Mega-Khujand-Home.dc.html` (нужен доступ к unpkg.com).

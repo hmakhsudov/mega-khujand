@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /design-reference/
 Disallow: /calibration/
+
+Sitemap: https://mega-khujand.pages.dev/sitemap.xml
