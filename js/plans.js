@@ -162,6 +162,55 @@
   };
 
   /* ── ключ-план этажа: квартиры с планировками кликабельны ──────── */
+  /* рамка контура квартиры по его d (M/L/C — абсолютные, h/v — относительные):
+     схема может быть скрыта, getBBox тогда даёт нули */
+  function pathBox(d) {
+    var t = d.match(/[MLCZhvz]|-?\d*\.?\d+/g) || [], i = 0, c = '', x = 0, y = 0, ring = null;
+    var b = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity, rings: [] };
+    function at(px, py) { x = px; y = py; ring.push([x, y]); b.x0 = Math.min(b.x0, x); b.y0 = Math.min(b.y0, y); b.x1 = Math.max(b.x1, x); b.y1 = Math.max(b.y1, y); }
+    while (i < t.length) {
+      if (/[A-Za-z]/.test(t[i])) c = t[i++];
+      if (c === 'M') { ring = []; b.rings.push(ring); at(+t[i], +t[i + 1]); i += 2; c = 'L'; }
+      else if (c === 'L') { at(+t[i], +t[i + 1]); i += 2; }
+      else if (c === 'C') { at(+t[i + 4], +t[i + 5]); i += 6; }
+      else if (c === 'h') { at(x + +t[i], y); i += 1; }
+      else if (c === 'v') { at(x, y + +t[i]); i += 1; }
+      else i++;
+    }
+    return b;
+  }
+  /* точка для кода квартиры: внутри контура и как можно дальше от его краёв
+     (у Г- и Z-образных квартир центр рамки попадает к соседям) */
+  function labelPoint(b) {
+    function inside(px, py) {
+      var n = false;
+      b.rings.forEach(function (r) {
+        for (var k = 0, j = r.length - 1; k < r.length; j = k++) {
+          if ((r[k][1] > py) !== (r[j][1] > py) && px < (r[j][0] - r[k][0]) * (py - r[k][1]) / (r[j][1] - r[k][1]) + r[k][0]) n = !n;
+        }
+      });
+      return n;
+    }
+    function edge(px, py) {
+      var m = Infinity;
+      b.rings.forEach(function (r) {
+        for (var k = 0, j = r.length - 1; k < r.length; j = k++) {
+          var ax = r[j][0], ay = r[j][1], dx = r[k][0] - ax, dy = r[k][1] - ay, L = dx * dx + dy * dy;
+          var u = L ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / L)) : 0;
+          m = Math.min(m, Math.hypot(px - ax - u * dx, py - ay - u * dy));
+        }
+      });
+      return m;
+    }
+    var best = [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2], bd = -1, N = 24;
+    for (var gx = 1; gx < N; gx++) for (var gy = 1; gy < N; gy++) {
+      var px = b.x0 + (b.x1 - b.x0) * gx / N, py = b.y0 + (b.y1 - b.y0) * gy / N;
+      if (!inside(px, py)) continue;
+      var e = edge(px, py);
+      if (e > bd) { bd = e; best = [px, py]; }
+    }
+    return best;
+  }
   var floorCache = {};
   PL.floor = function (root, floorKey, opts) {
     var f = P.floors[floorKey];
@@ -186,6 +235,10 @@
         path.setAttribute('d', p.key);
         a.appendChild(path);
         g.appendChild(a);
+        /* код квартиры; у выбранной — на тёмной табличке */
+        var pl = document.createElementNS(NS, 'rect');
+        pl.setAttribute('class', 'fp__plate');
+        a.appendChild(pl);
         var t = document.createElementNS(NS, 'text');
         t.setAttribute('class', 'fp__code');
         t.textContent = p.code;
@@ -193,9 +246,15 @@
       });
       svg.appendChild(g);
       $$('.fp__flat', svg).forEach(function (a) {
-        var b = $('path', a).getBBox(), t = $('text', a);
-        t.setAttribute('x', (b.x + b.width / 2).toFixed(1));
-        t.setAttribute('y', (b.y + b.height / 2 + 3).toFixed(1));
+        var b = pathBox($('path', a).getAttribute('d')), t = $('text', a), pl = $('.fp__plate', a);
+        var lp = labelPoint(b), cx = lp[0], cy = lp[1], w = t.textContent.length * 5.6 + 4.4;
+        t.setAttribute('x', cx.toFixed(1));
+        t.setAttribute('y', (cy + 2.5).toFixed(1));
+        pl.setAttribute('x', (cx - w / 2).toFixed(1));
+        pl.setAttribute('y', (cy - 5.2).toFixed(1));
+        pl.setAttribute('width', w.toFixed(1));
+        pl.setAttribute('height', '10.4');
+        pl.setAttribute('rx', '.6');
         a.addEventListener('click', function (e) {
           if (!opts.onSelect) return;
           e.preventDefault();

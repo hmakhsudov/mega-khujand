@@ -378,10 +378,10 @@ The whole complex stands as one elevation on a graphite vitrine, fitted to the f
 - **Phones:** the same four towers in miniature (12px rows, 2px gaps); a tap opens the block, where the panel comes first and the tower follows with 28px rows.
 
 ### Key Plan
-The floor's key plan on a plaster-face card: flats as faint ink washes with quiet-ink outlines, darker on hover, and the selected flat filled solid ink with a plaster code.
+The floor's key plan on a plaster-face card: flats as faint ink washes with 1px quiet-ink outlines (non-scaling), darker on hover. Every flat carries its code in Unbounded at the deepest point inside its outline (not the bbox centre, which falls on a neighbour for L- and Z-shaped flats). The selected flat is a 30% ink wash, so its walls, rooms and doors stay readable, with a 2.2px ink outline and its code on an ink plate with plaster text. It is never filled solid: a solid fill erased the drawing.
 
 ### Commercial Floors (quiet)
-Floors 1–2 are trade premises, and commercial buyers are not the audience, so they get no stage. They appear only as a section after "Все планировки" on the plans page, below a hairline rule, under an eyebrow heading rather than an h2 headline. A short note and the storefront render (small, with "вывески условные") sit on the left. On the right, one plaster-face card per block holds a simplified plan redrawn from the sheet: ink walls and columns, quiet-ink lines, no axes, dimensions or labels. Beside it are the hall area from the room schedule and underlined PDF links. The home page links to the section only from the "Первые два этажа" legend item.
+Floors 1–2 are trade premises, and commercial buyers are not the audience, so they get no stage. They appear only as a section after "Все планировки" on the plans page, below a hairline rule, under an eyebrow heading rather than an h2 headline. A short note and the storefront render (small, with "вывески условные") sit on the left. On the right, one plaster-face card per block holds a simplified plan redrawn from the sheet: ink walls and columns, quiet-ink lines, no axes, dimensions or labels, and only the house itself (no ramps, site boundary, porches or pits). Beside it are the hall area from the room schedule and underlined PDF links. The home page links to the section only from the "Первые два этажа" legend item.
 
 ### Service Directory
 A lobby directory on podium graphite: rows separated by strong 1px room rules top and bottom, service names in engraved Unbounded caps at 13px, descriptions in Manrope beside them.

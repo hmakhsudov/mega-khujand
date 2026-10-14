@@ -1335,11 +1335,16 @@ button.tw__plate:hover > span{color:var(--on-dark-2)}
 .kp-b{fill:var(--plaster-3)}
 .kp-l{stroke:var(--ink-2)}
 .kp-t{stroke:var(--line)}
-.fp__flat path{fill:rgba(18,20,22,.07);stroke:var(--ink-3);stroke-width:.8;transition:fill .2s ease}
-.fp__flat:hover path,.fp__flat:focus-visible path{fill:rgba(18,20,22,.18)}
+/* квартиры на схеме этажа: лёгкая заливка поверх чертежа; выбранная —
+   плотнее, но прозрачная, чтобы стены, комнаты и двери читались, с чётким
+   контуром и кодом на графитовой табличке */
+.fp__flat path{fill:rgba(18,20,22,.05);stroke:var(--ink-3);stroke-width:1;vector-effect:non-scaling-stroke;transition:fill .2s ease}
+.fp__flat:hover path,.fp__flat:focus-visible path{fill:rgba(18,20,22,.13)}
 .fp__flat:focus{outline:none}
-.fp__flat:focus-visible path{stroke:var(--ink);stroke-width:1.6}
-.fp__flat.is-sel path{fill:var(--ink);stroke:var(--ink);stroke-width:1}
+.fp__flat:focus-visible path{stroke:var(--ink);stroke-width:2}
+.fp__flat.is-sel path{fill:rgba(18,20,22,.3);stroke:var(--ink);stroke-width:2.2}
+.fp__plate{fill:var(--ink);opacity:0;transition:opacity .2s ease}
+.fp__flat.is-sel .fp__plate{opacity:1}
 .fp__flat.is-sel .fp__code{fill:var(--plaster)}
 .fp__code{font:600 7px/1 var(--f-disp);fill:var(--ink);text-anchor:middle;pointer-events:none}
 .plist{padding:clamp(48px,8vh,96px) var(--gx) clamp(46px,7vw,90px)}
