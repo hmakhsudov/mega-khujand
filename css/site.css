@@ -1056,7 +1056,7 @@ button.tw__plate:hover > span{color:var(--on-dark-2)}
 .vit__tag-p{margin-top:6px;font-size:15px;font-weight:800}
 .vit__tag-p small{font-size:12px;font-weight:700;color:var(--ink-3)}
 
-/* блок крупно: этаж гипсовым макетом и карточка квартиры */
+/* блок крупно: этаж макетом и карточка квартиры */
 .flr{display:none}
 .vit.is-focus .vit__stage{--rh:clamp(18px,calc((100svh - 360px) / 18),34px);--cw:calc(var(--rh) * .84);grid-template-columns:var(--rl) auto minmax(0,1fr);justify-content:start;column-gap:clamp(20px,3.2vw,56px);align-items:start}
 .vit.is-focus .flr{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr);grid-template-areas:"head head" "m3d flat" "note flat";grid-template-rows:auto auto 1fr;align-content:start;column-gap:clamp(16px,2vw,28px);

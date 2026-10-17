@@ -1,7 +1,7 @@
 /* Шахматка «Весь дом ночью»: четыре блока рядом, как подсвеченный макет
    вечером. Окно — квартира: горит — свободна. Наведение на этаж — табло
    лифта (свободно, цена от) и бирка квартиры; нажатие на окно раскрывает
-   блок: этаж гипсовым макетом (js/model.js) со светом в свободных
+   блок: этаж макетом (js/model.js) со светом в свободных
    квартирах этажа и карточка выбранной квартиры. Лоты — js/data.js. */
 (function () {
   'use strict';
@@ -235,8 +235,11 @@
 
   /* ── переходы между «весь дом» и «блок крупно» ─────────────────── */
   function transition(fn) {
-    if (document.startViewTransition && !MK.rm()) document.startViewTransition(fn);
-    else fn();
+    if (document.startViewTransition && !MK.rm()) {
+      // переход может сорваться (ещё идёт переход страницы, новый поверх) —
+      // смена всё равно применится, а отказ ready не должен сыпаться в консоль
+      document.startViewTransition(fn).ready.catch(function () {});
+    } else fn();
   }
   function syncUrl() {
     var q = S.sel ? '?id=' + encodeURIComponent(S.sel) : S.blk ? '?blk=' + block(S.blk).lat + '&floor=' + S.floor : '';

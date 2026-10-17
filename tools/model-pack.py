@@ -85,17 +85,23 @@ def save(im, base, w, q=74, avif=False):
     return im.size
 
 
-def frame_close(im, rooms, margin=0.06, gain=1.3):
+def frame_close(im, rooms, box=None, margin=0.06, gain=1.3):
     """Крупный план, где квартира мелкая в кадре (Б-2 огибает торец дома),
-    кадрируем по её свету — тёплые пиксели, соседи нейтрально-серые — с
-    полями, сохраняя 4:3; номера комнат пересчитываем."""
+    кадрируем по ней с полями, сохраняя 4:3; номера комнат пересчитываем.
+    Квартира — рамка её комнат из рендера (box, доли кадра), а в старых
+    рендерах без неё — по свету: тёплые пиксели среди нейтрально-серых
+    соседей (в цветной палитре тёплый и паркет соседей, там нужен box)."""
     a = np.asarray(im).astype(np.int16)
     H, W = a.shape[:2]
-    ys, xs = np.nonzero(a[..., 0] - a[..., 2] > 16)
-    if len(xs) < 1000:
-        return im, rooms
-    x0, x1 = np.percentile(xs, [1, 99]) / W - margin + np.array([0, 2 * margin])
-    y0, y1 = np.percentile(ys, [1, 99]) / H - margin + np.array([0, 2 * margin])
+    if box:
+        x0, y0, x1, y1 = box
+        x0, x1, y0, y1 = x0 - margin / 2, x1 + margin / 2, y0 - margin / 2, y1 + margin / 2
+    else:
+        ys, xs = np.nonzero(a[..., 0] - a[..., 2] > 16)
+        if len(xs) < 1000:
+            return im, rooms
+        x0, x1 = np.percentile(xs, [1, 99]) / W - margin + np.array([0, 2 * margin])
+        y0, y1 = np.percentile(ys, [1, 99]) / H - margin + np.array([0, 2 * margin])
     w, h = (x1 - x0) * W, (y1 - y0) * H
     w, h = (h * 4 / 3, h) if w / h < 4 / 3 else (w, w * 3 / 4)
     if W / w < gain:
@@ -178,7 +184,7 @@ def pack_plate(raw, items, close):
         path = os.path.join(raw, 'close-%s.png' % fid)
         if not os.path.exists(path):
             continue
-        im, cm_rooms = frame_close(load8(path), cm['rooms'])
+        im, cm_rooms = frame_close(load8(path), cm['rooms'], cm.get('box'))
         widths = [w for w in (1600, 960) if w <= im.width] or [im.width]
         if im.width < 1600 and im.width not in widths:
             widths.insert(0, im.width)
@@ -203,7 +209,7 @@ def main(raw):
     data = {'plates': plates, 'close': dict(sorted(close.items()))}
     with open(JS, 'w', encoding='utf-8') as fh:
         fh.write('/* Сгенерировано tools/model-pack.py — не править вручную.\n'
-                 '   Гипсовый макет типовых этажей: по плите на этаж из листов (кадры\n'
+                 '   Макет типовых этажей: по плите на этаж из листов (кадры\n'
                  '   раскладки, финальный кадр со светом квартир), крупные планы\n'
                  '   квартир. Координаты — доли кадра. */\n')
         fh.write('window.MK_MODEL = ' + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';\n')

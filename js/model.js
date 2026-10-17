@@ -1,4 +1,5 @@
-/* Гипсовый макет типовых этажей. Сцена посчитана в Blender (Cycles) по
+/* Макет типовых этажей (стены — гипс, интерьер в цветах 3D-видов из
+   листов). Сцена посчитана в Blender (Cycles) по
    чертежам этажей из проектной документации: tools/model-floor.py →
    model-render.py → model-pack.py → js/model-data.js. У каждой серии
    листов свой типовой этаж — своя плита (MK_MODEL.plates).
@@ -322,7 +323,7 @@
       if (from) from.textContent = FL[0] + '-го';
       if (to) to.textContent = FL[FL.length - 1] + '-й';
       var nm = plateName(k).replace(' · ', ': ');
-      cv.setAttribute('aria-label', 'Гипсовый макет типового этажа, ' + nm.charAt(0).toLowerCase() + nm.slice(1) + ' расходятся, верхние снимаются, в квартирах загорается свет');
+      cv.setAttribute('aria-label', '3D-макет типового этажа, ' + nm.charAt(0).toLowerCase() + nm.slice(1) + ' расходятся, верхние снимаются, в квартирах загорается свет');
       if (sw) $$('[data-plate]', sw).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-plate') === k)); });
       hot = undefined;
       pinned = null;
@@ -658,7 +659,7 @@
     var set = function (ext) { return c.widths.slice().sort(function (a, b) { return a - b; }).map(function (w) { return c.src + w + '.' + ext + ' ' + w + 'w'; }).join(', '); };
     return '<picture><source type="image/avif" srcset="' + set('avif') + '" sizes="' + sizes + '">' +
       '<source type="image/webp" srcset="' + set('webp') + '" sizes="' + sizes + '">' +
-      '<img class="pv__img pv__img--model" src="' + c.src + pickW(c.widths, 960) + '.webp" alt="Гипсовый макет квартиры ' + p.code + ' с мебелью: вид сверху под углом" width="' + c.w + '" height="' + c.h + '" decoding="async"></picture>' +
+      '<img class="pv__img pv__img--model" src="' + c.src + pickW(c.widths, 960) + '.webp" alt="3D-макет квартиры ' + p.code + ' с мебелью: вид сверху под углом" width="' + c.w + '" height="' + c.h + '" decoding="async"></picture>' +
       c.rooms.filter(function (r) { return r.n != null; }).map(function (r, k) {
         return '<span class="pv__pin" data-n="' + r.n + '" style="--x:' + (r.x * 100).toFixed(2) + '%;--y:' + (r.y * 100).toFixed(2) + '%;--i:' + k + '" aria-hidden="true">' + r.n + '</span>';
       }).join('');

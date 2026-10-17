@@ -4,8 +4,10 @@
 Читает media/model/floor.json (tools/model-floor.py) и для каждой плиты
 (типового этажа серии листов: А — этажи 3–7, Б — 3–6) строит макет:
 стены с проёмами дверей и окон, стекло и рамы, полукруглые балконы
-с ограждением, лестницы, шахты лифтов, плиту перекрытия. Из одинаковых
-этажей плиты собирается стопка для раскладки (у А пять плит, у Б четыре).
+с ограждением, лестницы, шахты лифтов, плиту перекрытия. Стены гипсовые,
+полы и мебель квартир в цветах 3D-видов из листов (палитра — PALETTE,
+MK_PALETTE=plaster вернёт весь гипс). Из одинаковых этажей плиты
+собирается стопка для раскладки (у А пять плит, у Б четыре).
 Сырые кадры каждой плиты — в своей подпапке: <папка>/<плита>/.
 
 Режимы (python из окружения с модулем bpy):
@@ -96,19 +98,90 @@ def mat(name, rgb, rough=0.85, spec=0.3, metal=0.0, trans=0.0, emit=None, es=0.0
     return m
 
 
+def srgb(h):
+    """'#rrggbb' → линейный RGB для Base Color."""
+    c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    return tuple(x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c)
+
+
+def tiles(name, c1, c2, seam, size, offset, rough, seam_w=0.006):
+    """Паркет или плитка: процедурная кладка в метрах объекта (доски вдоль x)."""
+    m = mat(name, c1, rough, 0.35)
+    nt = m.node_tree
+    tc = nt.nodes.new('ShaderNodeTexCoord')
+    br = nt.nodes.new('ShaderNodeTexBrick')
+    br.offset = offset
+    br.offset_frequency = 2
+    br.inputs['Color1'].default_value = (*c1, 1)
+    br.inputs['Color2'].default_value = (*c2, 1)
+    br.inputs['Mortar'].default_value = (*seam, 1)
+    br.inputs['Scale'].default_value = 1.0
+    br.inputs['Mortar Size'].default_value = seam_w
+    br.inputs['Bias'].default_value = 0.0
+    br.inputs['Brick Width'].default_value = size[0]
+    br.inputs['Row Height'].default_value = size[1]
+    nt.links.new(tc.outputs['Object'], br.inputs['Vector'])
+    nt.links.new(br.outputs['Color'], nt.nodes['Principled BSDF'].inputs['Base Color'])
+    return m
+
+
+# Палитра макета (MK_PALETTE): color (на сайте) — полы квартир паркетом,
+# в санузлах плитка, мебель в цветах 3D-видов из листов (дуб, ткань,
+# керамика), обивка, постель и кухня у каждой квартиры свои; стены — гипс,
+# срез стен — графит. wood — гипсовая мебель на паркете; plaster — весь гипс
+# (прежний макет).
+PALETTE = os.environ.get('MK_PALETTE', 'color')
+FABRIC = ['#8B9785', '#A27767', '#7A8695', '#AE9866', '#A28C8A', '#64676A']   # шалфей, глина, серо-голубой, охра, пыльная роза, графит
+BEDDING = ['#CDBFAA', '#9F7A6C', '#8592A0', '#B3A07E']
+FRONTS = ['#E7E3DB', '#5B7F7B', '#45494D', '#848469']                       # тёплый белый, бирюза, графит, олива
+ROLES = ['wood', 'cab', 'linen', 'ceramic', 'stone', 'metal', 'leaf', 'pot', 'screen', 'glass']
+
+
 def materials(look):
-    return {
-        'plaster': mat('plaster', (0.80, 0.80, 0.78), 0.92, 0.25, bevel=look.get('bevel', 0.012)),
+    bev = look.get('bevel', 0.012)
+    M = {
+        'plaster': mat('plaster', (0.80, 0.80, 0.78), 0.92, 0.25, bevel=bev),
         'top': mat('top', look.get('top', (0.035, 0.037, 0.04)), 0.7, 0.25),
         'slab': mat('slab', look.get('floor', (0.62, 0.62, 0.605)), 0.9, 0.2),
-        'edge': mat('edge', (0.74, 0.74, 0.72), 0.9, 0.2, bevel=look.get('bevel', 0.012)),
+        'edge': mat('edge', (0.74, 0.74, 0.72), 0.9, 0.2, bevel=bev),
         'glass': mat('glass', (0.86, 0.91, 0.95), 0.03, 0.5, 0.0, 1.0),
         'frame': mat('frame', (0.03, 0.032, 0.035), 0.45, 0.4, 0.4),
         'void': mat('void', (0.004, 0.004, 0.005), 1.0, 0.0),
-        'furn': mat('furn', (0.84, 0.83, 0.81), 0.8, 0.3, bevel=look.get('bevel', 0.012)),
+        'furn': mat('furn', (0.84, 0.83, 0.81), 0.8, 0.3, bevel=bev),
         'screen': mat('screen', (0.012, 0.013, 0.015), 0.25, 0.5),
         'ground': mat('ground', look.get('ground', (0.011, 0.012, 0.013)), 0.42, 0.45),
     }
+    if PALETTE == 'plaster':
+        M['deck'] = M['slab']
+    else:
+        M['oak'] = tiles('oak', srgb('#C8AE8E'), srgb('#BBA080'), srgb('#8F765C'), (1.2, 0.18), 0.5, 0.5)
+        M['tile'] = tiles('tile', srgb('#D9D6CF'), srgb('#D0CCC4'), srgb('#A9A59D'), (0.6, 0.6), 0.0, 0.3)
+        M['deck'] = tiles('deck', srgb('#A9A49B'), srgb('#9F9A91'), srgb('#7F7B74'), (0.4, 0.4), 0.0, 0.6)
+    for r in ROLES:
+        M['f_' + r] = M['furn']
+    M['f_screen'], M['f_glass'] = M['screen'], M['glass']
+    for i in range(len(FABRIC)):
+        M['fabric%d' % i] = M['furn']
+    for i in range(len(BEDDING)):
+        M['bed%d' % i] = M['furn']
+    for i in range(len(FRONTS)):
+        M['front%d' % i] = M['furn']
+    if PALETTE == 'color':
+        M['f_wood'] = mat('f_wood', srgb('#735945'), 0.5, 0.35, bevel=bev)
+        M['f_cab'] = mat('f_cab', srgb('#E2DDD3'), 0.4, 0.4, bevel=bev)
+        M['f_linen'] = mat('f_linen', srgb('#EDE9E1'), 0.9, 0.2, bevel=bev)
+        M['f_ceramic'] = mat('f_ceramic', srgb('#F0EFEA'), 0.15, 0.5, bevel=bev)
+        M['f_stone'] = mat('f_stone', srgb('#D8D4CC'), 0.3, 0.45, bevel=bev)
+        M['f_metal'] = mat('f_metal', srgb('#2B2D30'), 0.4, 0.4, 0.5)
+        M['f_leaf'] = mat('f_leaf', srgb('#557A45'), 0.7, 0.3)
+        M['f_pot'] = mat('f_pot', srgb('#B06E4E'), 0.8, 0.25, bevel=bev)
+        for i, h in enumerate(FABRIC):
+            M['fabric%d' % i] = mat('fabric%d' % i, srgb(h), 0.95, 0.15, bevel=bev)
+        for i, h in enumerate(BEDDING):
+            M['bed%d' % i] = mat('bed%d' % i, srgb(h), 0.95, 0.15, bevel=bev)
+        for i, h in enumerate(FRONTS):
+            M['front%d' % i] = mat('front%d' % i, srgb(h), 0.35, 0.4, bevel=bev)
+    return M
 
 
 # ── геометрия ─────────────────────────────────────────────────────────
@@ -257,14 +330,34 @@ def stair_geometry(bm, mi):
 
 
 # ── мебель по 3D-видам из листов ──────────────────────────────────────
-def room_rects():
-    """Комнаты квартир из model-furniture.json, уточнённые по граням стен."""
-    from shapely.geometry import Point, Polygon, box as sbox
+def free_faces():
+    """Пол между стенами: плита без стен и проёмов, по куску на помещение."""
+    from shapely.geometry import Polygon
     from shapely.ops import unary_union
     walls = unary_union([Polygon(clean(w['outer']), [clean(h) for h in w['holes']]).buffer(0) for w in D['walls']])
     ops = unary_union([Polygon(o['quad']).buffer(0.01) for o in D['doors'] + D['windows']])
     free = Polygon(D['slab']).buffer(0).difference(unary_union([walls, ops]))
-    faces = [g for g in getattr(free, 'geoms', [free]) if g.area > 0.2]
+    return [g for g in getattr(free, 'geoms', [free]) if g.area > 0.2]
+
+
+def floor_faces():
+    """Полы квартир для цветной палитры: санузлы — плитка (1), остальные
+    комнаты — паркет (0); общий коридор и лестничная клетка — плита."""
+    from shapely.geometry import Point
+    seeds = [(Point((r['rect'][0] + r['rect'][2]) / 2, (r['rect'][1] + r['rect'][3]) / 2), r['name'])
+             for rooms in ROOMS.values() for r in rooms]
+    out = []
+    for f in free_faces():
+        names = [n for p, n in seeds if f.contains(p)]
+        if names:
+            out.append((f, 1 if all(n == 'Санузел' for n in names) else 0))
+    return out
+
+
+def room_rects():
+    """Комнаты квартир из model-furniture.json, уточнённые по граням стен."""
+    from shapely.geometry import Point, box as sbox
+    faces = free_faces()
     out = {}
     for fid, spec in F.items():
         if fid.startswith('_') or fid not in D['flats']:
@@ -289,7 +382,10 @@ def room_rects():
 FLIP = {'e': 'w', 'w': 'e', 'n': 'n', 's': 's'}
 
 
-def furniture(bm, rooms, mi_furn, mi_screen, mi_glass):
+def furniture(bm, rooms, mi):
+    """Мебель комнат; mi — номера материалов по ролям деталей: fabric, bed,
+    front (у квартиры свои), wood, cab, linen, ceramic, stone, metal, leaf,
+    pot, screen, glass. В гипсовой палитре у всех ролей один гипс."""
     def rect(R, it, mirror):
         x0, y0, x1, y1 = R
         u0, u1 = it['u']
@@ -302,13 +398,13 @@ def furniture(bm, rooms, mi_furn, mi_screen, mi_glass):
 
     lift = [0.0]
 
-    def blk(a, b, c, d, z0, z1, mi=None):
+    def blk(a, b, c, d, z0, z1, role):
         if c - a < 0.005 or d - b < 0.005 or z1 - z0 < 0.002:
             return
         # угловые диваны и столешницы перекрываются: совпавшие грани
         # Cycles рисует чёрными пятнами, поэтому у каждого предмета своя высота
         z0, z1 = (z0 + lift[0] if z0 > 0 else z0), z1 + lift[0]
-        prism(bm, [(a, b), (c, b), (c, d), (a, d)], [], z0, z1, mi_furn if mi is None else mi)
+        prism(bm, [(a, b), (c, b), (c, d), (a, d)], [], z0, z1, mi[role])
 
     def edge(r, side, t):
         """Полоса толщиной t вдоль стороны side прямоугольника r."""
@@ -331,82 +427,82 @@ def furniture(bm, rooms, mi_furn, mi_screen, mi_glass):
             t = it['t']
             a, b, c, d = r
             if t == 'counter':
-                blk(*rest(r, FLIP[sd] if sd in 'ew' else {'n': 's', 's': 'n'}[sd], 0.03), 0, 0.86)
-                blk(a, b, c, d, 0.86, 0.9)
+                blk(*rest(r, FLIP[sd] if sd in 'ew' else {'n': 's', 's': 'n'}[sd], 0.03), 0, 0.86, 'front')
+                blk(a, b, c, d, 0.86, 0.9, 'stone')
             elif t == 'tall':
-                blk(a, b, c, d, 0, 2.0)
+                blk(a, b, c, d, 0, 2.0, 'front')
             elif t == 'wardrobe':
-                blk(a, b, c, d, 0, 2.15)
+                blk(a, b, c, d, 0, 2.15, 'cab')
             elif t in ('console', 'night'):
-                blk(a, b, c, d, 0, 0.5)
+                blk(a, b, c, d, 0, 0.5, 'wood')
             elif t == 'bench':
-                blk(a, b, c, d, 0, 0.45)
+                blk(a, b, c, d, 0, 0.45, 'wood')
             elif t == 'ottoman':
-                blk(a, b, c, d, 0, 0.42)
+                blk(a, b, c, d, 0, 0.42, 'fabric')
             elif t == 'tv':
-                blk(*edge(r, sd, 0.045), 0.95, 1.62, mi_screen)
+                blk(*edge(r, sd, 0.045), 0.95, 1.62, 'screen')
             elif t == 'sofa':
-                blk(*rest(r, sd, 0.2), 0, 0.42)
-                blk(*edge(r, sd, 0.2), 0, 0.8)
+                blk(*rest(r, sd, 0.2), 0, 0.42, 'fabric')
+                blk(*edge(r, sd, 0.2), 0, 0.8, 'fabric')
             elif t == 'armchair':
-                blk(*rest(r, sd, 0.16), 0, 0.42)
-                blk(*edge(r, sd, 0.16), 0, 0.8)
+                blk(*rest(r, sd, 0.16), 0, 0.42, 'fabric')
+                blk(*edge(r, sd, 0.16), 0, 0.8, 'fabric')
                 for o in (('n', 's') if sd in 'ew' else ('e', 'w')):
-                    blk(*edge(r, o, 0.1), 0, 0.6)
+                    blk(*edge(r, o, 0.1), 0, 0.6, 'fabric')
             elif t == 'bed':
-                blk(*rest(r, sd, 0.08), 0, 0.28)
+                blk(*rest(r, sd, 0.08), 0, 0.28, 'wood')
                 m = rest(rest(r, sd, 0.08), FLIP[sd] if sd in 'ew' else {'n': 's', 's': 'n'}[sd], 0.03)
-                blk(m[0] + (0.03 if sd in 'ns' else 0), m[1] + (0.03 if sd in 'ew' else 0), m[2] - (0.03 if sd in 'ns' else 0), m[3] - (0.03 if sd in 'ew' else 0), 0.28, 0.52)
-                blk(*edge(r, sd, 0.08), 0, 1.1)
+                blk(m[0] + (0.03 if sd in 'ns' else 0), m[1] + (0.03 if sd in 'ew' else 0), m[2] - (0.03 if sd in 'ns' else 0), m[3] - (0.03 if sd in 'ew' else 0), 0.28, 0.52, 'bed')
+                blk(*edge(r, sd, 0.08), 0, 1.1, 'wood')
                 # две подушки у изголовья
                 hx = edge(rest(r, sd, 0.12), sd, 0.36)
                 if sd in 'ew':
                     mid = (hx[1] + hx[3]) / 2
-                    blk(hx[0], hx[1] + 0.08, hx[2], mid - 0.04, 0.52, 0.64)
-                    blk(hx[0], mid + 0.04, hx[2], hx[3] - 0.08, 0.52, 0.64)
+                    blk(hx[0], hx[1] + 0.08, hx[2], mid - 0.04, 0.52, 0.64, 'linen')
+                    blk(hx[0], mid + 0.04, hx[2], hx[3] - 0.08, 0.52, 0.64, 'linen')
                 else:
                     mid = (hx[0] + hx[2]) / 2
-                    blk(hx[0] + 0.08, hx[1], mid - 0.04, hx[3], 0.52, 0.64)
-                    blk(mid + 0.04, hx[1], hx[2] - 0.08, hx[3], 0.52, 0.64)
+                    blk(hx[0] + 0.08, hx[1], mid - 0.04, hx[3], 0.52, 0.64, 'linen')
+                    blk(mid + 0.04, hx[1], hx[2] - 0.08, hx[3], 0.52, 0.64, 'linen')
             elif t == 'table':
-                blk(a, b, c, d, 0.72, 0.76)
+                blk(a, b, c, d, 0.72, 0.76, 'wood')
                 for x, y in ((a + 0.07, b + 0.07), (c - 0.12, b + 0.07), (a + 0.07, d - 0.12), (c - 0.12, d - 0.12)):
-                    blk(x, y, x + 0.05, y + 0.05, 0, 0.72)
+                    blk(x, y, x + 0.05, y + 0.05, 0, 0.72, 'metal')
             elif t == 'ctable':
-                blk(a, b, c, d, 0.36, 0.41)
-                blk(a + 0.06, b + 0.06, c - 0.06, d - 0.06, 0, 0.36)
+                blk(a, b, c, d, 0.36, 0.41, 'stone')
+                blk(a + 0.06, b + 0.06, c - 0.06, d - 0.06, 0, 0.36, 'metal')
             elif t == 'chair':
-                blk(a, b, c, d, 0.42, 0.47)
-                blk(*edge(r, sd, 0.05), 0.47, 0.9)
+                blk(a, b, c, d, 0.42, 0.47, 'fabric')
+                blk(*edge(r, sd, 0.05), 0.47, 0.9, 'fabric')
                 for x, y in ((a + 0.02, b + 0.02), (c - 0.06, b + 0.02), (a + 0.02, d - 0.06), (c - 0.06, d - 0.06)):
-                    blk(x, y, x + 0.04, y + 0.04, 0, 0.42)
+                    blk(x, y, x + 0.04, y + 0.04, 0, 0.42, 'metal')
             elif t == 'desk':
-                blk(a, b, c, d, 0.72, 0.75)
+                blk(a, b, c, d, 0.72, 0.75, 'wood')
                 for o in (('n', 's') if sd in 'ew' else ('e', 'w')):
-                    blk(*edge(r, o, 0.04), 0, 0.72)
+                    blk(*edge(r, o, 0.04), 0, 0.72, 'wood')
             elif t == 'toilet':
-                blk(*edge(r, sd, 0.17), 0, 0.78)
+                blk(*edge(r, sd, 0.17), 0, 0.78, 'ceramic')
                 bw = rest(r, sd, 0.17)
                 inset = 0.04
-                blk(bw[0] + (inset if sd in 'ns' else 0), bw[1] + (inset if sd in 'ew' else 0), bw[2] - (inset if sd in 'ns' else 0), bw[3] - (inset if sd in 'ew' else 0), 0, 0.4)
+                blk(bw[0] + (inset if sd in 'ns' else 0), bw[1] + (inset if sd in 'ew' else 0), bw[2] - (inset if sd in 'ns' else 0), bw[3] - (inset if sd in 'ew' else 0), 0, 0.4, 'ceramic')
             elif t == 'sink':
-                blk(a, b, c, d, 0, 0.85)
+                blk(a, b, c, d, 0, 0.85, 'ceramic')
             elif t == 'shower':
-                blk(a, b, c, d, 0, 0.05)
+                blk(a, b, c, d, 0, 0.05, 'ceramic')
                 for o in 'nsew':
                     if o not in side:
-                        blk(*edge(r, o, 0.012), 0.05, 2.0, mi_glass)
+                        blk(*edge(r, o, 0.012), 0.05, 2.0, 'glass')
             elif t == 'plant':
                 cx, cy = (a + c) / 2, (b + d) / 2
                 rr = min(c - a, d - b) / 2
-                blk(cx - rr * 0.55, cy - rr * 0.55, cx + rr * 0.55, cy + rr * 0.55, 0, 0.42)
+                blk(cx - rr * 0.55, cy - rr * 0.55, cx + rr * 0.55, cy + rr * 0.55, 0, 0.42, 'pot')
                 res = bmesh.ops.create_uvsphere(bm, u_segments=14, v_segments=9, radius=rr)
                 for v in res['verts']:
                     v.co.z += 0.78
                     v.co.x += cx
                     v.co.y += cy
                 for f in {f for v in res['verts'] for f in v.link_faces}:
-                    f.material_index = mi_furn
+                    f.material_index = mi['leaf']
                     f.smooth = True
 
 
@@ -428,8 +524,14 @@ def build_floor(M, name='floor'):
     bm = bmesh.new()
     prism(bm, D['slab'], [], -SLAB_T, 0, 1, top=0, bottom=1)
     for b in D['balconies']:
-        prism(bm, b, [], -SLAB_T, -0.02, 1, top=0, bottom=1)
-    to_obj(bm, name + '_slab', [M['slab'], M['edge']], coll)
+        prism(bm, b, [], -SLAB_T, -0.02, 1, top=2, bottom=1)
+    to_obj(bm, name + '_slab', [M['slab'], M['edge'], M['deck']], coll)
+    # полы квартир (не в гипсовой палитре): паркет, в санузлах плитка
+    if PALETTE != 'plaster':
+        bm = bmesh.new()
+        for f, kind in floor_faces():
+            prism(bm, list(f.exterior.coords), [list(h.coords) for h in f.interiors], 0.001, 0.006, kind)
+        to_obj(bm, name + '_floors', [M['oak'], M['tile']], coll)
     # остекление и рамы
     bm = bmesh.new()
     for o in D['windows']:
@@ -462,10 +564,17 @@ def build_floor(M, name='floor'):
     bm = bmesh.new()
     stair_geometry(bm, 0)
     to_obj(bm, name + '_stair', [M['plaster']], coll)
+    # мебель: общие роли, затем обивка, постель и кухня — у каждой квартиры свои
+    slots = ['f_' + r for r in ROLES] + ['fabric%d' % i for i in range(len(FABRIC))] \
+        + ['bed%d' % i for i in range(len(BEDDING))] + ['front%d' % i for i in range(len(FRONTS))]
     bm = bmesh.new()
-    for fid, rooms in ROOMS.items():
-        furniture(bm, rooms, 0, 1, 2)
-    to_obj(bm, name + '_furn', [M['furn'], M['screen'], M['glass']], coll)
+    for i, (fid, rooms) in enumerate(sorted(ROOMS.items())):
+        mi = {r: slots.index('f_' + r) for r in ROLES}
+        mi['fabric'] = slots.index('fabric%d' % (i % len(FABRIC)))
+        mi['bed'] = slots.index('bed%d' % ((i + 1) % len(BEDDING)))
+        mi['front'] = slots.index('front%d' % ((i + 2) % len(FRONTS)))
+        furniture(bm, rooms, mi)
+    to_obj(bm, name + '_furn', [M[s] for s in slots], coll)
     bm = bmesh.new()
     for (ax, ay), (bx, by) in D['lifts']:
         x0, x1 = sorted((ax, bx))
@@ -836,6 +945,15 @@ def close_rooms(cam, fid, z=2.0):
             for r in ROOMS[fid]]
 
 
+def close_box(cam, fid):
+    """Квартира в кадре крупного плана: рамка её комнат от пола до верха
+    стен (доли кадра) — по ней model-pack кадрирует мелкие квартиры."""
+    pr = project(cam, [(x, y, z) for r in ROOMS[fid] for x in (r['rect'][0], r['rect'][2])
+                       for y in (r['rect'][1], r['rect'][3]) for z in (0, WALL_H)])
+    xs, ys = [p[0] for p in pr], [p[1] for p in pr]
+    return [round(min(xs), 4), round(min(ys), 4), round(max(xs), 4), round(max(ys), 4)]
+
+
 def close_pass(fid, w, h, spp, look, outdir):
     """Крупный план квартиры: свет только в ней, мебель, подписи комнат."""
     sc, M, floor, plates = scene_base(look)
@@ -847,7 +965,7 @@ def close_pass(fid, w, h, spp, look, outdir):
     dof(cam, (cx, cy, 0.4), look.get('fstop', 0.9))
     render_setup(w, h, spp, look)
     render(os.path.join(outdir, 'close-%s.png' % fid))
-    return close_rooms(cam, fid)
+    return close_rooms(cam, fid), close_box(cam, fid)
 
 
 def save_scene(outdir, plate):
@@ -883,14 +1001,16 @@ def run(mode, plate, outdir):
         for fid in ROOMS or room_rects():
             if only and fid not in only:
                 continue
-            meta['close'][fid] = {'w': 1600, 'h': 1200, 'rooms': close_pass(fid, 1600, 1200, 128, CLOSE_LOOK, outdir)}
+            rooms, fbox = close_pass(fid, 1600, 1200, 128, CLOSE_LOOK, outdir)
+            meta['close'][fid] = {'w': 1600, 'h': 1200, 'rooms': rooms, 'box': fbox}
             json.dump(meta, open(meta_path, 'w'))
     if mode == 'close-anchors':
         # только номера помещений на крупных планах, без рендера
         scene_base(CLOSE_LOOK)
         for fid in ROOMS:
             cam, _ = close_camera(fid, 1600, 1200, CLOSE_LOOK)
-            meta.setdefault('close', {}).setdefault(fid, {'w': 1600, 'h': 1200})['rooms'] = close_rooms(cam, fid)
+            cm = meta.setdefault('close', {}).setdefault(fid, {'w': 1600, 'h': 1200})
+            cm['rooms'], cm['box'] = close_rooms(cam, fid), close_box(cam, fid)
         json.dump(meta, open(meta_path, 'w'))
     if mode == 'anchors':
         # только подписи этажей по кадрам, без рендера

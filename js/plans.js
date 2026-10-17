@@ -56,7 +56,7 @@
   };
 
   /* ── просмотрщик: кадр плана, номера помещений, вход ───────────────
-     opts.model — переключатель «Лист / Макет»: крупный план гипсового
+     opts.model — переключатель «Лист / Макет»: крупный план
      макета квартиры (js/model.js) с теми же номерами помещений */
   PL.viewer = function (root, opts) {
     opts = opts || {};
@@ -156,7 +156,7 @@
     var src = c ? c.src + Math.max.apply(null, c.widths) + '.webp' : p.img.base + '-1600.webp';
     zoomDlg.innerHTML = '<div class="pv-zoom__bar"><span class="plate">' + p.code + '</span><span>' + PL.kind(p.rooms) + ', ' + PL.area(p.area) + '</span>' +
       '<button class="menu__close" type="button" data-close aria-label="Закрыть">' + MK.icon('close') + '</button></div>' +
-      '<div class="pv-zoom__scroll' + (c ? ' is-model' : '') + '"><img src="' + src + '" alt="' + (c ? 'Гипсовый макет квартиры ' + p.code + ' с мебелью' : '3D-вид сверху: планировка ' + p.code) + '" width="' + (c ? c.w : p.img.w) + '" height="' + (c ? c.h : p.img.h) + '"></div>';
+      '<div class="pv-zoom__scroll' + (c ? ' is-model' : '') + '"><img src="' + src + '" alt="' + (c ? '3D-макет квартиры ' + p.code + ' с мебелью' : '3D-вид сверху: планировка ' + p.code) + '" width="' + (c ? c.w : p.img.w) + '" height="' + (c ? c.h : p.img.h) + '"></div>';
     if (typeof zoomDlg.showModal === 'function') { zoomDlg.showModal(); document.documentElement.style.overflow = 'hidden'; }
     else window.open(src, '_blank');
   };
@@ -338,7 +338,7 @@
     document.title = 'Планировка ' + p.code + ' — ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' — MEGA KHUJAND';
     if (push) history.replaceState(null, '', location.pathname + '?plan=' + p.id);
   }
-  /* этаж: гипсовый макет со светом выбранной квартиры или схема из листа */
+  /* этаж: макет со светом выбранной квартиры или схема из листа */
   var fviews = $('[data-fviews]'), f3el = $('[data-pfloor3d]'), f2el = $('[data-pfloor]'), fnote = $('[data-fnote]');
   var f3 = null, fview = MK.session.get('mk-fp-view') === 'plan' ? 'plan' : 'model';
   var NOTE = {
