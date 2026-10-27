@@ -17,6 +17,7 @@ for f in favicon.svg favicon-32.png apple-touch-icon.png robots.txt _headers; do
   cp "$f" dist/
 done
 [ -f sitemap.xml ] && cp sitemap.xml dist/ || true
+[ -f _redirects ] && cp _redirects dist/ || true
 
 # Папки целиком
 RS=(rsync -a --exclude='.DS_Store')

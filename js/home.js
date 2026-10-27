@@ -1,186 +1,40 @@
 /* Главная — страница объекта «Сырдарья»: первый экран, о доме, место,
-   свободные квартиры (фасад, где горят окна свободных квартир), планировки,
+   свободные квартиры по комнатам, планировки,
    условия, ход строительства и заявка; данные — js/object.js и data.js */
 (function () {
   'use strict';
   var D = window.MK_DATA;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var NS = 'http://www.w3.org/2000/svg';
-  var ease = function (t) { t = MK.clamp01(t); return t * t * (3 - 2 * t); };
 
-  var model = $('[data-model]'), frame = $('[data-frame]');
-
-  /* ── макет: свет в окнах свободных квартир, выбор по этажам ────── */
-  var svgF = $('[data-fsvg]');
-  var F = MK.home = MK.facade(svgF, { canvas: $('[data-fcv]'), mode: 'io' });
-  var lift = $('[data-lift]'), tag = $('[data-tag]');
-  var total = F.lots.length;
-  var NF = F.floors.length;
-
-  var ROOMS = [['all', 'Все']].concat(D.ROOM_TYPES.map(function (r) { return [r, r + '-комнатные']; }));
-  var keys = $('[data-keys]');
-  var isFree = function (l) { return D.isOpen(l); };
-  var cnt = function (r) { return F.lots.filter(function (it) { return isFree(it.lot) && (r === 'all' || it.lot.rooms === r); }).length; };
-  ROOMS = ROOMS.filter(function (k) { return cnt(k[0]) > 0; });
-  keys.innerHTML = ROOMS.map(function (k) {
-    return '<button class="seg__btn" type="button" data-r="' + k[0] + '" aria-pressed="' + (k[0] === 'all') + '">' + k[1] + ' <small>' + cnt(k[0]) + '</small></button>';
-  }).join('');
-  var sel = 'all';
-  var countEl = $('[data-count]'), go = $('[data-go]'), goFlats = $('[data-go-flats]');
-  var match = function (l) { return isFree(l) && (sel === 'all' || l.rooms === sel); };
-  function paintKeys() {
-    $$('[data-r]', keys).forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-r') === String(sel))); });
-    F.paint(match);
-    var n = cnt(sel);
-    var word = sel === 'all' ? '' : ' — ' + ROOMS.filter(function (k) { return k[0] === sel; })[0][1].toLowerCase();
-    countEl.innerHTML = 'Вид с бульвара: горит свет в <b>' + n + '</b> ' + D.plural(n, ['квартире', 'квартирах', 'квартирах']) + word +
-      ' из ' + total + ' на этом фасаде. ' + (matchMedia('(hover: hover)').matches ? 'Наведите' : 'Нажмите') + ' на дом — покажем этаж.';
-    go.href = 'picker.html?v=dusk' + (sel === 'all' ? '' : '&rooms=' + sel);
-    if (sel !== 'all') wish(sel);
-    goFlats.href = sel === 'all' ? 'flats.html' : 'flats.html?rooms=' + sel;
-    hideTag();
-    if (hotF != null) showLift(hotF);
+  /* шапка прозрачная над первым экраном, графитовая после прокрутки */
+  var hdr = $('#hdr');
+  if (hdr) {
+    var solid = function () { hdr.classList.toggle('is-solid', scrollY > 24); };
+    solid();
+    addEventListener('scroll', solid, { passive: true });
   }
-  keys.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-r]');
-    if (!b) return;
-    var v = b.getAttribute('data-r');
-    sel = v === 'all' ? 'all' : +v;
-    paintKeys();
+
+  /* ── свободные квартиры по комнатам: число и площади из каталога ── */
+  var LOTS = D.LOTS || [];
+  $$('[data-pick-n]').forEach(function (el) {
+    var r = +el.getAttribute('data-pick-n');
+    var all = LOTS.filter(function (l) { return l.rooms === r; });
+    var free = all.filter(D.isOpen);
+    var li = el.closest('li');
+    if (!all.length) { li.hidden = true; return; }
+    el.innerHTML = '<span class="led' + (free.length ? ' is-on' : '') + '" aria-hidden="true"></span>' +
+      (free.length ? free.length + ' в продаже' : 'сейчас нет в продаже');
+    var areas = all.map(function (l) { return l.area; });
+    var lo = Math.min.apply(null, areas), hi = Math.max.apply(null, areas);
+    $('[data-pick-a="' + r + '"]').textContent = lo === hi ? D.area(lo) : D.area(lo).replace(/\s*м²$/, '') + '–' + D.area(hi);
   });
 
-  /* что выбрал покупатель на макете или в планировках — сразу в форму шоурума */
+  /* что выбрал покупатель в планировках — сразу в форму шоурума */
   function wish(r) {
     var f = $('#lead select[name="interest"]');
     if (f && D.ROOM_NAMES[r]) f.value = D.ROOM_NAMES[r];
   }
-
-  /* табличка этажа — как в лифте: номер, свободные и цена от */
-  var hotF = null;
-  function floorInfo(f) {
-    var list = (F.byFloor[f] || []).filter(function (it) { return match(it.lot); });
-    var min = list.length ? Math.min.apply(null, list.map(function (it) { return it.lot.price; })) : 0;
-    return { n: list.length, min: min };
-  }
-  function placeLift(f, side) {
-    var fr = frame.getBoundingClientRect();
-    var e = F.floorEdge(f), c = e && F.client(e[0], e[1]);
-    if (!c) return false;
-    var left = side != null ? side : c[0] - fr.left + lift.offsetWidth + 40 > fr.width;
-    if (left) { e = F.floorEdge(f, true); c = e && F.client(e[0], e[1]); if (!c) return false; }
-    lift.classList.toggle('is-left', left);
-    /* кадр может обрезать края фасада (cover) — табличка остаётся в кадре */
-    var w = lift.offsetWidth + 34, x = c[0] - fr.left;
-    x = left ? MK.clamp(x, w + 8, fr.width - 8) : MK.clamp(x, 8, fr.width - w - 8);
-    lift.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(MK.clamp(c[1] - fr.top, 40, fr.height - 40)) + 'px)';
-    return true;
-  }
-  function showLift(f, ride) {
-    var inf = floorInfo(f);
-    lift.innerHTML = '<b class="lift__n tnum">' + f + '</b><span class="lift__t">этаж</span>' +
-      (ride ? '' : '<span class="lift__c">' + (inf.n ? inf.n + ' ' + D.plural(inf.n, ['свободная', 'свободные', 'свободных']) + (sel === 'all' ? '' : '') + (D.priced ? '<br>от ' + D.money(inf.min) : '') : 'свободных нет') + '</span>');
-    lift.classList.toggle('is-ride', !!ride);
-    lift.hidden = false;
-    if (!placeLift(f)) lift.hidden = true;
-  }
-  function hideLift() { lift.hidden = true; }
-
-  /* подъём света: табличка едет по фасаду вместе с фронтом света */
-  var riding = false;
-  function ride(lit) {
-    if (!F || hotF != null) return;
-    if (lit > 0.001 && lit < 0.985) {
-      var i = MK.clamp(Math.floor(lit * (NF + 3) - 1), 0, NF - 1);
-      var f = F.floors[i];
-      F.drawFloor(f);
-      showLift(f, true);
-      riding = true;
-    } else if (riding) {
-      riding = false;
-      F.drawFloor(null);
-      hideLift();
-    }
-  }
-
-  /* бирка квартиры у окна */
-  var hot = null, hideT = 0;
-  function showTag(it) {
-    clearTimeout(hideT);
-    hot = it;
-    F.focusLot(it);
-    var l = it.lot;
-    tag.innerHTML = '<b>' + l.type + ' · ' + D.area(l.area) + '</b>' +
-      '<span>Этаж ' + l.floor + ' · № ' + l.no + (D.priced ? ' · ' + D.money(l.price) : '') + '</span>' +
-      '<a href="' + D.lotHref(l) + '">Открыть квартиру ' + MK.icon('arrow') + '</a>';
-    tag.hidden = false;
-    var c = F.client(it.cx, Math.min.apply(null, it.win.map(function (q) { return Math.min(q[0][1], q[1][1]); })));
-    var fr = frame.getBoundingClientRect();
-    if (!c) return;
-    var x = MK.clamp(c[0] - fr.left, 120, fr.width - 120), yy = c[1] - fr.top;
-    var below = yy < 130;
-    if (below) yy = F.client(it.cx, Math.max.apply(null, it.win.map(function (q) { return Math.max(q[2][1], q[3][1]); })))[1] - fr.top;
-    tag.classList.toggle('is-below', below);
-    tag.style.left = x.toFixed(0) + 'px';
-    tag.style.top = yy.toFixed(0) + 'px';
-    /* бирка не должна закрывать табличку этажа — табличку уводим на другой край */
-    if (!lift.hidden && hotF != null) {
-      var tr = tag.getBoundingClientRect(), lr = lift.getBoundingClientRect();
-      if (tr.left < lr.right && tr.right > lr.left && tr.top < lr.bottom && tr.bottom > lr.top) placeLift(hotF, !lift.classList.contains('is-left'));
-    }
-  }
-  function hideTag() {
-    if (!tag) return;
-    hot = null;
-    F.focusLot(null);
-    tag.hidden = true;
-  }
-  function later() { clearTimeout(hideT); hideT = setTimeout(hideTag, 260); }
-  function setFloor(f) {
-    if (f === hotF) return;
-    hotF = f;
-    F.focusFloor(f);
-    if (f == null) { hideLift(); return; }
-    riding = false;
-    showLift(f);
-  }
-  function live() { return true; }
-  frame.addEventListener('pointermove', function (e) {
-    if (e.pointerType !== 'mouse' || !live()) return;
-    if (e.target.closest('[data-tag]')) { clearTimeout(hideT); return; }
-    var p = F.local(e.clientX, e.clientY);
-    if (!p) return;
-    setFloor(F.floorAt(p[0], p[1]));
-    var it = F.lotAt(p[0], p[1], match);
-    if (it) { if (it !== hot) showTag(it); } else if (hot) later();
-  });
-  frame.addEventListener('pointerleave', function (e) {
-    if (e.pointerType !== 'mouse') return;
-    setFloor(null); later();
-  });
-  frame.addEventListener('click', function (e) {
-    if (e.target.closest('[data-tag]') || !live()) return;
-    var p = F.local(e.clientX, e.clientY);
-    if (!p) return;
-    var it = F.lotAt(p[0], p[1], match);
-    if (it && e.pointerType === 'mouse' && it === hot) { location.href = D.lotHref(it.lot); return; }
-    var f = F.floorAt(p[0], p[1]);
-    setFloor(f);
-    if (it) showTag(it); else hideTag();
-  });
-  tag.addEventListener('pointerenter', function () { clearTimeout(hideT); });
-  tag.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') later(); });
-  addEventListener('keydown', function (e) { if (e.key === 'Escape') { hideTag(); setFloor(null); } });
-  addEventListener('resize', function () { if (hotF != null) placeLift(hotF); hideTag(); });
-  paintKeys();
-
-  /* свет загорается один раз, когда фасад появляется на экране */
-  var litOnce = false;
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) {
-      if (en[0].isIntersecting && !litOnce) { litOnce = true; F.lightUp(); }
-    }, { threshold: 0.3 }).observe(frame);
-  } else F.lightUp();
 
   /* ── номера на рендерах: точка изображения → точка кадра (cover) ── */
   function placePins() {

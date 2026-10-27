@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Plain static HTML, one shared `css/site.css` with the design tokens, and a small vanilla JS file per page; no framework and no build step (decided when the production build started; this replaces the earlier Astro choice). Pages: `index.html`, `flats.html`, `flat.html`, `building.html`, `picker.html`. All lot data comes from one file, `js/data.js`. Fonts are self-hosted. The 3D facade page was removed at the user's request. The original `.dc.html` design references live in `design-reference/`. Deploy target: not decided.
+Plain static HTML, one shared `css/site.css` with the design tokens, and a small vanilla JS file per page; no framework and no build step (decided when the production build started; this replaces the earlier Astro choice). Pages: `index.html`, `flats.html`, `flat.html`, `building.html`, `plans.html`, `privacy.html` (the facade picker `picker.html` was moved to `archive/gulistan-facade-picker/` on 2026-10-28: its renders show the Гулистон house). All lot data comes from one file, `js/data.js`. Fonts are self-hosted. The 3D facade page was removed at the user's request. The original `.dc.html` design references live in `design-reference/`. Deploy target: not decided.
 
 ## Users
 
@@ -56,7 +56,7 @@ Confirmed differentiators that other new buildings in Khujand cannot claim:
 
 **Placeholders.** Every project fact in the designs is unconfirmed and stays as it is for now. Future work must not present any of these as real or add new figures:
 
-- handover date ("IV квартал 2026")
+- handover date ("2027 год"; until 2026-10-28 "IV квартал 2026")
 - lot statuses, numbers, finishes and prices generated in `js/data.js` (currently 352 flats in blocks А, Б and В, of which 157 on sale). The structure itself follows the client (blocks А–Г, flats on floors 3–18) and the plan sheets (А-1…А-8 per floor in А, Б-1…Б-7 in Б and В); floors above the sheets' typical range repeat the typical floor, and block Г has no flats until its sheets arrive. Which blocks the facade renders show is an assumption
 - base price of ~9,400 TJS/m² and every price derived from it. Prices are hidden on the site at the client's request (2026-10-13, `SITE.showPrices: false`): buyers see «Цена по запросу» and «Узнать цену», no discounts, no price filter or sort; the price logic stays in the code behind the flag
 - the six named services (24/7 concierge, rental management, cleaning, valet parking, storage, guest apartments)

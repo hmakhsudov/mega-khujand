@@ -444,42 +444,70 @@ fieldset.field > legend + *{clear:both}
 
 /* ═════════════════════════ ГЛАВНАЯ ═══════════════════════════════════ */
 
-/* Герой: рендер дома и пульт под ним — что, где, когда и почём.
-   Без наложений на картинку: подпись стоит на графите под рендером. */
-.hero{position:relative;display:flex;flex-direction:column;background:var(--room);color:var(--on-dark)}
-.hero__img{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:var(--room-2)}
-.hero__img img{width:100%;height:100%;object-fit:cover;object-position:50% 55%}
-.hero__bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px clamp(20px,4vw,64px);align-items:end;padding:clamp(22px,3.2vh,34px) var(--gx) clamp(24px,3.6vh,40px);border-top:1px solid var(--room-line)}
-.hero__kicker{font:500 11px/1.3 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-3)}
-.hero__h{margin-top:10px;font:300 clamp(2.3rem,5.2vw,4.6rem)/.98 var(--f-disp);letter-spacing:-.035em}
-.hero__sub{margin-top:14px;max-width:52ch;font-size:clamp(15px,1.08vw,16.5px);line-height:1.6;color:var(--on-dark-2);text-wrap:pretty}
-.hero__end{display:grid;justify-items:end;gap:18px}
-.hero__facts{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:14px clamp(20px,2.4vw,40px)}
-.hero__facts dt{font:500 11px/1 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-3)}
-.hero__facts dd{margin-top:8px;font-size:15px;font-weight:600;line-height:1.35;white-space:nowrap}
+/* Герой: вид сверху на весь первый экран, шапка и подпись — прямо на
+   снимке. Снимок дневной и светлый: ровное затемнение (не градиент)
+   держит белый текст читаемым на любом участке; шапка прозрачная,
+   пока страница не прокручена (.is-solid после прокрутки ставит js/home.js). */
+.hero{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;min-height:100svh;background:var(--room);color:var(--on-dark)}
+.hero__img{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--room-2)}
+.hero__img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.hero__img::after{content:'';position:absolute;inset:0;background:rgba(12,14,16,.34)}
+.hero__sub,.hero__facts{text-shadow:0 1px 2px rgba(12,14,16,.45)}
+.hero__bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px clamp(24px,4vw,72px);align-items:end;padding:calc(var(--hh) + 32px) var(--gx) clamp(28px,5.5vh,64px)}
+.hero__h{font:300 clamp(3rem,8.4vw,8.25rem)/.92 var(--f-disp);letter-spacing:-.045em}
+.hero__sub{margin-top:clamp(14px,2vh,22px);max-width:46ch;font-size:clamp(15.5px,1.15vw,17.5px);font-weight:500;line-height:1.55;color:var(--on-dark);text-wrap:pretty}
+.hero__end{display:grid;justify-items:end;gap:22px}
+.hero__facts{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:14px clamp(22px,2.6vw,44px)}
+.hero__facts > div{padding-left:14px;border-left:1px solid rgba(238,240,238,.5)}
+.hero__facts dt{font:600 11px/1 var(--f-disp);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-2)}
+.hero__facts dd{margin-top:8px;font-size:15.5px;font-weight:700;line-height:1.35;white-space:nowrap}
 .hero__act{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
+.hero .btn--line{border-color:var(--on-dark);background-color:rgba(12,14,16,.3)}
 @media (min-width:900px){
-  .hero{height:clamp(600px,calc(100svh - var(--hh)),940px)}
-  .hero__img{flex:1 1 auto;min-height:0;aspect-ratio:auto}
+  .hero{min-height:clamp(640px,100svh,1100px)}
 }
 @media (max-width:1100px){
   .hero__bar{grid-template-columns:minmax(0,1fr)}
   .hero__end,.hero__facts,.hero__act{justify-items:start;justify-content:flex-start}
 }
 @media (max-width:560px){
-  .hero__img{aspect-ratio:4/3}
-  .hero__img img{object-position:52% 50%}
-  .hero__facts{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  /* телефон: название — над рекой вверху кадра, адрес и кнопки — внизу,
+     дом посередине остаётся открытым */
+  .hero__bar{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding-top:calc(var(--hh) + 18px);padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+  .hero__h{font-size:clamp(2.9rem,15vw,3.6rem)}
+  .hero__sub{font-size:15px}
+  .hero__facts{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:14px 18px}
   .hero__facts > div:first-child{grid-column:1/-1}
   .hero__facts dd{white-space:normal}
   .hero__act{width:100%}
   .hero__act .btn{flex:1 1 100%}
 }
 
-/* Свободные квартиры: заголовок секции над фасадом с огнями */
+/* Шапка главной лежит на первом экране: прозрачная над снимком,
+   графитовая, как только страница прокручена */
+.home .hdr{position:fixed;left:0;right:0;transition:background-color .35s ease,border-color .35s ease}
+.js .home .hdr:not(.is-solid){background:transparent;border-bottom-color:transparent}
+.js .home .hdr:not(.is-solid) .hdr__nav a,.js .home .hdr:not(.is-solid) .hdr__tel{color:var(--on-dark)}
+
+/* Свободные квартиры: число в продаже и выбор по комнатам */
 .flats-sec{background:var(--room);color:var(--on-dark)}
 .flats-sec__head{padding:clamp(64px,11vh,140px) var(--gx) clamp(24px,4vh,40px)}
 .flats-sec__head b{color:var(--led);font-weight:800;font-variant-numeric:lining-nums tabular-nums}
+.pick{padding:0 var(--gx) clamp(56px,9vh,110px)}
+.pick__list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pick__it{position:relative;display:grid;gap:12px;height:100%;padding:clamp(20px,2.4vw,30px);padding-right:64px;border:1px solid var(--room-line-2);border-radius:var(--r);background:var(--room-2);color:var(--on-dark);transition:border-color .25s ease,background-color .25s ease}
+.pick__it:hover{border-color:var(--on-dark-2);background-color:#202427;color:var(--on-dark)}
+.pick__it .ico{position:absolute;right:clamp(20px,2.4vw,30px);top:clamp(24px,2.8vw,36px);width:18px;height:18px;transition:transform .35s var(--ease-out)}
+.pick__it:hover .ico{transform:translateX(4px)}
+.pick__t{font:300 clamp(1.5rem,2.4vw,2.2rem)/1.05 var(--f-disp);letter-spacing:-.02em}
+.pick__n{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;font-variant-numeric:lining-nums tabular-nums}
+.pick__n:empty,.pick__a:empty{display:none}
+.pick__a{font-size:14px;color:var(--on-dark-2);font-variant-numeric:lining-nums tabular-nums}
+.pick__act{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+@media (max-width:760px){
+  .pick__list{grid-template-columns:minmax(0,1fr)}
+  .pick__act .btn{flex:1 1 100%}
+}
 
 /* Макет: рендер с огнями свободных квартир и пульт */
 .model{position:relative;z-index:1;background:var(--room);color:var(--on-dark)}
@@ -647,8 +675,8 @@ fieldset.field > legend + *{clear:both}
 /* Квартал и двор: легенда макета с номерами на рендере */
 .site{background:var(--plaster)}
 .site__grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(20px,3.4vw,56px);margin-top:clamp(28px,5vh,56px);align-items:start}
-.site__shot{position:relative;overflow:hidden;border-radius:var(--r);background:var(--plaster-2)}
-.site__shot img{width:100%;height:auto;aspect-ratio:1700/957;object-fit:cover}
+.site__shot{position:relative;overflow:hidden;border-radius:var(--r);background:var(--room)}
+.site__shot img{width:100%;height:auto;aspect-ratio:1080/607;object-fit:cover}
 .legend-list{display:grid;border-top:1px solid var(--line)}
 .legend-list li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;padding:16px 0;border-bottom:1px solid var(--line);transition:background .25s ease}
 .legend-list li.is-on .num{background:var(--plaster);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}

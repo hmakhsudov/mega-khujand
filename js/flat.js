@@ -10,9 +10,8 @@
 
   var ref = document.referrer || '';
   var back = /building\.html/.test(ref) ? { href: 'building.html', t: 'Назад к шахматке' }
-    : /picker\.html/.test(ref) ? { href: 'picker.html', t: 'Назад к фасаду' }
     : { href: MK.session.get('mk-catalog') || 'flats.html', t: 'Назад к каталогу' };
-  if (!/^(flats|building|picker)\.html/.test(back.href)) back.href = 'flats.html';
+  if (!/^(flats|building)\.html/.test(back.href)) back.href = 'flats.html';
   document.querySelectorAll('[data-back]').forEach(function (a) { a.href = back.href; });
 
   var arrow = '<span class="ico-ring"><svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg></span>';
@@ -43,42 +42,6 @@
     ['syr-dusk-corner', 'Первые этажи с витринами']
   ];
 
-  /* окна этой квартиры на рендере — первым кадром галереи */
-  var win = D.windowOf(lot);
-  /* на вечернем рендере — окно стояка квартиры и свет в нём */
-  var lit = MK.facade && MK.facade.windows ? MK.facade.windows(lot) : [];
-  if (lit.length) win = { view: { title: 'Вечером · бульвар', img: 'facade-night-dark' }, pts: [].concat.apply([], lit), quads: lit };
-  function winFigure(w) {
-    var xs = w.pts.map(function (p) { return p[0]; }), ys = w.pts.map(function (p) { return p[1]; });
-    var cx = (Math.min.apply(null, xs) + Math.max.apply(null, xs)) / 2, cy = (Math.min.apply(null, ys) + Math.max.apply(null, ys)) / 2;
-    var W = 780, H = 435;
-    var x0 = MK.clamp(cx - W / 2, 0, 2400 - W).toFixed(0), y0 = MK.clamp(cy - H / 2, 0, 1339 - H).toFixed(0);
-    var pts = w.pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
-    var href = 'picker.html?id=' + encodeURIComponent(lot.id);
-    if (w.quads) {
-      var q = function (qq) { return qq.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
-      var grown = w.quads.map(function (qq) {
-        var mx = (qq[0][0] + qq[2][0]) / 2, my = (qq[0][1] + qq[2][1]) / 2;
-        return qq.map(function (p) { return [p[0] + (p[0] - mx) * 0.35, p[1] + (p[1] - my) * 0.2]; });
-      });
-      return '<figure class="gallery__win"><a class="gallery__img" href="' + href + '" aria-label="Открыть подбор на фасаде с этой квартирой">' +
-        '<svg viewBox="' + x0 + ' ' + y0 + ' ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Окна квартиры на вечернем рендере фасада: в них горит свет">' +
-        '<defs><clipPath id="win-clip">' + grown.map(function (g) { return '<polygon points="' + q(g) + '"/>'; }).join('') + '</clipPath></defs>' +
-        '<image data-href="media/opt/facade-night-dark-1920.webp" width="2400" height="1339"/>' +
-        '<image data-href="' + MK_LIGHT.dusk.plate + '-2400.webp" width="2400" height="1339" clip-path="url(#win-clip)"/>' +
-        grown.map(function (g) { return '<polygon points="' + q(g) + '" fill="none" stroke="#F7F8F7" stroke-width="1.5" vector-effect="non-scaling-stroke"/>'; }).join('') +
-        '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="48" fill="none" stroke="rgba(247,248,247,.7)" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
-        '</svg></a><figcaption>Окна этой квартиры на фасаде вечером — нажмите, чтобы открыть подбор</figcaption></figure>';
-    }
-    return '<figure class="gallery__win"><a class="gallery__img" href="' + href + '" aria-label="Открыть подбор на фасаде с этой квартирой">' +
-      '<svg viewBox="' + x0 + ' ' + y0 + ' ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Окна квартиры на рендере фасада, ' + w.view.title.toLowerCase() + '">' +
-      '<defs><mask id="win-hole"><rect width="2400" height="1339" fill="#fff"/><polygon points="' + pts + '" fill="#000"/></mask></defs>' +
-      '<image data-href="media/opt/' + w.view.img + '-1920.webp" width="2400" height="1339"/>' +
-      '<rect width="2400" height="1339" fill="rgba(16,15,12,.16)" mask="url(#win-hole)"/>' +
-      '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="44" fill="none" stroke="#FFF4DC" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
-      '<polygon points="' + pts + '" fill="rgba(247,248,247,.22)" stroke="#F7F8F7" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
-      '</svg></a><figcaption>Окна этой квартиры на фасаде — нажмите, чтобы открыть подбор</figcaption></figure>';
-  }
 
   var similar = D.LOTS.filter(function (x) { return x.id !== lot.id && D.isOpen(x); })
     .map(function (x) { return { x: x, d: Math.abs(x.area - lot.area) + Math.abs(x.rooms - lot.rooms) * 14 + Math.abs(x.floor - lot.floor) * 0.4 + (x.plan === lot.plan ? 0 : 3) + (x.blk === lot.blk ? 0 : 2) }; })
@@ -132,7 +95,7 @@
         '<a class="planbox__real" href="plans.html?plan=' + lot.plan + '">Планировка ' + lot.code + ': номера помещений, место на этаже, лист в PDF ' + MK.icon('arrow') + '</a>' +
       '</figure>' +
     '</section>' +
-    '<section class="gallery" aria-label="Дом и окружение">' + (win ? winFigure(win) : '') + gallery.slice(0, win ? 2 : 3).map(function (g) {
+    '<section class="gallery" aria-label="Дом и окружение">' + gallery.map(function (g) {
       return '<figure><div class="gallery__img">' + MK.pic(g[0], g[1], { sizes: '(min-width: 900px) 33vw, 100vw' }) + '</div><figcaption>' + g[1] + '</figcaption></figure>';
     }).join('') + '</section>' +
     '<section class="flat-info">' +
@@ -211,8 +174,8 @@
     root.innerHTML = '<section class="notfound" aria-labelledby="nf-h">' +
       '<nav class="crumbs" aria-label="Навигационная цепочка" style="justify-content:center"><a href="index.html">Главная</a><span class="sep" aria-hidden="true">·</span><a href="flats.html">Квартиры</a></nav>' +
       '<h1 id="nf-h" style="margin-top:18px">' + (had ? 'Такой квартиры нет в каталоге' : 'Квартира не выбрана') + '</h1>' +
-      '<p>' + (had ? 'Возможно, ссылка устарела или в ней опечатка. Посмотрите свободные квартиры — или оставьте заявку, подберём похожую.' : 'Выберите квартиру в каталоге, на шахматке или прямо на фасаде — здесь откроется её планировка и цена.') + '</p>' +
-      '<div class="row-btns"><a class="btn btn--dark btn--lg" href="flats.html">Все квартиры</a><a class="btn btn--soft btn--lg" href="building.html">Шахматка дома</a><a class="btn btn--soft btn--lg" href="picker.html">Подбор на фасаде</a></div>' +
+      '<p>' + (had ? 'Возможно, ссылка устарела или в ней опечатка. Посмотрите свободные квартиры — или оставьте заявку, подберём похожую.' : 'Выберите квартиру в каталоге или на шахматке — здесь откроется её планировка и цена.') + '</p>' +
+      '<div class="row-btns"><a class="btn btn--dark btn--lg" href="flats.html">Все квартиры</a><a class="btn btn--soft btn--lg" href="building.html">Шахматка дома</a></div>' +
       '<h2 class="eyebrow" style="justify-content:center;margin-top:clamp(40px,7vh,72px)">Сейчас в продаже</h2>' +
       '<div class="lots" style="margin-top:22px">' + pick.map(function (x) { return MK.lotCard(x, { sm: true }); }).join('') + '</div>' +
       '</section>';

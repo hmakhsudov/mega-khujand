@@ -19,7 +19,7 @@
     address: OBJ.address || 'Худжанд, ул. Сырдарьинская, 14',
     geo: OBJ.geo || [40.2931909, 69.622398],
     showroomHours: 'ежедневно, 9:00–19:00',
-    handover: OBJ.handover || 'IV квартал 2026',
+    handover: OBJ.handover || '2027 год',
     ceiling: OBJ.ceiling || '3,1 м',
     priceFromM2: OBJ.priceFromM2 || null,
     priceBase: 9400,
