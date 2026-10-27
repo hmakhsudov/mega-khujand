@@ -4,6 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Ход строительства: фото из media/progress/<дата>/ → js/progress-data.js
+if [ -x .venv/bin/python ]; then .venv/bin/python tools/progress.py; else python3 tools/progress.py || echo "progress.py не запустился — ход строительства без новых фото" >&2; fi
+
 rm -rf dist
 mkdir -p dist/media
 
@@ -25,6 +28,10 @@ for d in opt light plans map; do
 done
 # Гипсовый макет — без сырых рендеров
 "${RS[@]}" --exclude='/raw/' media/model/ dist/media/model/
+
+# Фото хода строительства и документы застройщика (если есть)
+[ -d media/progress/web ] && "${RS[@]}" media/progress/web/ dist/media/progress/web/ || true
+[ -d media/docs ] && "${RS[@]}" media/docs/ dist/media/docs/ || true
 
 # Картинка для превью ссылок
 cp media/og.jpg dist/media/og.jpg

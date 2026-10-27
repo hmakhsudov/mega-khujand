@@ -24,7 +24,7 @@
   var open = D.isOpen(lot);
   var st = lot.status;
   var title = lot.type + ', ' + D.area(lot.area);
-  document.title = title + ' — квартира №\u00a0' + lot.no + ', блок ' + lot.blk + ' · MEGA KHUJAND';
+  document.title = title + ' — квартира №\u00a0' + lot.no + ', блок ' + lot.blk + ' · ЖК «' + D.SITE.object + '» · MEGA KHUJAND';
   var md = document.querySelector('meta[name="description"]');
   if (md) md.content = lot.type + ' ' + D.area(lot.area) + ' на ' + lot.floor + ' этаже, блок ' + lot.blk + ' MEGA KHUJAND в Худжанде. ' +
     (open ? (D.priced ? 'Цена ' + D.money(lot.price) + '.' : 'Свободна.') : D.STATUS[st] + '.') + ' Планировка ' + lot.code + ' из проекта и площади помещений.';
@@ -38,9 +38,9 @@
   var typ = plan ? (lot.typical ? 'по листу проекта (этажи ' + plan.floors[0] + '–' + plan.floors[1] + ')' : 'по типовому этажу ' + plan.floors[0] + '–' + plan.floors[1]) : '—';
 
   var gallery = [
-    lot.floor >= 12 ? ['facade-night-dusk-elevation', 'Фасад дома вечером'] : ['facade-day-hero-plaza', 'Фасад и площадь у дома'],
-    ['courtyard-playground-collage', 'Внутренний двор без машин'],
-    ['retail-arcade-entrance', 'Входная группа и торговые помещения первых этажей']
+    lot.floor >= 12 ? ['syr-dusk-front', 'Дом вечером'] : ['syr-day-front', 'Фасад дома днём'],
+    ['syr-courtyard', 'Двор без машин'],
+    ['syr-dusk-corner', 'Первые этажи с витринами']
   ];
 
   /* окна этой квартиры на рендере — первым кадром галереи */
@@ -188,6 +188,7 @@
   syncSticky();
 
   /* пришли по кнопке «Забронировать» с шахматки или фасада */
+  MK.ownLead = true;  /* у карточки свой переход к заявке — общий из site.js не нужен */
   function goLead(focus) {
     var el = document.getElementById('lead');
     el.scrollIntoView({ behavior: MK.rm() ? 'auto' : 'smooth', block: 'start' });

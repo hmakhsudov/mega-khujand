@@ -204,7 +204,9 @@
   /* ── изображения ────────────────────────────────────────────────── */
   MK.pic = function (name, alt, o) {
     o = o || {};
-    var w = [640, 1280, 1920];
+    /* рендеры Сырдарьи пришли в WhatsApp шириной 1080 — у них две ширины */
+    var syr = /^syr-/.test(name);
+    var w = syr ? [640, 1080] : [640, 1280, 1920];
     var set = function (ext) { return w.map(function (x) { return 'media/opt/' + name + '-' + x + '.' + ext + ' ' + x + 'w'; }).join(', '); };
     var sizes = o.sizes || '100vw';
     return '<picture' + (o.pcls ? ' class="' + o.pcls + '"' : '') + '>' +
@@ -212,7 +214,7 @@
       '<source type="image/webp" srcset="' + set('webp') + '" sizes="' + sizes + '">' +
       '<img src="media/opt/' + name + '-' + w[1] + '.jpg" alt="' + MK.esc(alt || '') + '"' +
       (o.cls ? ' class="' + o.cls + '"' : '') +
-      (o.eager ? '' : ' loading="lazy"') + ' decoding="async" width="2400" height="1339">' +
+      (o.eager ? '' : ' loading="lazy"') + ' decoding="async" width="' + (syr ? 1080 : 2400) + '" height="' + (syr ? 607 : 1339) + '">' +
       '</picture>';
   };
 
@@ -343,11 +345,20 @@
     visit: 'позвонит, чтобы согласовать время визита в шоурум'
   };
   var uid = 0;
+  /* префикс поля «+992» — не часть номера: раньше его цифры считались
+     номером, и при наборе первой же цифры поле показывало «+992 99 29» */
+  /* «+», «+9», «+99» — остатки префикса, если стёрли его часть */
+  var PREFIX = /^\s*\+(?:992|99|92|9)?/;
   function phoneDigits(v) {
-    var d = String(v).replace(/\D/g, '');
-    /* код страны мог попасть дважды: префикс поля + вставленный номер */
+    var d = String(v).replace(PREFIX, '').replace(/\D/g, '');
+    /* вставили номер с кодом страны (992… или 00992…) */
+    if (d.indexOf('00992') === 0) d = d.slice(5);
     while (d.indexOf('992') === 0 && d.length > 9) d = d.slice(3);
     return d.slice(0, 9);
+  }
+  /* сколько цифр номера стоит до курсора (префикс не считается) */
+  function digitsBefore(head) {
+    return head.replace(PREFIX, '').replace(/\D/g, '').length;
   }
   function fmtPhone(d) {
     var p = [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean);
@@ -363,6 +374,7 @@
       '<div class="form__lot" data-lot hidden></div>' +
       '<input type="hidden" name="lot" value="">' +
       '<input type="hidden" name="plan" value="">' +
+      '<input type="hidden" name="object" value="' + MK.esc(D.SITE.object) + '">' +
       '<div class="field"><label class="field__label" for="' + id + '-name">Как к вам обращаться</label>' +
       '<input class="input" id="' + id + '-name" name="name" type="text" autocomplete="name" maxlength="80" required aria-describedby="' + id + '-name-e">' +
       '<p class="field__err" id="' + id + '-name-e"></p></div>' +
@@ -381,7 +393,7 @@
       '<div class="hp" aria-hidden="true"><label>Компания<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>' +
       '<div data-alert role="alert"></div>' +
       '<button class="btn btn--dark btn--lg btn--block" type="submit">Отправить заявку</button>' +
-      '<p class="form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Ответим в часы работы шоурума: ' + D.SITE.showroomHours + '.</p>' +
+      '<p class="form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных по <a href="privacy.html">политике конфиденциальности</a>. Ответим в часы работы шоурума: ' + D.SITE.showroomHours + '.</p>' +
       '</form></div>' +
       '<div class="form-done" data-lead-done hidden tabindex="-1"></div>' +
       '</div>';
@@ -436,8 +448,8 @@
     phone.addEventListener('focus', function () { if (!phone.value) phone.value = '+992 '; });
     phone.addEventListener('blur', function () { if (!phoneDigits(phone.value)) phone.value = ''; });
     phone.addEventListener('input', function () {
-      var pos = phone.selectionStart || phone.value.length;
-      var before = phoneDigits(phone.value.slice(0, pos)).length;
+      var pos = phone.selectionStart == null ? phone.value.length : phone.selectionStart;
+      var before = Math.min(9, digitsBefore(phone.value.slice(0, pos)));
       var d = phoneDigits(phone.value);
       phone.value = fmtPhone(d);
       var n = 0, i = 5;
@@ -470,19 +482,22 @@
     async function send(payload) {
       if (MK.params.get('lead') === 'fail') { await MK.wait(700); throw new Error('forced'); }
       var url = D.SITE.leadEndpoint;
-      if (!url) {
-        await MK.wait(800);
-        var saved = MK.store.get('mk-leads', []);
-        saved.push(payload);
-        MK.store.set('mk-leads', saved.slice(-20));
-        return;
-      }
+      if (!url) return 'whatsapp';
       var ctrl = 'AbortController' in window ? new AbortController() : null;
       var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
       try {
         var r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined });
+        /* приёмник не настроен (нет ключей) или его нет на этом сервере —
+           заявка уйдёт сообщением в WhatsApp */
+        if (r.status === 501 || r.status === 404 || r.status === 405) return 'whatsapp';
         if (!r.ok) throw new Error('HTTP ' + r.status);
+        return 'sent';
       } finally { clearTimeout(timer); }
+    }
+    function keep(payload) {
+      var saved = MK.store.get('mk-leads', []);
+      saved.push(payload);
+      MK.store.set('mk-leads', saved.slice(-20));
     }
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -492,7 +507,7 @@
       var method = (form.querySelector('input[name=method]:checked') || {}).value || 'call';
       var lot = D.find(form.elements.lot.value);
       var payload = {
-        name: name.value.trim(), phone: fmtPhone(phoneDigits(phone.value)), method: method,
+        object: form.elements.object.value, name: name.value.trim(), phone: fmtPhone(phoneDigits(phone.value)), method: method,
         lot: lot ? lot.id : null, lotLabel: lot ? D.lotLabel(lot) : null,
         plan: form.elements.plan.value || null,
         interest: lot ? null : (form.elements.interest.value || null),
@@ -500,11 +515,13 @@
       };
       busy(true);
       try {
-        await send(payload);
+        var how = await send(payload);
+        keep(payload);
         var about = lot ? D.lotLabel(lot) + ', этаж ' + lot.floor : payload.plan ? 'планировка ' + payload.plan : payload.interest;
-        if (D.SITE.leadEndpoint) {
+        if (how === 'sent') {
+          MK.goal('lead');
           done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
-            '<h3 class="form-card__title">Заявка принята</h3>' +
+            '<h3 class="form-card__title">Заявка отправлена</h3>' +
             '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
             (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в блоке ' + lot.blk : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
             '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
@@ -512,7 +529,8 @@
         } else {
           /* приёмник заявок не подключён: заявка уходит менеджеру сообщением
              в WhatsApp — посетитель отправляет его сам, одним нажатием */
-          var msg = 'Здравствуйте! Заявка с сайта MEGA KHUJAND.\nИмя: ' + payload.name + '\nТелефон: ' + payload.phone +
+          MK.goal('lead');
+          var msg = 'Здравствуйте! Заявка с сайта MEGA KHUJAND.\nОбъект: ' + payload.object + '\nИмя: ' + payload.name + '\nТелефон: ' + payload.phone +
             '\nКак связаться: ' + METHOD_NAME[method] + (about ? '\nИнтересует: ' + about : '');
           done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
             '<h3 class="form-card__title">Осталось отправить менеджеру</h3>' +
@@ -541,6 +559,62 @@
     return { setLot: setLot, setPlan: setPlan };
   };
 
+  /* ── «Записаться на показ»: сразу к полям формы ──────────────────
+     Кнопки ведут на #lead; на телефоне поля начинались экраном ниже
+     заголовка секции, и казалось, что формы нет. Ведём к самой форме. */
+  function toForm(focus) {
+    var sec = document.getElementById('lead');
+    var card = sec && (sec.querySelector('[data-lead-card]') || sec);
+    if (!card) return false;
+    var go = function (how) { card.scrollIntoView({ behavior: how, block: 'start' }); };
+    go(MK.rm() ? 'auto' : 'smooth');
+    /* пока страница едет, выше догружаются картинки и макет — в конце
+       прокрутки доводим карточку под шапку */
+    var fix = function () {
+      var want = parseFloat(getComputedStyle(card).scrollMarginTop) || 0;
+      if (Math.abs(card.getBoundingClientRect().top - want) > 24) go('auto');
+    };
+    if ('onscrollend' in window) addEventListener('scrollend', fix, { once: true });
+    setTimeout(fix, 1200);
+    var n = card.querySelector('input[name=name]');
+    if (focus && n && matchMedia('(hover: hover)').matches) n.focus({ preventScroll: true });
+    return true;
+  }
+  document.addEventListener('click', function (e) {
+    if (MK.ownLead || e.defaultPrevented) return;
+    var a = e.target.closest('a[href="#lead"]');
+    if (!a || !toForm(true)) return;
+    e.preventDefault();
+    var dlg = a.closest('dialog');
+    if (dlg && dlg.open) dlg.close();
+    history.replaceState(null, '', location.pathname + location.search + '#lead');
+  });
+  addEventListener('load', function () { if (location.hash === '#lead' && !MK.ownLead) setTimeout(function () { toForm(false); }, 60); });
+
+  /* ── аналитика: Яндекс Метрика и/или Google Analytics из data.js ── */
+  MK.goal = function (name) {
+    try {
+      if (D.SITE.metrika && window.ym) window.ym(+D.SITE.metrika, 'reachGoal', name);
+      if (D.SITE.ga && window.gtag) window.gtag('event', name === 'lead' ? 'generate_lead' : name);
+    } catch (e) { /* аналитика не мешает заявке */ }
+  };
+  function analytics() {
+    var add = function (src) { var s = document.createElement('script'); s.async = true; s.src = src; document.head.appendChild(s); };
+    if (D.SITE.metrika) {
+      window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
+      window.ym.l = +new Date();
+      add('https://mc.yandex.ru/metrika/tag.js');
+      window.ym(+D.SITE.metrika, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
+    }
+    if (D.SITE.ga) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', D.SITE.ga);
+      add('https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(D.SITE.ga));
+    }
+  }
+
   /* ── цифры из data.js в разметке ─────────────────────────────────
      В HTML записаны те же значения — страница читается и без JS,
      а скрипт держит их в согласии с data.js. */
@@ -564,6 +638,19 @@
       var k = n.getAttribute('data-site');
       if (k in D.SITE) n.textContent = D.SITE[k];
     });
+    /* цена «от … сомони/м²» — когда она есть в js/object.js */
+    var pm = D.SITE.priceFromM2;
+    document.querySelectorAll('[data-price-from]').forEach(function (n) {
+      n.textContent = pm ? 'от ' + D.num(pm) + ' сомони/м²' : 'по запросу';
+    });
+    document.querySelectorAll('[data-price-line]').forEach(function (n) {
+      if (pm) { n.textContent = ' Цена — от ' + D.num(pm) + ' сомони/м²; точную стоимость квартиры назовёт менеджер.'; n.hidden = false; }
+    });
+    var dev = D.SITE.developer || {};
+    document.querySelectorAll('[data-dev-name]').forEach(function (n) { if (dev.name) n.textContent = dev.name; });
+    document.querySelectorAll('[data-requisites]').forEach(function (n) {
+      if (D.SITE.requisites) { n.textContent = ' ' + D.SITE.requisites; n.hidden = false; }
+    });
   }
 
   /* ── старт ──────────────────────────────────────────────────────── */
@@ -577,4 +664,5 @@
   });
   document.querySelectorAll('[data-year]').forEach(function (n) { n.textContent = new Date().getFullYear(); });
   bindData();
+  analytics();
 })();

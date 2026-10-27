@@ -1,5 +1,6 @@
-/* Главная «Выставочный макет»: плита с вырезанным именем → макет в сумерках,
-   где горят окна свободных квартир; планировки и легенды из data.js */
+/* Главная — страница объекта «Сырдарья»: первый экран, о доме, место,
+   свободные квартиры (фасад, где горят окна свободных квартир), планировки,
+   условия, ход строительства и заявка; данные — js/object.js и data.js */
 (function () {
   'use strict';
   var D = window.MK_DATA;
@@ -8,134 +9,11 @@
   var NS = 'http://www.w3.org/2000/svg';
   var ease = function (t) { t = MK.clamp01(t); return t * t * (3 - 2 * t); };
 
-  var stage = $('[data-stage]'), veil = $('[data-veil]'), bar = $('[data-bar]');
-  var mark = $('[data-mark]'), wm = $('[data-wm]');
   var model = $('[data-model]'), frame = $('[data-frame]');
-  var hero = $('.hero'), hdr = $('#hdr');
-  var sceneMq = matchMedia('(min-width: 900px)');
-  function scene() { return sceneMq.matches && !MK.rm(); }
-
-  /* ── плита: вписываем имя в поле над подписью ──────────────────── */
-  var base = { s: 1, tx: 0, ty: 0, fx: 0, fy: 0, r: 0, zc: 60, W: 1, H: 1 };
-  function fitMark() {
-    var r = mark.getBoundingClientRect();
-    var W = Math.max(1, Math.round(r.width)), H = Math.max(1, Math.round(r.height));
-    mark.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    ['[data-mask]', '[data-mrect]', '[data-prect]'].forEach(function (s) {
-      var n = $(s, mark); n.setAttribute('width', W); n.setAttribute('height', H);
-    });
-    var overlap = getComputedStyle(bar).position === 'absolute' ? bar.offsetHeight : 0;
-    var top = W < 560 ? 18 : Math.max(24, H * 0.05);
-    var area = H - overlap - top - (overlap ? Math.max(18, H * 0.03) : 18);
-    wm.setAttribute('transform', '');
-    var bb = wm.getBBox();
-    if (!bb.width) return;
-    var s = Math.min((W * (W < 560 ? 0.9 : 0.86)) / bb.width, area / bb.height);
-    var cx = W / 2, cy = top + area / 2;
-    base.s = s;
-    base.tx = cx - (bb.x + bb.width / 2) * s;
-    base.ty = cy - (bb.y + bb.height / 2) * s;
-    focal(W, H);
-    /* масштаб, при котором штрих буквы целиком закрывает кадр: дальше плиту
-       можно просто убрать — без белой вспышки и лишних кадров */
-    var far = Math.max(Math.hypot(base.fx, base.fy), Math.hypot(W - base.fx, base.fy), Math.hypot(base.fx, H - base.fy), Math.hypot(W - base.fx, H - base.fy));
-    base.zc = base.r > 1 ? MK.clamp(far / base.r * 1.06, 6, 90) : 60;
-    applyMark(1);
-  }
-  /* точка внутри штриха буквы у центра: при пролёте она раскрывается на весь экран */
-  function focal(W, H) {
-    base.fx = W / 2; base.fy = H / 2; base.r = 0; base.W = W; base.H = H;
-    try {
-      var k = 0.25, cw = Math.ceil(W * k), ch = Math.ceil(H * k);
-      var c = document.createElement('canvas'); c.width = cw; c.height = ch;
-      var g = c.getContext('2d');
-      g.setTransform(base.s * k, 0, 0, base.s * k, base.tx * k, base.ty * k);
-      g.font = '800 100px Unbounded';
-      if ('letterSpacing' in g) g.letterSpacing = '-2px';
-      g.textAlign = 'center';
-      g.fillText('MEGA', 0, 0);
-      g.fillText('KHUJAND', 0, 90);
-      var d = g.getImageData(0, 0, cw, ch).data;
-      /* двухпроходная карта расстояний до края штриха: берём точку на оси
-         самого толстого штриха ближе к центру — дыра раскрывается ровно */
-      var n = cw * ch, dt = new Float32Array(n), INF = 1e6, D2 = 1.4142;
-      for (var i = 0; i < n; i++) dt[i] = d[i * 4 + 3] > 128 ? INF : 0;
-      for (var y = 0; y < ch; y++) for (var x = 0; x < cw; x++) {
-        var o = y * cw + x; if (!dt[o]) continue;
-        var m = dt[o];
-        if (x > 0) m = Math.min(m, dt[o - 1] + 1); else m = 0;
-        if (y > 0) { m = Math.min(m, dt[o - cw] + 1); if (x > 0) m = Math.min(m, dt[o - cw - 1] + D2); if (x < cw - 1) m = Math.min(m, dt[o - cw + 1] + D2); } else m = 0;
-        dt[o] = m;
-      }
-      for (var y2 = ch - 1; y2 >= 0; y2--) for (var x2 = cw - 1; x2 >= 0; x2--) {
-        var o2 = y2 * cw + x2; if (!dt[o2]) continue;
-        var m2 = dt[o2];
-        if (x2 < cw - 1) m2 = Math.min(m2, dt[o2 + 1] + 1); else m2 = 0;
-        if (y2 < ch - 1) { m2 = Math.min(m2, dt[o2 + cw] + 1); if (x2 < cw - 1) m2 = Math.min(m2, dt[o2 + cw + 1] + D2); if (x2 > 0) m2 = Math.min(m2, dt[o2 + cw - 1] + D2); } else m2 = 0;
-        dt[o2] = m2;
-      }
-      var tx = cw / 2, ty = ch / 2, best = null, bs = -Infinity, diag = Math.hypot(cw, ch);
-      for (var y3 = 0; y3 < ch; y3++) for (var x3 = 0; x3 < cw; x3++) {
-        var v = dt[y3 * cw + x3]; if (v < 2) continue;
-        var sc = v - 0.06 * Math.hypot(x3 - tx, y3 - ty) * (60 / diag);
-        if (sc > bs) { bs = sc; best = [x3, y3]; }
-      }
-      if (best) { base.fx = best[0] / k; base.fy = best[1] / k; base.r = bs / k; }
-    } catch (e) { /* без canvas — зум от центра */ }
-  }
-  function applyMark(z) {
-    var f = z === 1 ? '' : 'translate(' + base.fx.toFixed(1) + ' ' + base.fy.toFixed(1) + ') scale(' + z.toFixed(4) + ') translate(' + (-base.fx).toFixed(1) + ' ' + (-base.fy).toFixed(1) + ') ';
-    wm.setAttribute('transform', f + 'translate(' + base.tx.toFixed(1) + ' ' + base.ty.toFixed(1) + ') scale(' + base.s.toFixed(4) + ')');
-  }
-  var fitQueued = false;
-  function queueFit() { if (!fitQueued) { fitQueued = true; requestAnimationFrame(function () { fitQueued = false; fitMark(); MK.tick(); }); } }
-  addEventListener('resize', queueFit);
-  if (document.fonts && document.fonts.load) document.fonts.load('800 100px Unbounded').then(queueFit, queueFit);
-  fitMark();
-
-  /* ── сцена: одна шкала прокрутки — пролёт, свет по этажам, пульт ── */
-  var lastZ = -1, P = 0;
-  var T = { zoom: 0.22, dim: [0.2, 0.08], lit: [0.25, 0.4], con: [0.62, 0.08] };
-  MK.watch(hero, function (y, vh) {
-    if (!scene()) {
-      if (lastZ !== 1) { lastZ = 1; applyMark(1); }
-      stage.classList.remove('is-open'); stage.classList.add('is-veiled');
-      return;
-    }
-    var hh = hdr ? hdr.offsetHeight : 64;
-    var r = hero.getBoundingClientRect();
-    var run = r.height - (vh - hh);
-    var p = P = run > 8 ? MK.clamp01((hh - r.top) / run) : 0;
-    var t = MK.clamp01(p / T.zoom);
-    var z = Math.exp(Math.log(base.zc) * Math.pow(t, 1.7));
-    if (Math.abs(z - lastZ) > 0.0005) { lastZ = z; applyMark(z); }
-    var veiled = t < 1;
-    stage.style.setProperty('--bo', (1 - ease((p - 0.008) / 0.05)).toFixed(3));
-    stage.style.setProperty('--pz', MK.clamp01(p / 0.4).toFixed(4));
-    stage.style.setProperty('--dim', ease((p - T.dim[0]) / T.dim[1]).toFixed(3));
-    stage.style.setProperty('--con', ease((p - T.con[0]) / T.con[1]).toFixed(3));
-    var lit = MK.clamp01((p - T.lit[0]) / T.lit[1]);
-    model.style.setProperty('--lit', lit.toFixed(4));
-    if (F) F.setLit(lit);
-    stage.classList.toggle('is-veiled', veiled);
-    stage.classList.toggle('is-open', !veiled);
-    if (veiled) hideTag();
-    ride(lit);
-  });
-
-  /* фокус с клавиатуры на пульте: докручиваем сцену до момента, где он виден */
-  model.addEventListener('focusin', function () {
-    if (!scene()) return;
-    var hh = hdr ? hdr.offsetHeight : 64;
-    var r = hero.getBoundingClientRect();
-    var run = r.height - (innerHeight - hh);
-    var p = MK.clamp01((hh - r.top) / run);
-    if (p < 0.72) scrollTo({ top: scrollY + (0.76 - p) * run, behavior: 'auto' });
-  });
 
   /* ── макет: свет в окнах свободных квартир, выбор по этажам ────── */
   var svgF = $('[data-fsvg]');
-  var F = MK.home = MK.facade(svgF, { canvas: $('[data-fcv]'), mode: scene() ? 'scroll' : 'io' });
+  var F = MK.home = MK.facade(svgF, { canvas: $('[data-fcv]'), mode: 'io' });
   var lift = $('[data-lift]'), tag = $('[data-tag]');
   var total = F.lots.length;
   var NF = F.floors.length;
@@ -266,7 +144,7 @@
     riding = false;
     showLift(f);
   }
-  function live() { return !scene() || stage.classList.contains('is-open'); }
+  function live() { return true; }
   frame.addEventListener('pointermove', function (e) {
     if (e.pointerType !== 'mouse' || !live()) return;
     if (e.target.closest('[data-tag]')) { clearTimeout(hideT); return; }
@@ -296,27 +174,13 @@
   addEventListener('resize', function () { if (hotF != null) placeLift(hotF); hideTag(); });
   paintKeys();
 
-  /* режим света: по шкале сцены или один раз при появлении */
+  /* свет загорается один раз, когда фасад появляется на экране */
   var litOnce = false;
-  function syncMode() {
-    F.setMode(scene() ? 'scroll' : 'io');
-    if (!scene()) model.style.removeProperty('--lit');
-  }
-  syncMode();
-  if (sceneMq.addEventListener) sceneMq.addEventListener('change', function () { syncMode(); queueFit(); });
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (en) {
       if (en[0].isIntersecting && !litOnce) { litOnce = true; F.lightUp(); }
     }, { threshold: 0.3 }).observe(frame);
   } else F.lightUp();
-
-  /* вечер наступает: пока сцена в буквах, в доме понемногу зажигаются окна */
-  if (scene()) {
-    var amb = F.lots.filter(function (it) { return isFree(it.lot); }).sort(function (a, b) { return ((a.lot.no * 37) % 101) - ((b.lot.no * 37) % 101); }).slice(0, 26);
-    amb.forEach(function (it, i) {
-      setTimeout(function () { if (P < T.lit[0]) F.amb(it, true); }, 500 + i * 230 + ((it.lot.no * 13) % 7) * 60);
-    });
-  }
 
   /* ── номера на рендерах: точка изображения → точка кадра (cover) ── */
   function placePins() {
@@ -429,6 +293,42 @@
       if (slot && slot._lead) slot._lead.setPlan(PLN.find(hp.id));
     });
     hpRender();
+  }
+
+  /* ── блоки, которые появляются, когда есть данные ─────────────────
+     условия покупки — js/object.js (terms), ход строительства —
+     js/progress-data.js (tools/progress.py из папок media/progress/<дата>/),
+     застройщик — SITE.developer в js/data.js */
+  var OBJ = window.MK_OBJECT || {};
+  var esc = MK.esc;
+  if (OBJ.terms && OBJ.terms.length) {
+    $('[data-terms-list]').innerHTML = OBJ.terms.map(function (t) {
+      return '<li><h3>' + esc(t.t) + '</h3>' + (t.d ? '<p>' + esc(t.d) + '</p>' : '') + '</li>';
+    }).join('');
+    $('[data-terms]').hidden = false;
+  }
+  var PRG = window.MK_PROGRESS || [];
+  if (PRG.length) {
+    var fmtDate = function (d) {
+      var m = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+      var p = d.split('-');
+      return +p[2] + ' ' + m[+p[1] - 1] + ' ' + p[0];
+    };
+    $('[data-progress-stage]').textContent = (PRG[0].stage ? PRG[0].stage + ' ' : '') + 'Фото от ' + fmtDate(PRG[0].date) + '.';
+    $('[data-progress-list]').innerHTML = PRG.map(function (g) {
+      return '<section class="progress__set"><h3 class="progress__date">' + fmtDate(g.date) + (g.stage ? ' · <span>' + esc(g.stage) + '</span>' : '') + '</h3>' +
+        '<div class="progress__photos">' + g.photos.map(function (ph) {
+          return '<a class="progress__ph" href="' + ph.full + '" target="_blank" rel="noopener"><img src="' + ph.src + '" width="' + ph.w + '" height="' + ph.h + '" alt="Стройка, ' + fmtDate(g.date) + '" loading="lazy" decoding="async"></a>';
+        }).join('') + '</div></section>';
+    }).join('');
+    $('[data-progress]').hidden = false;
+  }
+  var DEV = D.SITE.developer || {};
+  if (DEV.about || (DEV.done && DEV.done.length) || (DEV.docs && DEV.docs.length)) {
+    $('[data-dev-about]').textContent = DEV.about || '';
+    $('[data-dev-done]').innerHTML = (DEV.done || []).map(function (o) { return '<li><h3>' + esc(o.t) + '</h3>' + (o.d ? '<p>' + esc(o.d) + '</p>' : '') + '</li>'; }).join('');
+    $('[data-dev-docs]').innerHTML = (DEV.docs || []).map(function (o) { return '<li><a class="link-arrow" href="' + esc(o.href) + '" download>' + esc(o.t) + ' · PDF</a></li>'; }).join('');
+    $('[data-dev]').hidden = false;
   }
 
   if (MK.motion) MK.motion();

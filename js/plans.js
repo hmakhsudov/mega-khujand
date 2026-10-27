@@ -51,7 +51,7 @@
       if (ve) out.push(ve === 1 ? 'веранда' : ve + ' ' + MK_DATA.plural(ve, ['веранда', 'веранды', 'веранд']));
       return out.join(' · ');
     },
-    shareText: function (p) { return 'Планировка ' + p.code + ' · ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' — MEGA KHUJAND'; },
+    shareText: function (p) { return 'Планировка ' + p.code + ' · ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' · ЖК «' + ((window.MK_DATA || {}).SITE || {}).object + '» · MEGA KHUJAND'; },
     url: function (p) { return new URL('plans.html?plan=' + p.id, location.href).href; }
   };
 
@@ -335,7 +335,7 @@
     floorView(p);
     lead.setPlan(p);
     paintCards();
-    document.title = 'Планировка ' + p.code + ' — ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' — MEGA KHUJAND';
+    document.title = 'Планировка ' + p.code + ' — ' + PL.kind(p.rooms).toLowerCase() + ', ' + PL.area(p.area) + ' · ЖК «' + ((window.MK_DATA || {}).SITE || {}).object + '» · MEGA KHUJAND';
     if (push) history.replaceState(null, '', location.pathname + '?plan=' + p.id);
   }
   /* этаж: макет со светом выбранной квартиры или схема из листа */
