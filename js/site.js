@@ -376,10 +376,10 @@
       '<input type="hidden" name="plan" value="">' +
       '<input type="hidden" name="object" value="' + MK.esc(D.SITE.object) + '">' +
       '<div class="field"><label class="field__label" for="' + id + '-name">Как к вам обращаться</label>' +
-      '<input class="input" id="' + id + '-name" name="name" type="text" autocomplete="name" maxlength="80" required aria-describedby="' + id + '-name-e">' +
+      '<input class="input ym-disable-keys" id="' + id + '-name" name="name" type="text" autocomplete="name" maxlength="80" required aria-describedby="' + id + '-name-e">' +
       '<p class="field__err" id="' + id + '-name-e"></p></div>' +
       '<div class="field"><label class="field__label" for="' + id + '-phone">Телефон</label>' +
-      '<input class="input tnum" id="' + id + '-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+992 __ ___ __ __" required aria-describedby="' + id + '-phone-e">' +
+      '<input class="input tnum ym-disable-keys" id="' + id + '-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+992 __ ___ __ __" required aria-describedby="' + id + '-phone-e">' +
       '<p class="field__err" id="' + id + '-phone-e"></p></div>' +
       '<fieldset class="field"><legend class="field__label">Как удобнее связаться</legend><div class="opts">' +
       METHODS.map(function (m, i) {
@@ -603,8 +603,9 @@
     if (D.SITE.metrika) {
       window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
       window.ym.l = +new Date();
-      add('https://mc.yandex.ru/metrika/tag.js');
-      window.ym(+D.SITE.metrika, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
+      add('https://mc.yandex.ru/metrika/tag.js?id=' + encodeURIComponent(D.SITE.metrika));
+      window.ym(+D.SITE.metrika, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true, referrer: document.referrer, url: location.href });
+      /* Вебвизор пишет действия на странице; имя и телефон из формы в запись не попадают — у полей класс ym-disable-keys */
     }
     if (D.SITE.ga) {
       window.dataLayer = window.dataLayer || [];

@@ -41,7 +41,7 @@
     requisites: '',
     /* Аналитика: номер счётчика Яндекс Метрики и/или Google Analytics (G-…).
        Цель «Отправка заявки» — reachGoal('lead') / событие generate_lead. */
-    metrika: '',
+    metrika: '114273977',
     ga: ''
   };
 
