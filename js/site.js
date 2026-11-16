@@ -223,7 +223,7 @@
     var t = [];
     if (l.status === 'sale') t.push(['−' + l.disc + '%', 'tag--sale']);
     if (l.veranda) t.push(['Веранда', 'tag--accent']);
-    t.push([l.fin, '']);
+    if (D.known) t.push([l.fin, '']);
     return t;
   };
   MK.priceHtml = function (l) {
@@ -238,13 +238,13 @@
     var st = l.status === 'book' ? ', забронирована' : l.status === 'sale' ? ', скидка ' + l.disc + '%' : '';
     return '<article class="lot' + (o.sm ? ' lot--sm' : '') + (l.status === 'book' ? ' lot--book' : '') + '">' +
       '<div class="lot__head"><h3 class="lot__type"><a class="lot__link" href="' + D.lotHref(l) + '">' + l.type +
-      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + st + '</span></a></h3>' +
+      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира ' + D.lotRef(l) + st + '</span></a></h3>' +
       '<span class="lot__area" aria-hidden="true">' + D.area(l.area) + '</span></div>' +
-      '<p class="lot__meta" aria-hidden="true">' + (o.sm ? 'Блок ' + l.blk + ' · этаж ' + l.floor + ' · №\u00a0' + l.no : D.lotPlace(l) + ' · №\u00a0' + l.no) + '</p>' +
+      '<p class="lot__meta" aria-hidden="true">' + (o.sm ? 'Блок ' + l.blk + ' · этаж ' + l.floor + ' · ' + D.lotRef(l) : D.lotPlace(l) + ' · ' + D.lotRef(l)) + '</p>' +
       '<div class="lot__plan"><img src="' + D.planSrc(l.plan) + '" alt="" width="480" height="420" loading="lazy" decoding="async"></div>' +
       (o.sm ? '' : '<ul class="lot__tags">' + MK.tags(l).map(function (t) { return '<li class="tag ' + t[1] + '">' + t[0] + '</li>'; }).join('') + '</ul>') +
       '<div class="lot__foot"><p class="lot__price">' + MK.priceHtml(l) + '</p>' +
-      (o.noFav ? '' : '<button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + fav + '" aria-label="В избранное: ' + l.type + ' №\u00a0' + l.no + '">' + MK.icon('heart', '') + '</button>') +
+      (o.noFav ? '' : '<button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + fav + '" aria-label="В избранное: ' + l.type + ' ' + D.lotRef(l) + '">' + MK.icon('heart', '') + '</button>') +
       '</div></article>';
   };
   document.addEventListener('click', function (e) {
@@ -400,8 +400,8 @@
   }
   function lotSummary(l) {
     return '<span class="form__lot-plan"><img src="' + D.planSrc(l.plan) + '" alt=""></span>' +
-      '<span class="form__lot-txt"><b>' + l.type + ' №\u00a0' + l.no + ', ' + D.area(l.area) + '</b>' +
-      'Блок ' + l.blk + ' · этаж ' + l.floor + (D.isOpen(l) ? ' · ' + (D.priced ? D.money(l.price) : 'свободна') : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
+      '<span class="form__lot-txt"><b>' + l.type + ' ' + D.lotRef(l) + ', ' + D.area(l.area) + '</b>' +
+      'Блок ' + l.blk + ' · этаж ' + l.floor + (D.isOpen(l) ? (D.priced ? ' · ' + D.money(l.price) : D.known ? ' · свободна' : '') : ' · ' + D.STATUS[l.status].toLowerCase()) + '</span>' +
       '<button class="form__lot-x" type="button" data-lot-x aria-label="Убрать квартиру из заявки">' + MK.icon('close') + '</button>';
   }
   function planSummary(p) {
@@ -523,7 +523,7 @@
           done.innerHTML = '<span class="form-done__mark" aria-hidden="true">' + MK.icon('check', '') + '</span>' +
             '<h3 class="form-card__title">Заявка отправлена</h3>' +
             '<p>' + MK.esc(payload.name) + ', менеджер ' + METHOD_DONE[method] + ' по номеру <b class="tnum">' + payload.phone + '</b>' +
-            (lot ? ' и расскажет о квартире №\u00a0' + lot.no + ' в блоке ' + lot.blk : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
+            (lot ? ' и расскажет о квартире ' + D.lotRef(lot) + ' в блоке ' + lot.blk + ', этаж ' + lot.floor : payload.plan ? ' и расскажет о квартирах с планировкой ' + payload.plan : '') + '. Отвечаем ' + D.SITE.showroomHours + '.</p>' +
             '<div class="row"><a class="btn btn--soft btn--sm" href="' + D.SITE.phoneHref + '">Позвонить сейчас</a>' +
             '<button class="btn btn--soft btn--sm" type="button" data-again>Новая заявка</button></div>';
         } else {

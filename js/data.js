@@ -27,6 +27,11 @@
        показываются (лот со скидкой — просто свободный), фильтр и сортировка
        по цене скрыты. Цены в данных и вся их логика на месте: true — вернуть. */
     showPrices: false,
+    /* Статусы (свободна / бронь / продана), номера квартир и отделка — пока из
+       генератора, выгрузки из 1С нет. false — сайт их не показывает: все
+       квартиры открыты, наличие и цену покупатель узнаёт у менеджера, вместо
+       номера — блок, этаж и код планировки. С выгрузкой — true. */
+    showStatus: false,
     /* Приём заявок: функция Cloudflare Pages functions/api/lead.js пересылает
        заявку в Telegram и/или Bitrix24 (ключи — в настройках проекта
        Cloudflare, см. README → «Заявка»). Пока ключей нет, функция отвечает
@@ -128,6 +133,8 @@
         /* без цен скидки нет: лот со скидкой — свободный по полной цене
            (генератор не меняется, при showPrices: true всё как было) */
         if (!SITE.showPrices && lot.status === 'sale') { lot.status = 'free'; lot.price = lot.was; lot.disc = 0; lot.was = 0; }
+        /* статусы не показываются: все квартиры открыты, без скидок */
+        if (!SITE.showStatus) { if (lot.was) lot.price = lot.was; lot.status = 'free'; lot.disc = 0; lot.was = 0; }
         row.push(lot);
         LOTS.push(lot);
         BY_ID[lot.id] = lot;
@@ -159,7 +166,9 @@
   function lotHref(l, hash) { return 'flat.html?id=' + encodeURIComponent(l.id) + (hash || ''); }
   function lotTitle(l) { return l.type + ', ' + area(l.area); }
   function lotPlace(l) { return 'Блок ' + l.blk + ' · этаж ' + l.floor + ' из ' + l.floors; }
-  function lotLabel(l) { return l.type + ' № ' + l.no + ', блок ' + l.blk; }
+  /* как назвать квартиру: «№ 12», а пока номеров нет — код планировки */
+  function lotRef(l) { return SITE.showStatus ? '№\u00a0' + l.no : l.code; }
+  function lotLabel(l) { return SITE.showStatus ? l.type + ' № ' + l.no + ', блок ' + l.blk : l.type + ' ' + l.code + ', блок ' + l.blk + ', этаж ' + l.floor; }
   /* экспликация — ровно по листу планировки */
   function roomsFor(l) {
     var p = PLAN[l.plan];
@@ -230,7 +239,7 @@
     find: find, block: block, plan: function (id) { return PLAN[id] || null; },
     stats: stats, isOpen: isOpen, perM: perM, roomsFor: roomsFor,
     homography: homography, planeOf: planeOf, windowQuad: windowQuad, windowOf: windowOf, lightKey: lightKey,
-    money: money, num: num, area: area, plural: plural, priced: SITE.showPrices, priceText: priceText,
+    money: money, num: num, area: area, plural: plural, priced: SITE.showPrices, priceText: priceText, known: SITE.showStatus, lotRef: lotRef,
     planSrc: planSrc, lotHref: lotHref, lotTitle: lotTitle, lotPlace: lotPlace, lotLabel: lotLabel
   };
 })(typeof window !== 'undefined' ? window : globalThis);

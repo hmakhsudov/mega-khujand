@@ -21,6 +21,9 @@
   var mqNarrow = matchMedia('(max-width: 759px)');
   var hoverable = matchMedia('(hover: hover)');
 
+  /* легенда статусов — только когда статусы настоящие (SITE.showStatus) */
+  var legend = $('[data-legend]');
+  if (legend && D.known) legend.hidden = false;
   function block(k) { return D.block(k); }
   function lotAt(b, f, x) { var r = b.floors[f - FIRST]; return r ? r.row[x] || null : null; }
   function roomOk(l) { return S.rooms === 'all' || l.rooms === S.rooms; }
@@ -33,8 +36,8 @@
   }
   function statusText(l) { return l.status === 'sale' ? 'свободна, скидка ' + l.disc + '%' : D.STATUS[l.status].toLowerCase(); }
   function winLabel(l) {
-    return 'Блок ' + l.blk + ', ' + l.floor + ' этаж, квартира № ' + l.no + ', ' + l.code + ', ' + l.type + ', ' + D.area(l.area) + ', ' +
-      statusText(l) + (D.isOpen(l) && D.priced ? ', ' + D.money(l.price) : '');
+    return 'Блок ' + l.blk + ', ' + l.floor + ' этаж, ' + (D.known ? 'квартира № ' + l.no + ', ' : '') + l.code + ', ' + l.type + ', ' + D.area(l.area) +
+      (D.known ? ', ' + statusText(l) : '') + (D.isOpen(l) && D.priced ? ', ' + D.money(l.price) : '');
   }
 
   /* ── клавиши комнатности и счётчик ─────────────────────────────── */
@@ -48,8 +51,9 @@
   }
   function renderCount() {
     var pool = D.LOTS.filter(roomOk), free = pool.filter(D.isOpen).length;
-    $('[data-free-n]').textContent = free;
-    $('[data-free-of]').textContent = D.plural(free, ['свободна', 'свободны', 'свободно']) + ' из ' + pool.length + ' ' +
+    $('[data-free-n]').textContent = D.known ? free : pool.length;
+    $('[data-free-of]').textContent = !D.known ? D.plural(pool.length, ['квартира', 'квартиры', 'квартир']) + (S.rooms === 'all' ? ' в доме' : ' подходят') :
+      D.plural(free, ['свободна', 'свободны', 'свободно']) + ' из ' + pool.length + ' ' +
       (S.rooms === 'all' ? D.plural(pool.length, ['квартиры', 'квартир', 'квартир']) : D.plural(pool.length, ['подходящей', 'подходящих', 'подходящих']));
   }
 
@@ -63,9 +67,9 @@
     var lat = b.lat;
     if (b.pending) {
       return '<div class="tw tw--ghost" data-blk="' + b.k + '" style="--cols:7;view-transition-name:tw-' + lat + '">' +
-        '<div class="tw__plate"><b>' + b.k + '</b><span>готовится</span></div>' +
-        '<div class="tw__body tw__ghost"><p>Продажи в&nbsp;блоке&nbsp;' + b.k + ' ещё не открыты.</p>' +
-        '<a class="tw__ask" href="#lead" data-ask-g>Узнать первым</a></div>' +
+        '<div class="tw__plate"><b>' + b.k + '</b><span>по запросу</span></div>' +
+        '<div class="tw__body tw__ghost"><p>Квартиры блока&nbsp;' + b.k + ' покажет менеджер.</p>' +
+        '<a class="tw__ask" href="#lead" data-ask-g>Узнать о блоке ' + b.k + '</a></div>' +
         '<div class="tw__pod" aria-hidden="true"></div></div>';
     }
     var free = b.floors.reduce(function (s, r) { return s + r.row.filter(lit).length; }, 0);
@@ -74,8 +78,8 @@
       rows.push('<div class="tw__row" role="row" data-f="' + f + '">' + floorLots(b, f).map(function (l) { return winHtml(b, l, ti); }).join('') + '</div>');
     }
     return '<div class="tw" data-blk="' + b.k + '" style="--cols:' + b.cols + ';view-transition-name:tw-' + lat + '">' +
-      '<button class="tw__plate" type="button" data-open="' + b.k + '" aria-label="Открыть блок ' + b.k + ': ' + free + ' ' + D.plural(free, ['свободная квартира', 'свободные квартиры', 'свободных квартир']) + '">' +
-        '<b>' + b.k + '</b><span><span class="tnum" data-blk-free>' + free + '</span> своб.</span></button>' +
+      '<button class="tw__plate" type="button" data-open="' + b.k + '" aria-label="Открыть блок ' + b.k + ': ' + free + ' ' + (D.known ? D.plural(free, ['свободная квартира', 'свободные квартиры', 'свободных квартир']) : D.plural(free, ['квартира', 'квартиры', 'квартир'])) + '">' +
+        '<b>' + b.k + '</b><span><span class="tnum" data-blk-free>' + free + '</span> ' + (D.known ? 'своб.' : 'кв.') + '</span></button>' +
       '<div class="tw__body" role="grid" aria-label="Блок ' + b.k + ': квартиры по этажам, ' + TOP + '–' + FIRST + ' этаж" aria-rowcount="' + (TOP - FIRST + 1) + '" aria-colcount="' + b.cols + '">' + rows.join('') + '</div>' +
       '<div class="tw__pod" aria-hidden="true">' + (ti === 0 ? '<span>1–2 · торговые</span>' : '') + '</div></div>';
   }
@@ -136,7 +140,7 @@
     var left = rr.right + 260 > sr.right;
     liftEl.querySelector('.lift__n').textContent = f;
     liftEl.querySelector('.lift__c').innerHTML = info.free
-      ? info.free + ' из ' + info.all + ' ' + D.plural(info.free, ['свободна', 'свободны', 'свободно']) + (D.priced ? '<br>от ' + D.money(info.min) : '')
+      ? (D.known ? info.free + ' из ' + info.all + ' ' + D.plural(info.free, ['свободна', 'свободны', 'свободно']) : info.all + ' ' + D.plural(info.all, ['квартира', 'квартиры', 'квартир'])) + (D.priced ? '<br>от ' + D.money(info.min) : '')
       : 'свободных нет';
     liftEl.classList.toggle('is-left', left);
     liftEl.style.left = (left ? rr.left : rr.right) - sr.left + 'px';
@@ -148,8 +152,8 @@
     var l = D.find(w.getAttribute('data-id'));
     var open = D.isOpen(l);
     tagEl.innerHTML = '<p class="vit__tag-t">' + l.code + ' · ' + l.type + '</p>' +
-      '<p class="vit__tag-m tnum">' + D.area(l.area) + ' · № ' + l.no + '</p>' +
-      '<p class="vit__tag-p tnum">' + (open ? (D.priced ? D.money(l.price) + (l.disc ? ' <small>−' + l.disc + '%</small>' : '') : 'Свободна') : D.STATUS[l.status]) + '</p>';
+      '<p class="vit__tag-m tnum">' + D.area(l.area) + (D.known ? ' · № ' + l.no : ' · этаж ' + l.floor) + '</p>' +
+      '<p class="vit__tag-p tnum">' + (open ? (D.priced ? D.money(l.price) + (l.disc ? ' <small>−' + l.disc + '%</small>' : '') : D.known ? 'Свободна' : 'Цена по запросу') : D.STATUS[l.status]) + '</p>';
     var sr = stage.getBoundingClientRect(), wr = w.getBoundingClientRect();
     tagEl.style.left = wr.left + wr.width / 2 - sr.left + 'px';
     tagEl.style.top = wr.top - sr.top + 'px';
@@ -193,7 +197,7 @@
     $('[data-flr-blk]', stage).textContent = 'Блок ' + b.k;
     $('[data-flr-n]', stage).textContent = f;
     $('[data-flr-sum]', stage).innerHTML = info.free
-      ? 'свободно ' + info.free + ' из ' + info.all + (D.priced ? ' · от ' + D.money(info.min) : '')
+      ? (D.known ? 'свободно ' + info.free + ' из ' + info.all : info.all + ' ' + D.plural(info.all, ['квартира', 'квартиры', 'квартир'])) + (D.priced ? ' · от ' + D.money(info.min) : '')
       : 'на этаже свободных нет';
     $('[data-step="1"]', stage).disabled = f >= TOP;
     $('[data-step="-1"]', stage).disabled = f <= FIRST;
@@ -214,7 +218,7 @@
     var box = $('[data-flr-flat]', stage), l = S.sel && D.find(S.sel);
     if (!l || l.blk !== S.blk) {
       var b = block(S.blk), info = b ? floorInfo(b, curFloor()) : null;
-      box.innerHTML = '<p class="flr__hint">' + (info && info.free ? 'Нажмите на светящуюся квартиру на макете или окно в блоке — покажем её планировку.' : 'На этом этаже всё продано или забронировано — выберите другой этаж: светлые окна в блоке слева.') + '</p>';
+      box.innerHTML = '<p class="flr__hint">' + (info && info.free ? 'Нажмите на квартиру на макете или окно в блоке — покажем её планировку.' : 'На этом этаже всё продано или забронировано — выберите другой этаж: светлые окна в блоке слева.') + '</p>';
       return;
     }
     var p = D.plan(l.plan), open = D.isOpen(l);
@@ -222,9 +226,9 @@
     box.innerHTML = '<article class="flc">' +
       '<a class="flc__plan" href="' + D.lotHref(l) + '" tabindex="-1" aria-hidden="true"><img src="' + D.planSrc(l.plan) + '" alt="" width="' + (p ? p.img.w : 480) + '" height="' + (p ? p.img.h : 420) + '" decoding="async"></a>' +
       '<div class="flc__body">' +
-        '<p class="flc__top"><span class="plate">' + l.code + '</span><span class="status' + (l.status === 'free' ? ' status--free' : l.status === 'sale' ? ' status--sale' : '') + '">' + st + '</span></p>' +
+        '<p class="flc__top"><span class="plate">' + l.code + '</span>' + (D.known ? '<span class="status' + (l.status === 'free' ? ' status--free' : l.status === 'sale' ? ' status--sale' : '') + '">' + st + '</span>' : '') + '</p>' +
         '<h3 class="flc__t"><a href="' + D.lotHref(l) + '">' + l.type + ', <span class="tnum">' + D.area(l.area) + '</span></a></h3>' +
-        '<p class="flc__m">Блок ' + l.blk + ' · ' + l.floor + ' этаж · квартира № ' + l.no + ' · ' + l.fin.toLowerCase() + '</p>' +
+        '<p class="flc__m">Блок ' + l.blk + ' · ' + l.floor + ' этаж' + (D.known ? ' · квартира № ' + l.no + ' · ' + l.fin.toLowerCase() : '') + '</p>' +
         '<p class="flc__price tnum">' + (open ? (D.priced ? (l.was ? '<s>' + D.money(l.was) + '</s>' : '') + D.money(l.price) + '<small>' + D.num(D.perM(l)) + ' смн за м²</small>' : 'Цена по запросу<small>Узнайте у менеджера</small>') : D.STATUS[l.status]) + '</p>' +
         '<div class="flc__act">' +
           (open ? '<a class="btn btn--dark btn--sm" href="' + D.lotHref(l, '#lead') + '">' + (D.priced ? 'Забронировать' : 'Узнать цену') + '</a>' : '<a class="btn btn--dark btn--sm" href="' + D.lotHref(l, '#lead') + '">Сообщить, если освободится</a>') +

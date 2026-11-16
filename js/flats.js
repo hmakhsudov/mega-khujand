@@ -98,6 +98,13 @@
 
   /* ── разметка выдачи ────────────────────────────────────────────── */
   var COLS = [['Тип'], ['Блок'], ['План'], ['Площадь', 'area'], ['Этаж', 'floor'], ['№'], ['Отделка'], ['Особенности'], D.priced ? ['Стоимость', 'price'] : ['Стоимость'], ['']];
+  /* без статусов (SITE.showStatus) нет номера, отделки и «Только свободные» */
+  if (!D.known) {
+    COLS = COLS.filter(function (c) { return c[0] !== '№' && c[0] !== 'Отделка'; });
+    var finSel = $('[data-f="fin"]'), openChip = $('[data-chip="open"]');
+    if (finSel) finSel.closest('.select').hidden = true;
+    if (openChip) openChip.hidden = true;
+  }
   function headHtml() {
     var cur = S.sort.split('-');
     return '<div class="rows__head">' + COLS.map(function (c) {
@@ -114,16 +121,15 @@
     var feats = l.veranda ? 'веранда' : '—';
     return '<li class="row' + (l.status === 'book' ? ' row--book' : '') + '">' +
       '<span class="row__type"><a class="lot__link" href="' + D.lotHref(l) + '">' + l.type +
-      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира №\u00a0' + l.no + ', ' + (open ? D.priceText(l).toLowerCase() : D.STATUS[l.status].toLowerCase()) + '</span></a></span>' +
+      '<span class="sr-only">, ' + D.area(l.area) + ', ' + D.lotPlace(l) + ', квартира ' + D.lotRef(l) + ', ' + (open ? D.priceText(l).toLowerCase() : D.STATUS[l.status].toLowerCase()) + '</span></a></span>' +
       '<span aria-hidden="true">' + l.blk + ' · ' + l.code + '</span>' +
       '<span class="row__plan" aria-hidden="true"><img src="' + D.planSrc(l.plan) + '" alt="" loading="lazy" decoding="async"></span>' +
       '<span aria-hidden="true">' + D.area(l.area) + '</span>' +
       '<span aria-hidden="true">' + l.floor + ' из ' + l.floors + '</span>' +
-      '<span aria-hidden="true">' + l.no + '</span>' +
-      '<span aria-hidden="true">' + l.fin + '</span>' +
+      (D.known ? '<span aria-hidden="true">' + l.no + '</span><span aria-hidden="true">' + l.fin + '</span>' : '') +
       '<span aria-hidden="true">' + feats + '</span>' +
-      '<span class="row__price" aria-hidden="true">' + (open ? (D.priced ? D.money(l.price) + '<small>' + (l.disc ? 'скидка ' + l.disc + '%' : D.num(D.perM(l)) + ' смн/м²') + '</small>' : 'По запросу<small>свободна</small>') : D.STATUS[l.status]) + '</span>' +
-      '<span class="row__fav"><button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + MK.fav.has(l.id) + '" aria-label="В избранное: ' + l.type + ' №\u00a0' + l.no + '">' + MK.icon('heart', '') + '</button></span></li>';
+      '<span class="row__price" aria-hidden="true">' + (open ? (D.priced ? D.money(l.price) + '<small>' + (l.disc ? 'скидка ' + l.disc + '%' : D.num(D.perM(l)) + ' смн/м²') + '</small>' : 'По запросу<small>' + (D.known ? 'свободна' : 'узнайте у менеджера') + '</small>') : D.STATUS[l.status]) + '</span>' +
+      '<span class="row__fav"><button class="fav" type="button" data-fav="' + l.id + '" aria-pressed="' + MK.fav.has(l.id) + '" aria-label="В избранное: ' + l.type + ' ' + D.lotRef(l) + '">' + MK.icon('heart', '') + '</button></span></li>';
   }
   function emptyHtml() {
     if (S.fav && !MK.fav.list().length) {
@@ -152,7 +158,7 @@
       var slice = list.slice(0, shown);
       res.innerHTML = v === 'grid'
         ? '<div class="lots">' + slice.map(function (l) { return MK.lotCard(l); }).join('') + '</div>'
-        : '<div class="rows"><div class="rows__in">' + headHtml() + '<ul>' + slice.map(rowHtml).join('') + '</ul></div></div>';
+        : '<div class="rows' + (D.known ? '' : ' rows--lite') + '"><div class="rows__in">' + headHtml() + '<ul>' + slice.map(rowHtml).join('') + '</ul></div></div>';
       var rest = list.length - shown;
       more.hidden = rest <= 0;
       if (rest > 0) {

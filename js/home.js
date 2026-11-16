@@ -24,7 +24,7 @@
     var li = el.closest('li');
     if (!all.length) { li.hidden = true; return; }
     el.innerHTML = '<span class="led' + (free.length ? ' is-on' : '') + '" aria-hidden="true"></span>' +
-      (free.length ? free.length + ' в продаже' : 'сейчас нет в продаже');
+      (!D.known ? all.length + ' ' + D.plural(all.length, ['квартира', 'квартиры', 'квартир']) : free.length ? free.length + ' в продаже' : 'сейчас нет в продаже');
     var areas = all.map(function (l) { return l.area; });
     var lo = Math.min.apply(null, areas), hi = Math.max.apply(null, areas);
     $('[data-pick-a="' + r + '"]').textContent = lo === hi ? D.area(lo) : D.area(lo).replace(/\s*м²$/, '') + '–' + D.area(hi);
