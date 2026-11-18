@@ -29,7 +29,7 @@ python3 -m http.server 8080      # открывать через сервер, �
 
 ## Публикация
 
-Сайт на Cloudflare Pages: https://mega-khujand.pages.dev. Обновить одной строкой (подробности — «Публикация» в `README.md`):
+Сайт на Cloudflare Pages: https://mega-khujand.tj (домен — регистратор ISM.TJ, оплачен через reg.ru; NS — Cloudflare, зона в том же аккаунте) и https://mega-khujand.pages.dev. Обновить одной строкой (подробности — «Публикация» в `README.md`):
 
 ```bash
 bash tools/build-dist.sh && npx wrangler@latest pages deploy dist --project-name mega-khujand --branch main

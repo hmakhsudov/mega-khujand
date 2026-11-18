@@ -110,7 +110,7 @@ python3 tools/model-render.py scene /путь/к/сырым  # сцены model-
 
 ## Публикация
 
-Сайт опубликован на Cloudflare Pages (проект `mega-khujand`): **https://mega-khujand.pages.dev**
+Сайт опубликован на Cloudflare Pages (проект `mega-khujand`): **https://mega-khujand.tj** (и `https://mega-khujand.pages.dev`). Домен `.tj` зарегистрирован у ISM.TJ через reg.ru: DNS-серверы меняет поддержка reg.ru по заявке, в кабинете reg.ru домен показан «Неактивна» — так и должно быть. Зона `mega-khujand.tj` — в Cloudflare, `mega-khujand.tj` и `www.mega-khujand.tj` подключены к проекту (Custom domains).
 
 `bash tools/build-dist.sh` собирает папку `dist/` (в git её нет) — только то, что нужно сайту: страницы, `css/`, `js/`, `fonts/`, `media/{opt,light,plans,model,map}`, `media/og.jpg`, `robots.txt`, `sitemap.xml`, `_headers`. Заметки (`*.md`), `tools/`, `design-reference/`, `calibration/`, рендеры, сырые кадры макета и стоковые фото в неё не попадают. `_headers` задаёт кэш (шрифты — год, `media/` — неделя, HTML/CSS/JS — без долгого кэша) и заголовки безопасности.
 

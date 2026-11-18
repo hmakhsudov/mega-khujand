@@ -3,4 +3,4 @@ Allow: /
 Disallow: /design-reference/
 Disallow: /calibration/
 
-Sitemap: https://mega-khujand.pages.dev/sitemap.xml
+Sitemap: https://mega-khujand.tj/sitemap.xml
