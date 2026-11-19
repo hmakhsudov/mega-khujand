@@ -114,7 +114,9 @@ python3 tools/model-render.py scene /путь/к/сырым  # сцены model-
 
 `bash tools/build-dist.sh` собирает папку `dist/` (в git её нет) — только то, что нужно сайту: страницы, `css/`, `js/`, `fonts/`, `media/{opt,light,plans,model,map}`, `media/og.jpg`, `robots.txt`, `sitemap.xml`, `_headers`. Заметки (`*.md`), `tools/`, `design-reference/`, `calibration/`, рендеры, сырые кадры макета и стоковые фото в неё не попадают. `_headers` задаёт кэш (шрифты — год, `media/` — неделя, HTML/CSS/JS — без долгого кэша) и заголовки безопасности.
 
-Обновить сайт после правок:
+**Хостинг reg.ru.** Пока DNS домена — `ns1/ns2.hosting.reg.ru`, `mega-khujand.tj` открывается с хостинга reg.ru «Хост-0» u3728646 (server27.hosting.reg.ru, папка `www/mega-khujand.tj`). Выложить: `bash tools/deploy-regru.sh` — соберёт `dist/` и зальёт его rsync по SSH (пароль — reg.ru → хостинг → «Доступы» → «SSH, SFTP»). `_headers`/`_redirects` там не работают — их заменяет `tools/htaccess-regru` (кладётся в `dist/.htaccess`); SSL Let's Encrypt, переход на https и кэш nginx (без css/js) настроены в ispmanager → Сайты → mega-khujand.tj. Функции `/api/lead` на хостинге нет (404) — форма отправляет заявку через WhatsApp.
+
+Обновить сайт на Cloudflare Pages после правок:
 
 ```bash
 bash tools/build-dist.sh && npx wrangler@latest pages deploy dist --project-name mega-khujand --branch main

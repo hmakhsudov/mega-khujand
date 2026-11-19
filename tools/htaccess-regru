@@ -1,0 +1,42 @@
+# Хостинг reg.ru (Apache): то же, что _headers и _redirects на Cloudflare Pages.
+# build-dist.sh кладёт этот файл в dist/.htaccess.
+
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset utf-8
+AddType image/avif .avif
+AddType image/webp .webp
+AddType font/woff2 .woff2
+
+RewriteEngine On
+# без www
+RewriteCond %{HTTP_HOST} ^www\.mega-khujand\.tj$ [NC]
+RewriteRule ^ %{REQUEST_SCHEME}://mega-khujand.tj%{REQUEST_URI} [R=301,L]
+# https — включить (снять #), когда в панели reg.ru выпущен SSL-сертификат
+#RewriteCond %{HTTPS} !=on
+#RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+#RewriteRule ^ https://mega-khujand.tj%{REQUEST_URI} [R=301,L]
+# подбор на фасаде убран — на каталог
+RewriteRule ^picker(\.html)?$ /flats.html [R=302,L]
+# адреса без .html, как на Cloudflare
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+)$ $1.html [L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  <FilesMatch "\.(html|css|js)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(woff2|ttf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(jpg|jpeg|png|webp|avif|svg|gif|pdf|json)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json image/svg+xml text/plain application/xml
+</IfModule>

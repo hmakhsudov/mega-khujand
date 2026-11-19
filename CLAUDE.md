@@ -29,7 +29,7 @@ python3 -m http.server 8080      # открывать через сервер, �
 
 ## Публикация
 
-Сайт на Cloudflare Pages: https://mega-khujand.tj (домен — регистратор ISM.TJ, оплачен через reg.ru; NS — Cloudflare, зона в том же аккаунте) и https://mega-khujand.pages.dev. Обновить одной строкой (подробности — «Публикация» в `README.md`):
+Сайт на Cloudflare Pages: https://mega-khujand.tj (домен — регистратор ISM.TJ, оплачен через reg.ru; NS — Cloudflare, зона в том же аккаунте) и https://mega-khujand.pages.dev. **Сейчас `mega-khujand.tj` открывается с хостинга reg.ru** (u3728646, server27, папка `www/mega-khujand.tj`, SSL Let's Encrypt и переход на https — в ispmanager): DNS домена — `ns*.hosting.reg.ru`. Выложить туда — `bash tools/deploy-regru.sh` (rsync по SSH, пароль вводит пользователь в своём терминале). Если поддержка reg.ru сменит DNS на Cloudflare (заявка #20261118373020771), домен переедет на Pages сам. На Cloudflare Pages — одной строкой (подробности — «Публикация» в `README.md`):
 
 ```bash
 bash tools/build-dist.sh && npx wrangler@latest pages deploy dist --project-name mega-khujand --branch main
